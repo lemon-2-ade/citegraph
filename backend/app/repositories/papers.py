@@ -36,7 +36,7 @@ _ORDER: dict[PaperSort, LiteralString] = {
     "cited_by": "ORDER BY COUNT { (:Paper)-[:CITES]->(p) } DESC, p.year DESC",
 }
 
-_LIST_FILTER: LiteralString = """
+_LIST_MATCH_FRAGMENT: LiteralString = """
     MATCH (p:Paper)
     WHERE coalesce(p.is_stub, false) = false
       AND ($year_from IS NULL OR p.year >= $year_from)
@@ -119,11 +119,15 @@ class PaperRepository:
             "limit": page.page_size,
         }
         query = (
-            _LIST_FILTER + "WITH p " + _ORDER[sort] + " SKIP $skip LIMIT $limit RETURN " + SUMMARY
+            _LIST_MATCH_FRAGMENT
+            + "WITH p "
+            + _ORDER[sort]
+            + " SKIP $skip LIMIT $limit RETURN "
+            + SUMMARY
         )
         rows = await self._graph.read(query, params, label=f"papers.list.{sort}")
         total_rows = await self._graph.read(
-            _LIST_FILTER + "RETURN count(p) AS total", params, label="papers.count"
+            _LIST_MATCH_FRAGMENT + "RETURN count(p) AS total", params, label="papers.count"
         )
         return Page(
             items=[summary_from_row(r) for r in rows],

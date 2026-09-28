@@ -25,7 +25,11 @@ test-integration: ## Run integration tests (needs Neo4j + PostgreSQL running)
 lint: ## Lint, format-check and type-check
 	cd $(BACKEND) && uv run ruff check . && uv run ruff format --check . && uv run mypy app
 
+lint-cypher: ## Syntax/semantic-check every Cypher query with Neo4j's parser (needs Node.js)
+	cd scripts/cypher-lint && npm ci --silent
+	cd $(BACKEND) && uv run python scripts/dump_cypher.py | node ../scripts/cypher-lint/lint.mjs
+
 format: ## Auto-format code
 	cd $(BACKEND) && uv run ruff format . && uv run ruff check --fix .
 
-.PHONY: help install up down dev test test-integration lint format
+.PHONY: help install up down dev test test-integration lint lint-cypher format

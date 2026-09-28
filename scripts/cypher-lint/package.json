@@ -1,0 +1,8 @@
+{
+  "name": "researchgraph-cypher-lint",
+  "private": true,
+  "description": "Syntax + semantic lint of every Cypher query in the backend, using Neo4j's language-support parser.",
+  "type": "module",
+  "scripts": { "lint": "node lint.mjs" },
+  "dependencies": { "@neo4j-cypher/language-support": "2.0.0-next.6" }
+}
