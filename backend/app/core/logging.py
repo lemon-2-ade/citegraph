@@ -62,7 +62,7 @@ def configure_logging(level: str = "INFO", json: bool = True, *, stream: str = "
     # Route stdlib logging (uvicorn, neo4j driver, httpx) through the same level.
     logging.basicConfig(
         level=level.upper(),
-        stream=_LazyStream(stream),  # type: ignore[arg-type]
+        stream=_LazyStream(stream),
         format="%(message)s",
         force=True,
     )
