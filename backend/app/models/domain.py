@@ -50,6 +50,9 @@ class InstitutionRecord(_Record):
 
 class AuthorRecord(_Record):
     name: str
+    # Provider-scoped key that asserts identity across papers (e.g. a curated seed key
+    # such as "yoshua-bengio"). Resolution treats it like an external identifier.
+    key: str | None = None
     orcid: str | None = None
     openalex: str | None = None
     institutions: list[InstitutionRecord] = Field(default_factory=list)
