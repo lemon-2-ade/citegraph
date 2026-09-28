@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      neo4j:
+        image: neo4j:5.26-community
+        env:
+          NEO4J_AUTH: neo4j/ci-password-123
+          NEO4J_PLUGINS: '["graph-data-science"]'
+          NEO4J_dbms_security_procedures_unrestricted: gds.*
+        ports: ["7687:7687"]
+        options: >-
+          --health-cmd "cypher-shell -u neo4j -p ci-password-123 'RETURN 1'"
+          --health-interval 10s --health-timeout 10s --health-retries 30
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ci" --health-interval 5s --health-retries 20
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.17"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: uv sync --frozen
+      - name: Lint and type-check
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+          uv run mypy app
+      - name: Cypher lint
+        run: |
+          (cd ../scripts/cypher-lint && npm ci)
+          uv run python scripts/dump_cypher.py | node ../scripts/cypher-lint/lint.mjs
+      - name: Unit tests
+        run: uv run pytest -m "not integration"
+      - name: Integration tests
+        env:
+          RG_TEST_NEO4J_URI: bolt://localhost:7687
+          RG_TEST_NEO4J_PASSWORD: ci-password-123
+          RG_TEST_DATABASE_URL: postgresql+asyncpg://ci:ci@localhost:5432/ci
+        run: uv run pytest -m integration
