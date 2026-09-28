@@ -16,8 +16,11 @@ import os
 from collections.abc import AsyncIterator
 
 import pytest
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.core.config import Settings
+from app.db.models import Base
+from app.db.session import create_engine, create_sessionmaker, create_tables
 from app.graph.client import GraphClient
 
 
@@ -37,3 +40,18 @@ async def neo4j_graph() -> AsyncIterator[GraphClient]:
         yield graph
     finally:
         await graph.close()
+
+
+@pytest.fixture
+async def pg_sessionmaker() -> AsyncIterator[async_sessionmaker[AsyncSession]]:
+    url = os.environ.get("RG_TEST_DATABASE_URL")
+    if not url:
+        pytest.skip("RG_TEST_DATABASE_URL not set")
+    engine = create_engine(url)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+    await create_tables(engine)
+    try:
+        yield create_sessionmaker(engine)
+    finally:
+        await engine.dispose()
