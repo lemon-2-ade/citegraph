@@ -13,15 +13,24 @@ from app.core.config import Settings, get_settings
 from app.core.errors import register_error_handlers
 from app.core.logging import configure_logging, get_logger
 from app.core.middleware import RequestContextMiddleware, SecurityHeadersMiddleware
+from app.graph.client import GraphClient
 
 log = get_logger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    log.info("app.startup", env=app.state.settings.app_env)
-    yield
-    log.info("app.shutdown")
+    settings: Settings = app.state.settings
+    log.info("app.startup", env=settings.app_env)
+    # The driver connects lazily; startup does not fail if Neo4j is still booting.
+    # /api/health/ready reports dependency status.
+    if not hasattr(app.state, "graph"):
+        app.state.graph = GraphClient.from_settings(settings)
+    try:
+        yield
+    finally:
+        await app.state.graph.close()
+        log.info("app.shutdown")
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
