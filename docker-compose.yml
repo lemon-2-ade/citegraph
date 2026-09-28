@@ -10,6 +10,7 @@ x-backend-env: &backend-env
   REDIS_URL: redis://redis:6379/0
   OPENALEX_MAILTO: ${OPENALEX_MAILTO:-}
   OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  ADMIN_API_TOKEN: ${ADMIN_API_TOKEN:-}
   LLM_PROVIDER: ${LLM_PROVIDER:-openai}
   EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-openai}
 
@@ -66,6 +67,15 @@ services:
     environment: *backend-env
     ports:
       - "8000:8000"
+    depends_on:
+      neo4j: { condition: service_healthy }
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  worker:
+    build: ./backend
+    command: ["arq", "app.workers.ingestion.WorkerSettings"]
+    environment: *backend-env
     depends_on:
       neo4j: { condition: service_healthy }
       postgres: { condition: service_healthy }

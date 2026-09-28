@@ -8,12 +8,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import entities, health, papers
+from app.api import entities, health, ingestion, papers
 from app.core.config import Settings, get_settings
 from app.core.errors import register_error_handlers
 from app.core.logging import configure_logging, get_logger
 from app.core.middleware import RequestContextMiddleware, SecurityHeadersMiddleware
-from app.graph.client import GraphClient
+from app.core.resources import Resources
 
 log = get_logger(__name__)
 
@@ -22,14 +22,20 @@ log = get_logger(__name__)
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings: Settings = app.state.settings
     log.info("app.startup", env=settings.app_env)
-    # The driver connects lazily; startup does not fail if Neo4j is still booting.
+    # Connections are lazy; startup does not fail if a database is still booting.
     # /api/health/ready reports dependency status.
+    resources: Resources | None = None
     if not hasattr(app.state, "graph"):
-        app.state.graph = GraphClient.from_settings(settings)
+        resources = Resources.create(settings)
+        app.state.graph = resources.graph
+        app.state.sessions = resources.sessions
     try:
         yield
     finally:
-        await app.state.graph.close()
+        if getattr(app.state, "arq", None) is not None:
+            await app.state.arq.aclose()
+        if resources is not None:
+            await resources.close()
         log.info("app.shutdown")
 
 
@@ -57,7 +63,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         expose_headers=["X-Request-ID"],
     )
     register_error_handlers(app)
-    for router in (health.router, papers.router, entities.router):
+    for router in (health.router, papers.router, entities.router, ingestion.router):
         app.include_router(router, prefix=settings.api_prefix)
     return app
 

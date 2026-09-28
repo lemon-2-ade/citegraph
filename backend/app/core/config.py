@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     log_json: bool = True
     api_prefix: str = "/api"
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:5173"])
+    # Required (X-Admin-Token header) for administrative endpoints such as ingestion.
+    # If unset, those endpoints are open in development and disabled in production.
+    admin_api_token: SecretStr | None = None
 
     # --- Neo4j ---------------------------------------------------------------
     neo4j_uri: str = "bolt://localhost:7687"
