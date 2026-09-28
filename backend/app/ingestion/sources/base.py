@@ -35,6 +35,9 @@ class PaperSource(ABC):
     """
 
     name: str
+    # Which ``ExternalIds`` field this source's own identifiers populate; used to find
+    # stub papers this source can hydrate.
+    id_field: str
 
     @abstractmethod
     async def search(

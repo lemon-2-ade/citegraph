@@ -82,17 +82,18 @@ class JobRepository:
         """Upsert raw payloads keyed by (source, external_id)."""
         if not records:
             return
+        latest = dict(records)  # the same work can appear twice in one page
         async with self._sessions.begin() as session:
             existing = {
                 r.external_id: r
                 for r in await session.scalars(
                     select(RawRecord).where(
                         RawRecord.source == source,
-                        RawRecord.external_id.in_([eid for eid, _ in records]),
+                        RawRecord.external_id.in_(list(latest)),
                     )
                 )
             }
-            for external_id, payload in records:
+            for external_id, payload in latest.items():
                 row = existing.get(external_id)
                 if row is None:
                     session.add(

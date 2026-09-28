@@ -102,6 +102,7 @@ def extract_arxiv_id(work: dict[str, Any]) -> str | None:
 
 class OpenAlexSource(PaperSource):
     name = "openalex"
+    id_field = "openalex"
 
     def __init__(self, fetcher: HttpFetcher, base_url: str, mailto: str | None = None) -> None:
         self._fetcher = fetcher

@@ -66,7 +66,9 @@ def static_queries() -> dict[str, str]:
                     if _CYPHER_START.match(v):
                         found[f"{module_info.name}.{name}[{i}]"] = v
             elif isinstance(value, dict) and all(isinstance(v, str) for v in value.values()):
-                continue  # fragments (e.g. ORDER BY clauses) are covered by runtime capture
+                for key, v in value.items():
+                    if _CYPHER_START.match(v):  # ORDER BY fragments are skipped here
+                        found[f"{module_info.name}.{name}[{key}]"] = v
     return found
 
 
