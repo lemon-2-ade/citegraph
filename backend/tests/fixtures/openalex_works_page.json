@@ -1,0 +1,65 @@
+{
+  "_comment": "Synthetic payload shaped like the OpenAlex /works response. Not real bibliographic data.",
+  "meta": {"count": 2, "per_page": 2, "next_cursor": "CURSOR-2"},
+  "results": [
+    {
+      "id": "https://openalex.org/W1000000001",
+      "doi": "https://doi.org/10.9999/SYNTH.001",
+      "title": "Synthetic Graph Networks for Testing",
+      "display_name": "Synthetic Graph Networks for Testing",
+      "publication_year": 2021,
+      "publication_date": "2021-06-01",
+      "language": "en",
+      "type": "article",
+      "cited_by_count": 12,
+      "abstract_inverted_index": {"We": [0], "test": [1], "graphs.": [2]},
+      "authorships": [
+        {
+          "author_position": "first",
+          "author": {"id": "https://openalex.org/A2000000001", "display_name": "Ada Example", "orcid": "https://orcid.org/0000-0002-1825-0097"},
+          "institutions": [{"id": "https://openalex.org/I3000000001", "display_name": "Example University", "ror": "https://ror.org/000000000", "country_code": "IN"}],
+          "raw_author_name": "A. Example"
+        },
+        {
+          "author_position": "last",
+          "author": {"id": "https://openalex.org/A2000000002", "display_name": "Bo Sample", "orcid": null},
+          "institutions": [],
+          "raw_author_name": "Bo Sample"
+        }
+      ],
+      "primary_location": {
+        "landing_page_url": "https://example.org/synth-001",
+        "source": {"id": "https://openalex.org/S4000000001", "display_name": "Journal of Synthetic Results", "type": "journal"}
+      },
+      "locations": [
+        {"landing_page_url": "https://example.org/synth-001", "pdf_url": null},
+        {"landing_page_url": "http://arxiv.org/abs/2101.00001v2", "pdf_url": "http://arxiv.org/pdf/2101.00001v2"}
+      ],
+      "topics": [{"id": "https://openalex.org/T5000000001", "display_name": "Graph Neural Networks", "score": 0.98}],
+      "keywords": [{"id": "https://openalex.org/keywords/message-passing", "display_name": "Message passing", "score": 0.5}],
+      "referenced_works": ["https://openalex.org/W1000000002", "https://openalex.org/W1000000003"],
+      "ids": {"openalex": "https://openalex.org/W1000000001", "doi": "https://doi.org/10.9999/SYNTH.001"}
+    },
+    {
+      "id": "https://openalex.org/W1000000002",
+      "doi": "https://doi.org/10.48550/arxiv.1901.00002",
+      "title": null,
+      "display_name": "Synthetic Preprint &amp; Baseline",
+      "publication_year": 2019,
+      "publication_date": "2019-01-05",
+      "language": "en",
+      "type": "preprint",
+      "cited_by_count": 3,
+      "abstract_inverted_index": null,
+      "authorships": [
+        {"author_position": "first", "author": {"id": null, "display_name": null}, "institutions": [], "raw_author_name": "Chen Placeholder"}
+      ],
+      "primary_location": {"landing_page_url": null, "source": {"id": "https://openalex.org/S4000000002", "display_name": "arXiv (Cornell University)", "type": "repository"}},
+      "locations": [],
+      "topics": [],
+      "keywords": [],
+      "referenced_works": [],
+      "ids": {"openalex": "https://openalex.org/W1000000002"}
+    }
+  ]
+}
