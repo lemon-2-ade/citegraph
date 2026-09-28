@@ -98,3 +98,19 @@ async def test_authors_with_shared_coauthor_are_unified(neo4j_graph: GraphClient
     rows = await neo4j_graph.read("MATCH (a:Author {name: 'Wei Wang'}) RETURN count(a) AS n")
     # P1/P2 share a co-author -> one node; P3 has no evidence -> separate node.
     assert rows[0]["n"] == 2
+
+
+async def test_seed_dataset_loads_idempotently(neo4j_graph: GraphClient) -> None:
+    from app.ingestion.seed import load_dataset, seed_graph
+
+    await apply_schema(neo4j_graph)
+    dataset = load_dataset()
+    await seed_graph(neo4j_graph)
+    second = await seed_graph(neo4j_graph)
+    assert second.papers_created == 0
+    assert second.authors_created == 0
+    assert await _count(neo4j_graph, "MATCH (p:Paper) RETURN count(p) AS n") == len(dataset.papers)
+    assert await _count(neo4j_graph, "MATCH (p:Paper {is_stub: true}) RETURN count(p) AS n") == 0
+    assert await _count(neo4j_graph, "MATCH ()-[r:CITES]->() RETURN count(r) AS n") == sum(
+        len(p.cites) for p in dataset.papers
+    )

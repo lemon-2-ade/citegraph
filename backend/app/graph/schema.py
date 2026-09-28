@@ -37,6 +37,7 @@ CONSTRAINTS: tuple[LiteralString, ...] = (
     "CREATE CONSTRAINT paper_openalex IF NOT EXISTS FOR (n:Paper) REQUIRE n.openalex_id IS UNIQUE",
     "CREATE CONSTRAINT paper_arxiv IF NOT EXISTS FOR (n:Paper) REQUIRE n.arxiv_id IS UNIQUE",
     "CREATE CONSTRAINT paper_s2 IF NOT EXISTS FOR (n:Paper) REQUIRE n.s2_id IS UNIQUE",
+    "CREATE CONSTRAINT paper_seed IF NOT EXISTS FOR (n:Paper) REQUIRE n.seed_key IS UNIQUE",
     "CREATE CONSTRAINT author_orcid IF NOT EXISTS FOR (n:Author) REQUIRE n.orcid IS UNIQUE",
     "CREATE CONSTRAINT author_openalex IF NOT EXISTS "
     "FOR (n:Author) REQUIRE n.openalex_id IS UNIQUE",

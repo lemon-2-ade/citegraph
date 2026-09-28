@@ -67,10 +67,12 @@ CALL {
     UNION
     MATCH (p:Paper) WHERE p.s2_id IN $s2 RETURN p
     UNION
+    MATCH (p:Paper) WHERE p.seed_key IN $seed RETURN p
+    UNION
     MATCH (p:Paper) WHERE p.title_key IN $title_keys RETURN p
 }
 RETURN p.id AS id, p.doi AS doi, p.openalex_id AS openalex_id, p.arxiv_id AS arxiv_id,
-       p.s2_id AS s2_id, p.title_key AS title_key, p.year AS year,
+       p.s2_id AS s2_id, p.seed_key AS seed_key, p.title_key AS title_key, p.year AS year,
        coalesce(p.is_stub, false) AS is_stub,
        COLLECT { MATCH (a:Author)-[:WROTE]->(p) RETURN a.name } AS author_names
 """
@@ -108,12 +110,13 @@ CALL {
     MERGE (k)-[n:HAS_KEYWORD]->(w) SET n += properties(r)
 }
 WITH k, d, properties(d) AS dp
-SET d.doi = null, d.openalex_id = null, d.arxiv_id = null, d.s2_id = null
+SET d.doi = null, d.openalex_id = null, d.arxiv_id = null, d.s2_id = null, d.seed_key = null
 WITH k, d, dp
 SET k.doi = coalesce(k.doi, dp.doi),
     k.openalex_id = coalesce(k.openalex_id, dp.openalex_id),
     k.arxiv_id = coalesce(k.arxiv_id, dp.arxiv_id),
     k.s2_id = coalesce(k.s2_id, dp.s2_id),
+    k.seed_key = coalesce(k.seed_key, dp.seed_key),
     k.title = coalesce(k.title, dp.title),
     k.title_key = coalesce(k.title_key, dp.title_key),
     k.abstract = coalesce(k.abstract, dp.abstract),
@@ -144,6 +147,7 @@ SET p.title = coalesce(p.title, row.title),
     p.openalex_id = coalesce(p.openalex_id, row.openalex_id),
     p.arxiv_id = coalesce(p.arxiv_id, row.arxiv_id),
     p.s2_id = coalesce(p.s2_id, row.s2_id),
+    p.seed_key = coalesce(p.seed_key, row.seed_key),
     p.url = coalesce(p.url, row.url),
     p.language = coalesce(p.language, row.language),
     p.citation_count = coalesce(row.citation_count, p.citation_count),
@@ -247,6 +251,7 @@ ON CREATE SET p.is_stub = true,
               p.openalex_id = row.openalex_id,
               p.arxiv_id = row.arxiv_id,
               p.s2_id = row.s2_id,
+              p.seed_key = row.seed_key,
               p.sources = [row.source]
 """
 
@@ -302,6 +307,7 @@ def _candidate(row: dict[str, Any]) -> PaperCandidate:
         openalex_id=row["openalex_id"],
         arxiv_id=row["arxiv_id"],
         s2_id=row["s2_id"],
+        seed_key=row["seed_key"],
         title_key=row["title_key"],
         year=row["year"],
         is_stub=row["is_stub"],
@@ -333,7 +339,13 @@ class GraphLoader:
     async def _paper_candidates(
         self, id_sets: Iterable[ExternalIds], title_keys: Iterable[str] = ()
     ) -> list[PaperCandidate]:
-        params: dict[str, list[str]] = {"doi": [], "openalex": [], "arxiv": [], "s2": []}
+        params: dict[str, list[str]] = {
+            "doi": [],
+            "openalex": [],
+            "arxiv": [],
+            "s2": [],
+            "seed": [],
+        }
         for ids in id_sets:
             for attr in params:
                 value = getattr(ids, attr)

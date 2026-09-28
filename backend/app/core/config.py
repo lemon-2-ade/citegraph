@@ -8,7 +8,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import Field, SecretStr
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -49,6 +49,9 @@ class Settings(BaseSettings):
     http_timeout_seconds: float = 30.0
     http_max_retries: int = 5
 
+    # Curated seed dataset; defaults to <repo>/data/seed/papers.json when unset.
+    seed_path: str | None = None
+
     # --- Analytics -------------------------------------------------------------
     # "auto" uses Neo4j GDS when the plugin is installed, NetworkX otherwise.
     analytics_backend: Literal["auto", "gds", "networkx"] = "auto"
@@ -61,6 +64,19 @@ class Settings(BaseSettings):
     openai_api_key: SecretStr | None = None
     gemini_api_key: SecretStr | None = None
     ollama_base_url: str = "http://localhost:11434"
+
+    @field_validator(
+        "admin_api_token",
+        "openai_api_key",
+        "gemini_api_key",
+        "openalex_mailto",
+        "seed_path",
+        mode="before",
+    )
+    @classmethod
+    def _blank_is_unset(cls, value: object) -> object:
+        # Docker Compose passes unset variables as empty strings.
+        return None if isinstance(value, str) and not value.strip() else value
 
 
 @lru_cache

@@ -39,6 +39,8 @@ PAPER_ID_FIELDS: tuple[tuple[str, str], ...] = (
     ("openalex", "openalex_id"),
     ("arxiv", "arxiv_id"),
     ("s2", "s2_id"),
+    # Curated seed-dataset key: lets seed papers without external IDs reference each other.
+    ("seed", "seed_key"),
 )
 
 
@@ -51,6 +53,7 @@ class PaperCandidate:
     openalex_id: str | None = None
     arxiv_id: str | None = None
     s2_id: str | None = None
+    seed_key: str | None = None
     title_key: str | None = None
     year: int | None = None
     author_keys: frozenset[str] = frozenset()
@@ -240,6 +243,7 @@ def _as_candidate(candidate_id: str, record: PaperRecord) -> PaperCandidate:
         openalex_id=record.ids.openalex,
         arxiv_id=record.ids.arxiv,
         s2_id=record.ids.s2,
+        seed_key=record.ids.seed,
         title_key=normalize_title(record.title),
         year=record.year,
         author_keys=record_author_keys(record),

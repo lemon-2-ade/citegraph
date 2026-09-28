@@ -8,7 +8,7 @@ The research knowledge graph lives in Neo4j. Constraints and indexes are defined
 
 | Label | Key properties | Notes |
 | --- | --- | --- |
-| `Paper` | `id`, `title`, `title_key`, `abstract`, `description`, `year`, `publication_date`, `doi`, `openalex_id`, `arxiv_id`, `s2_id`, `url`, `language`, `citation_count`, `authors_complete`, `is_stub`, `sources`, `created_at`, `updated_at` | `description` is a curated summary (seed data), never presented as the abstract. `citation_count` is only set when a source reports it. `is_stub = true` marks a referenced paper whose metadata has not been ingested yet. |
+| `Paper` | `id`, `title`, `title_key`, `abstract`, `description`, `year`, `publication_date`, `doi`, `openalex_id`, `arxiv_id`, `s2_id`, `seed_key`, `url`, `language`, `citation_count`, `authors_complete`, `is_stub`, `sources`, `created_at`, `updated_at` | `description` is a curated summary (seed data), never presented as the abstract. `citation_count` is only set when a source reports it. `is_stub = true` marks a referenced paper whose metadata has not been ingested yet. |
 | `Author` | `id`, `name`, `name_key`, `orcid`, `openalex_id` | |
 | `Institution` | `id`, `name`, `country`, `ror` | |
 | `Venue` | `id`, `name`, `type` | `type` ∈ journal, conference, repository, book, other |
@@ -50,7 +50,7 @@ Cypher query.
 ## Constraints
 
 Uniqueness on every `id`, and on `Paper.doi`, `Paper.openalex_id`, `Paper.arxiv_id`,
-`Paper.s2_id`, `Author.orcid`, `Author.openalex_id`. These back up application-level
+`Paper.s2_id`, `Paper.seed_key`, `Author.orcid`, `Author.openalex_id`. These back up application-level
 entity resolution: even a resolver bug cannot create two papers with the same DOI.
 
 ## Indexes

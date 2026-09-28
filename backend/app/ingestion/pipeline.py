@@ -30,7 +30,6 @@ from app.core.logging import get_logger
 from app.db.models import IngestionJob, JobStatus
 from app.graph.client import GraphClient
 from app.ingestion.loader import GraphLoader, LoadStats
-from app.ingestion.resolution import PAPER_ID_FIELDS
 from app.ingestion.sources.base import PaperSource, RawPayload, SearchFilters
 from app.models.domain import PaperRecord
 from app.repositories.jobs import JobRepository
@@ -61,7 +60,6 @@ _STUBS_TO_HYDRATE: dict[str, LiteralString] = {
         WITH s, COUNT { (:Paper)-[:CITES]->(s) } AS n ORDER BY n DESC LIMIT $limit
         RETURN s.id AS id, s.s2_id AS external_id""",
 }
-assert set(_STUBS_TO_HYDRATE) == {attr for attr, _ in PAPER_ID_FIELDS}
 
 _MARK_HYDRATION_ATTEMPTED = """
 UNWIND $ids AS id
@@ -164,7 +162,9 @@ class IngestionPipeline:
         stats: dict[str, Any],
     ) -> tuple[dict[str, Any], dict[str, Any]]:
         hydrated = int(checkpoint.get("hydrated", 0))
-        query = _STUBS_TO_HYDRATE[self._source.id_field]
+        query = _STUBS_TO_HYDRATE.get(self._source.id_field)
+        if query is None:
+            raise ValueError(f"Source {self._source.name!r} does not support hydration")
         while hydrated < params.hydrate_references:
             limit = min(HYDRATE_BATCH, params.hydrate_references - hydrated)
             stubs = await self._graph.read(query, {"limit": limit}, label="ingestion.stubs")

@@ -26,6 +26,7 @@ class ExternalIds(_Record):
     openalex: str | None = None
     arxiv: str | None = None
     s2: str | None = None
+    seed: str | None = None
 
     @field_validator("doi")
     @classmethod
@@ -38,7 +39,7 @@ class ExternalIds(_Record):
         return normalize_arxiv_id(v)
 
     def is_empty(self) -> bool:
-        return not any((self.doi, self.openalex, self.arxiv, self.s2))
+        return not any((self.doi, self.openalex, self.arxiv, self.s2, self.seed))
 
 
 class InstitutionRecord(_Record):

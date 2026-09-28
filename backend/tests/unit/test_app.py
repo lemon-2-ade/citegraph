@@ -38,3 +38,10 @@ def test_openapi_is_served_under_api_prefix() -> None:
     response = _client().get("/api/openapi.json")
     assert response.status_code == 200
     assert response.json()["info"]["title"] == "ResearchGraph API"
+
+
+def test_blank_optional_settings_are_treated_as_unset() -> None:
+    settings = Settings(admin_api_token="", openai_api_key="  ", openalex_mailto="")  # type: ignore[arg-type]
+    assert settings.admin_api_token is None
+    assert settings.openai_api_key is None
+    assert settings.openalex_mailto is None

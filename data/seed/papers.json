@@ -1,0 +1,3385 @@
+{
+ "dataset": "researchgraph-curated-seed",
+ "version": 1,
+ "description": "Hand-curated sample of well-known papers across transformers/LLMs, retrieval-augmented generation, knowledge graphs, graph neural networks and graph-based fraud detection. Used to demo ResearchGraph without network access.",
+ "provenance": {
+  "curation": "Titles, first-public-release years, arXiv identifiers, venues and author lists were entered by hand from well-known bibliographic knowledge.",
+  "year": "Year of first public release (arXiv or venue, whichever came first).",
+  "authors": "Author names map to a stable key (slug of the name). The same name across papers is asserted to be the same person; an explicit {name, key} object disambiguates different people who share a name. authors_complete=false marks papers whose author list was deliberately truncated.",
+  "description": "One-sentence curated descriptions written for this dataset. They are NOT the papers' abstracts.",
+  "citations": "'cites' lists a curated, high-confidence SUBSET of each paper's references among papers in this seed. It is not a complete reference list and was not machine-extracted.",
+  "not_included": "No citation counts, abstracts or DOIs are included. Run OpenAlex ingestion to add authoritative metadata; entity resolution merges it into these records by arXiv ID and title/year/author matching."
+ },
+ "topics": [
+  {
+   "key": "sequence-modeling",
+   "name": "Sequence Modeling",
+   "description": "Recurrent and encoder-decoder neural architectures for sequential data such as text."
+  },
+  {
+   "key": "attention",
+   "name": "Attention Mechanisms",
+   "description": "Learned weighting over inputs, from alignment models in translation to self-attention."
+  },
+  {
+   "key": "word-embeddings",
+   "name": "Word Embeddings",
+   "description": "Dense vector representations of words learned from co-occurrence statistics."
+  },
+  {
+   "key": "transformers",
+   "name": "Transformers",
+   "description": "Architectures built primarily on self-attention rather than recurrence or convolution."
+  },
+  {
+   "key": "pretrained-language-models",
+   "name": "Pretrained Language Models",
+   "description": "Models pretrained on large unlabeled corpora and adapted to downstream tasks."
+  },
+  {
+   "key": "large-language-models",
+   "name": "Large Language Models",
+   "description": "Very large autoregressive language models and how they scale, are aligned and are used."
+  },
+  {
+   "key": "efficient-transformers",
+   "name": "Efficient Transformers",
+   "description": "Methods that reduce the time or memory cost of attention and model adaptation."
+  },
+  {
+   "key": "prompting-reasoning",
+   "name": "Prompting & Reasoning",
+   "description": "Eliciting multi-step reasoning and tool use from language models through prompts or self-supervision."
+  },
+  {
+   "key": "retrieval-augmented-generation",
+   "name": "Retrieval-Augmented Generation",
+   "description": "Language models that condition generation on documents retrieved from an external corpus."
+  },
+  {
+   "key": "information-retrieval",
+   "name": "Information Retrieval",
+   "description": "Ranking documents or passages for a query, lexically or with learned dense representations."
+  },
+  {
+   "key": "vector-search",
+   "name": "Vector Similarity Search",
+   "description": "Approximate nearest-neighbour search over large collections of embedding vectors."
+  },
+  {
+   "key": "knowledge-graphs",
+   "name": "Knowledge Graphs",
+   "description": "Graph-structured knowledge bases and their use together with language models."
+  },
+  {
+   "key": "kg-embedding",
+   "name": "Knowledge Graph Embedding",
+   "description": "Learning vector representations of entities and relations for link prediction."
+  },
+  {
+   "key": "graph-neural-networks",
+   "name": "Graph Neural Networks",
+   "description": "Neural networks that learn by passing and aggregating messages over graph structure."
+  },
+  {
+   "key": "network-embedding",
+   "name": "Network Embedding",
+   "description": "Unsupervised node representations learned from random walks or proximity objectives."
+  },
+  {
+   "key": "heterogeneous-graphs",
+   "name": "Heterogeneous Graphs",
+   "description": "Graphs with multiple node and edge types, and models designed for them."
+  },
+  {
+   "key": "dynamic-graphs",
+   "name": "Temporal & Dynamic Graphs",
+   "description": "Learning on graphs whose nodes and edges change over time."
+  },
+  {
+   "key": "fraud-detection",
+   "name": "Graph-based Fraud & Anomaly Detection",
+   "description": "Detecting fraudulent or anomalous entities using relational structure."
+  },
+  {
+   "key": "community-detection",
+   "name": "Community Detection & Network Science",
+   "description": "Finding densely connected groups and ranking nodes in networks."
+  },
+  {
+   "key": "recommender-systems",
+   "name": "Recommender Systems",
+   "description": "Predicting user-item preferences, increasingly with graph-based models."
+  },
+  {
+   "key": "deep-learning-training",
+   "name": "Deep Learning Training",
+   "description": "Optimisation, normalisation and regularisation techniques for training deep networks."
+  },
+  {
+   "key": "computer-vision",
+   "name": "Computer Vision",
+   "description": "Neural architectures for image recognition."
+  },
+  {
+   "key": "scholarly-data",
+   "name": "Scholarly Data & Scientific Documents",
+   "description": "Open bibliographic corpora and representation learning for scientific papers."
+  }
+ ],
+ "venues": [
+  {
+   "key": "neurips",
+   "name": "NeurIPS",
+   "type": "conference"
+  },
+  {
+   "key": "icml",
+   "name": "ICML",
+   "type": "conference"
+  },
+  {
+   "key": "iclr",
+   "name": "ICLR",
+   "type": "conference"
+  },
+  {
+   "key": "acl",
+   "name": "ACL",
+   "type": "conference"
+  },
+  {
+   "key": "naacl",
+   "name": "NAACL",
+   "type": "conference"
+  },
+  {
+   "key": "emnlp",
+   "name": "EMNLP",
+   "type": "conference"
+  },
+  {
+   "key": "eacl",
+   "name": "EACL",
+   "type": "conference"
+  },
+  {
+   "key": "tacl",
+   "name": "Transactions of the ACL",
+   "type": "journal"
+  },
+  {
+   "key": "kdd",
+   "name": "KDD",
+   "type": "conference"
+  },
+  {
+   "key": "www",
+   "name": "The Web Conference (WWW)",
+   "type": "conference"
+  },
+  {
+   "key": "sigir",
+   "name": "SIGIR",
+   "type": "conference"
+  },
+  {
+   "key": "cikm",
+   "name": "CIKM",
+   "type": "conference"
+  },
+  {
+   "key": "aaai",
+   "name": "AAAI",
+   "type": "conference"
+  },
+  {
+   "key": "eswc",
+   "name": "ESWC",
+   "type": "conference"
+  },
+  {
+   "key": "cvpr",
+   "name": "CVPR",
+   "type": "conference"
+  },
+  {
+   "key": "jmlr",
+   "name": "Journal of Machine Learning Research",
+   "type": "journal"
+  },
+  {
+   "key": "neural-computation",
+   "name": "Neural Computation",
+   "type": "journal"
+  },
+  {
+   "key": "jstat",
+   "name": "Journal of Statistical Mechanics: Theory and Experiment",
+   "type": "journal"
+  },
+  {
+   "key": "sci-reports",
+   "name": "Scientific Reports",
+   "type": "journal"
+  },
+  {
+   "key": "tkde",
+   "name": "IEEE Transactions on Knowledge and Data Engineering",
+   "type": "journal"
+  },
+  {
+   "key": "tnnls",
+   "name": "IEEE Transactions on Neural Networks and Learning Systems",
+   "type": "journal"
+  },
+  {
+   "key": "ai-open",
+   "name": "AI Open",
+   "type": "journal"
+  },
+  {
+   "key": "ftir",
+   "name": "Foundations and Trends in Information Retrieval",
+   "type": "journal"
+  },
+  {
+   "key": "arxiv",
+   "name": "arXiv",
+   "type": "repository"
+  },
+  {
+   "key": "openai",
+   "name": "OpenAI (technical report)",
+   "type": "other"
+  },
+  {
+   "key": "stanford-tr",
+   "name": "Stanford InfoLab (technical report)",
+   "type": "other"
+  },
+  {
+   "key": "kdd-workshop",
+   "name": "KDD Workshop on Anomaly Detection in Finance",
+   "type": "conference"
+  }
+ ],
+ "papers": [
+  {
+   "key": "pagerank",
+   "title": "The PageRank Citation Ranking: Bringing Order to the Web",
+   "year": 1999,
+   "arxiv": null,
+   "venue": "stanford-tr",
+   "authors": [
+    "Lawrence Page",
+    "Sergey Brin",
+    "Rajeev Motwani",
+    "Terry Winograd"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "community-detection"
+   ],
+   "keywords": [
+    "pagerank",
+    "link analysis",
+    "random walk"
+   ],
+   "description": "Ranks web pages by the stationary distribution of a random surfer over the hyperlink graph, so a page is important if important pages link to it.",
+   "cites": []
+  },
+  {
+   "key": "lstm",
+   "title": "Long Short-Term Memory",
+   "year": 1997,
+   "arxiv": null,
+   "venue": "neural-computation",
+   "authors": [
+    "Sepp Hochreiter",
+    "Jürgen Schmidhuber"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "sequence-modeling"
+   ],
+   "keywords": [
+    "recurrent neural network",
+    "gating"
+   ],
+   "description": "Introduces a gated recurrent cell with a constant error carousel that lets recurrent networks learn long-range dependencies.",
+   "cites": []
+  },
+  {
+   "key": "louvain",
+   "title": "Fast unfolding of communities in large networks",
+   "year": 2008,
+   "arxiv": "0803.0476",
+   "venue": "jstat",
+   "authors": [
+    "Vincent D. Blondel",
+    "Jean-Loup Guillaume",
+    "Renaud Lambiotte",
+    "Etienne Lefebvre"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "community-detection"
+   ],
+   "keywords": [
+    "modularity",
+    "louvain",
+    "clustering"
+   ],
+   "description": "A greedy, hierarchical modularity-optimisation heuristic (the Louvain method) that scales community detection to very large networks.",
+   "cites": []
+  },
+  {
+   "key": "leiden",
+   "title": "From Louvain to Leiden: guaranteeing well-connected communities",
+   "year": 2018,
+   "arxiv": "1810.08473",
+   "venue": "sci-reports",
+   "authors": [
+    "V. A. Traag",
+    "L. Waltman",
+    "N. J. van Eck"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "community-detection"
+   ],
+   "keywords": [
+    "leiden",
+    "modularity",
+    "clustering"
+   ],
+   "description": "Shows that Louvain can produce badly connected communities and proposes the Leiden algorithm, which guarantees connected communities and converges faster.",
+   "cites": [
+    "louvain"
+   ]
+  },
+  {
+   "key": "word2vec",
+   "title": "Efficient Estimation of Word Representations in Vector Space",
+   "year": 2013,
+   "arxiv": "1301.3781",
+   "venue": "arxiv",
+   "authors": [
+    "Tomas Mikolov",
+    "Kai Chen",
+    "Greg Corrado",
+    "Jeffrey Dean"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "word-embeddings"
+   ],
+   "keywords": [
+    "skip-gram",
+    "cbow",
+    "embeddings"
+   ],
+   "description": "Proposes the CBOW and skip-gram log-linear models for learning word vectors efficiently from large corpora.",
+   "cites": []
+  },
+  {
+   "key": "glove",
+   "title": "GloVe: Global Vectors for Word Representation",
+   "year": 2014,
+   "arxiv": null,
+   "venue": "emnlp",
+   "authors": [
+    "Jeffrey Pennington",
+    "Richard Socher",
+    "Christopher D. Manning"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "word-embeddings"
+   ],
+   "keywords": [
+    "co-occurrence",
+    "embeddings"
+   ],
+   "description": "Learns word vectors by factorising global word co-occurrence statistics with a weighted least-squares objective.",
+   "cites": [
+    "word2vec"
+   ]
+  },
+  {
+   "key": "seq2seq",
+   "title": "Sequence to Sequence Learning with Neural Networks",
+   "year": 2014,
+   "arxiv": "1409.3215",
+   "venue": "neurips",
+   "authors": [
+    "Ilya Sutskever",
+    "Oriol Vinyals",
+    "Quoc V. Le"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "sequence-modeling"
+   ],
+   "keywords": [
+    "encoder-decoder",
+    "machine translation"
+   ],
+   "description": "Uses a multilayer LSTM encoder and decoder to map input sequences to output sequences, applied to machine translation.",
+   "cites": [
+    "lstm"
+   ]
+  },
+  {
+   "key": "gru",
+   "title": "Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation",
+   "year": 2014,
+   "arxiv": "1406.1078",
+   "venue": "emnlp",
+   "authors": [
+    "Kyunghyun Cho",
+    "Bart van Merriënboer",
+    "Caglar Gulcehre",
+    "Dzmitry Bahdanau",
+    "Fethi Bougares",
+    "Holger Schwenk",
+    "Yoshua Bengio"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "sequence-modeling"
+   ],
+   "keywords": [
+    "gated recurrent unit",
+    "encoder-decoder",
+    "machine translation"
+   ],
+   "description": "Introduces the RNN encoder-decoder for scoring phrase pairs and the gated recurrent unit (GRU).",
+   "cites": [
+    "lstm"
+   ]
+  },
+  {
+   "key": "bahdanau",
+   "title": "Neural Machine Translation by Jointly Learning to Align and Translate",
+   "year": 2014,
+   "arxiv": "1409.0473",
+   "venue": "iclr",
+   "authors": [
+    "Dzmitry Bahdanau",
+    "Kyunghyun Cho",
+    "Yoshua Bengio"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "sequence-modeling",
+    "attention"
+   ],
+   "keywords": [
+    "attention",
+    "alignment",
+    "machine translation"
+   ],
+   "description": "Adds a learned soft alignment (attention) over encoder states so the decoder is not limited by a single fixed-length context vector.",
+   "cites": [
+    "seq2seq",
+    "gru",
+    "lstm"
+   ]
+  },
+  {
+   "key": "luong",
+   "title": "Effective Approaches to Attention-based Neural Machine Translation",
+   "year": 2015,
+   "arxiv": "1508.04025",
+   "venue": "emnlp",
+   "authors": [
+    "Minh-Thang Luong",
+    "Hieu Pham",
+    "Christopher D. Manning"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "sequence-modeling",
+    "attention"
+   ],
+   "keywords": [
+    "global attention",
+    "local attention"
+   ],
+   "description": "Compares global and local attention variants for neural machine translation.",
+   "cites": [
+    "bahdanau",
+    "seq2seq",
+    "lstm"
+   ]
+  },
+  {
+   "key": "adam",
+   "title": "Adam: A Method for Stochastic Optimization",
+   "year": 2014,
+   "arxiv": "1412.6980",
+   "venue": "iclr",
+   "authors": [
+    "Diederik P. Kingma",
+    "Jimmy Ba"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "deep-learning-training"
+   ],
+   "keywords": [
+    "optimizer",
+    "adaptive learning rate"
+   ],
+   "description": "An optimiser that adapts per-parameter step sizes from estimates of the first and second moments of the gradients.",
+   "cites": []
+  },
+  {
+   "key": "dropout",
+   "title": "Dropout: A Simple Way to Prevent Neural Networks from Overfitting",
+   "year": 2014,
+   "arxiv": null,
+   "venue": "jmlr",
+   "authors": [
+    "Nitish Srivastava",
+    "Geoffrey E. Hinton",
+    "Alex Krizhevsky",
+    "Ilya Sutskever",
+    "Ruslan Salakhutdinov"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "deep-learning-training"
+   ],
+   "keywords": [
+    "regularization",
+    "dropout"
+   ],
+   "description": "Randomly drops units during training to reduce co-adaptation and overfitting.",
+   "cites": []
+  },
+  {
+   "key": "batchnorm",
+   "title": "Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift",
+   "year": 2015,
+   "arxiv": "1502.03167",
+   "venue": "icml",
+   "authors": [
+    "Sergey Ioffe",
+    "Christian Szegedy"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "deep-learning-training"
+   ],
+   "keywords": [
+    "normalization"
+   ],
+   "description": "Normalises layer inputs using mini-batch statistics, allowing higher learning rates and faster training.",
+   "cites": []
+  },
+  {
+   "key": "resnet",
+   "title": "Deep Residual Learning for Image Recognition",
+   "year": 2015,
+   "arxiv": "1512.03385",
+   "venue": "cvpr",
+   "authors": [
+    "Kaiming He",
+    "Xiangyu Zhang",
+    "Shaoqing Ren",
+    "Jian Sun"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "computer-vision",
+    "deep-learning-training"
+   ],
+   "keywords": [
+    "residual connection",
+    "image classification"
+   ],
+   "description": "Introduces residual (skip) connections that make very deep convolutional networks trainable.",
+   "cites": [
+    "batchnorm"
+   ]
+  },
+  {
+   "key": "layernorm",
+   "title": "Layer Normalization",
+   "year": 2016,
+   "arxiv": "1607.06450",
+   "venue": "arxiv",
+   "authors": [
+    "Jimmy Ba",
+    "Jamie Ryan Kiros",
+    "Geoffrey E. Hinton"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "deep-learning-training"
+   ],
+   "keywords": [
+    "normalization"
+   ],
+   "description": "Normalises across the features of a single example rather than across a batch, which suits recurrent networks.",
+   "cites": [
+    "batchnorm"
+   ]
+  },
+  {
+   "key": "transformer",
+   "title": "Attention Is All You Need",
+   "year": 2017,
+   "arxiv": "1706.03762",
+   "venue": "neurips",
+   "authors": [
+    "Ashish Vaswani",
+    "Noam Shazeer",
+    "Niki Parmar",
+    "Jakob Uszkoreit",
+    "Llion Jones",
+    "Aidan N. Gomez",
+    "Łukasz Kaiser",
+    "Illia Polosukhin"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "transformers",
+    "attention",
+    "sequence-modeling"
+   ],
+   "keywords": [
+    "self-attention",
+    "multi-head attention",
+    "machine translation"
+   ],
+   "description": "Introduces the Transformer, an encoder-decoder architecture based entirely on multi-head self-attention, without recurrence or convolution.",
+   "cites": [
+    "seq2seq",
+    "bahdanau",
+    "luong",
+    "gru",
+    "lstm",
+    "adam",
+    "layernorm",
+    "resnet",
+    "dropout"
+   ]
+  },
+  {
+   "key": "elmo",
+   "title": "Deep contextualized word representations",
+   "year": 2018,
+   "arxiv": "1802.05365",
+   "venue": "naacl",
+   "authors": [
+    "Matthew E. Peters",
+    "Mark Neumann",
+    "Mohit Iyyer",
+    "Matt Gardner",
+    "Christopher Clark",
+    "Kenton Lee",
+    "Luke Zettlemoyer"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "pretrained-language-models",
+    "word-embeddings"
+   ],
+   "keywords": [
+    "contextual embeddings",
+    "bidirectional language model"
+   ],
+   "description": "Derives contextual word representations from the internal states of a deep bidirectional LSTM language model (ELMo).",
+   "cites": [
+    "word2vec",
+    "glove",
+    "lstm"
+   ]
+  },
+  {
+   "key": "gpt1",
+   "title": "Improving Language Understanding by Generative Pre-Training",
+   "year": 2018,
+   "arxiv": null,
+   "venue": "openai",
+   "authors": [
+    "Alec Radford",
+    "Karthik Narasimhan",
+    "Tim Salimans",
+    "Ilya Sutskever"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "pretrained-language-models",
+    "transformers"
+   ],
+   "keywords": [
+    "generative pretraining",
+    "fine-tuning"
+   ],
+   "description": "Pretrains a Transformer decoder as a language model on unlabeled text, then fine-tunes it on downstream tasks.",
+   "cites": [
+    "transformer",
+    "elmo",
+    "word2vec",
+    "glove"
+   ]
+  },
+  {
+   "key": "bert",
+   "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+   "year": 2018,
+   "arxiv": "1810.04805",
+   "venue": "naacl",
+   "authors": [
+    "Jacob Devlin",
+    "Ming-Wei Chang",
+    "Kenton Lee",
+    "Kristina Toutanova"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "pretrained-language-models",
+    "transformers"
+   ],
+   "keywords": [
+    "masked language model",
+    "fine-tuning"
+   ],
+   "description": "Pretrains a bidirectional Transformer encoder with masked language modelling and next-sentence prediction, then fine-tunes it per task.",
+   "cites": [
+    "transformer",
+    "elmo",
+    "gpt1",
+    "word2vec",
+    "glove"
+   ]
+  },
+  {
+   "key": "gpt2",
+   "title": "Language Models are Unsupervised Multitask Learners",
+   "year": 2019,
+   "arxiv": null,
+   "venue": "openai",
+   "authors": [
+    "Alec Radford",
+    "Jeffrey Wu",
+    "Rewon Child",
+    "David Luan",
+    "Dario Amodei",
+    "Ilya Sutskever"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "large-language-models",
+    "pretrained-language-models"
+   ],
+   "keywords": [
+    "zero-shot",
+    "language modeling"
+   ],
+   "description": "Scales up Transformer language modelling (GPT-2) and studies zero-shot task performance without fine-tuning.",
+   "cites": [
+    "transformer",
+    "gpt1",
+    "bert",
+    "elmo"
+   ]
+  },
+  {
+   "key": "transformer-xl",
+   "title": "Transformer-XL: Attentive Language Models beyond a Fixed-Length Context",
+   "year": 2019,
+   "arxiv": "1901.02860",
+   "venue": "acl",
+   "authors": [
+    "Zihang Dai",
+    "Zhilin Yang",
+    "Yiming Yang",
+    "Jaime Carbonell",
+    "Quoc V. Le",
+    "Ruslan Salakhutdinov"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "transformers",
+    "efficient-transformers"
+   ],
+   "keywords": [
+    "segment recurrence",
+    "relative positional encoding"
+   ],
+   "description": "Adds segment-level recurrence and relative positional encodings so Transformer language models can use longer context.",
+   "cites": [
+    "transformer",
+    "lstm",
+    "elmo",
+    "gpt1"
+   ]
+  },
+  {
+   "key": "sparse-transformer",
+   "title": "Generating Long Sequences with Sparse Transformers",
+   "year": 2019,
+   "arxiv": "1904.10509",
+   "venue": "arxiv",
+   "authors": [
+    "Rewon Child",
+    "Scott Gray",
+    "Alec Radford",
+    "Ilya Sutskever"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "efficient-transformers",
+    "transformers"
+   ],
+   "keywords": [
+    "sparse attention",
+    "long sequences"
+   ],
+   "description": "Uses factorised sparse attention patterns to reduce attention cost for long sequences.",
+   "cites": [
+    "transformer"
+   ]
+  },
+  {
+   "key": "xlnet",
+   "title": "XLNet: Generalized Autoregressive Pretraining for Language Understanding",
+   "year": 2019,
+   "arxiv": "1906.08237",
+   "venue": "neurips",
+   "authors": [
+    "Zhilin Yang",
+    "Zihang Dai",
+    "Yiming Yang",
+    "Jaime Carbonell",
+    "Ruslan Salakhutdinov",
+    "Quoc V. Le"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "pretrained-language-models"
+   ],
+   "keywords": [
+    "permutation language modeling"
+   ],
+   "description": "Pretrains with a permutation-based autoregressive objective, building on Transformer-XL.",
+   "cites": [
+    "bert",
+    "transformer-xl",
+    "transformer",
+    "elmo",
+    "gpt1"
+   ]
+  },
+  {
+   "key": "roberta",
+   "title": "RoBERTa: A Robustly Optimized BERT Pretraining Approach",
+   "year": 2019,
+   "arxiv": "1907.11692",
+   "venue": "arxiv",
+   "authors": [
+    "Yinhan Liu",
+    "Myle Ott",
+    "Naman Goyal",
+    "Jingfei Du",
+    "Mandar Joshi",
+    "Danqi Chen",
+    "Omer Levy",
+    "Mike Lewis",
+    "Luke Zettlemoyer",
+    "Veselin Stoyanov"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "pretrained-language-models"
+   ],
+   "keywords": [
+    "pretraining",
+    "ablation"
+   ],
+   "description": "Re-examines BERT pretraining choices (data, batch size, training length, objectives) and shows a better-tuned recipe.",
+   "cites": [
+    "bert",
+    "xlnet",
+    "gpt2",
+    "elmo",
+    "transformer",
+    "adam"
+   ]
+  },
+  {
+   "key": "scibert",
+   "title": "SciBERT: A Pretrained Language Model for Scientific Text",
+   "year": 2019,
+   "arxiv": "1903.10676",
+   "venue": "emnlp",
+   "authors": [
+    "Iz Beltagy",
+    "Kyle Lo",
+    "Arman Cohan"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "pretrained-language-models",
+    "scholarly-data"
+   ],
+   "keywords": [
+    "scientific text",
+    "domain adaptation"
+   ],
+   "description": "Pretrains BERT on a large corpus of scientific papers and evaluates it on scientific NLP tasks.",
+   "cites": [
+    "bert",
+    "elmo",
+    "transformer"
+   ]
+  },
+  {
+   "key": "sbert",
+   "title": "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks",
+   "year": 2019,
+   "arxiv": "1908.10084",
+   "venue": "emnlp",
+   "authors": [
+    "Nils Reimers",
+    "Iryna Gurevych"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "pretrained-language-models",
+    "information-retrieval"
+   ],
+   "keywords": [
+    "sentence embeddings",
+    "siamese network"
+   ],
+   "description": "Fine-tunes BERT in a siamese setup to produce sentence embeddings that can be compared with cosine similarity.",
+   "cites": [
+    "bert",
+    "roberta",
+    "glove"
+   ]
+  },
+  {
+   "key": "bart",
+   "title": "BART: Denoising Sequence-to-Sequence Pre-training for Natural Language Generation, Translation, and Comprehension",
+   "year": 2019,
+   "arxiv": "1910.13461",
+   "venue": "acl",
+   "authors": [
+    "Mike Lewis",
+    "Yinhan Liu",
+    "Naman Goyal",
+    "Marjan Ghazvininejad",
+    "Abdelrahman Mohamed",
+    "Omer Levy",
+    "Veselin Stoyanov",
+    "Luke Zettlemoyer"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "pretrained-language-models"
+   ],
+   "keywords": [
+    "denoising autoencoder",
+    "sequence-to-sequence"
+   ],
+   "description": "Pretrains a sequence-to-sequence Transformer by reconstructing text corrupted with noising functions.",
+   "cites": [
+    "bert",
+    "roberta",
+    "xlnet",
+    "gpt1",
+    "transformer"
+   ]
+  },
+  {
+   "key": "t5",
+   "title": "Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer",
+   "year": 2019,
+   "arxiv": "1910.10683",
+   "venue": "jmlr",
+   "authors": [
+    "Colin Raffel",
+    "Noam Shazeer",
+    "Adam Roberts",
+    "Katherine Lee",
+    "Sharan Narang",
+    "Michael Matena",
+    "Yanqi Zhou",
+    "Wei Li",
+    "Peter J. Liu"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "pretrained-language-models",
+    "transformers"
+   ],
+   "keywords": [
+    "text-to-text",
+    "transfer learning"
+   ],
+   "description": "Casts every NLP task as text-to-text and systematically compares pretraining objectives, architectures and data (T5).",
+   "cites": [
+    "transformer",
+    "bert",
+    "roberta",
+    "xlnet",
+    "gpt2",
+    "elmo"
+   ]
+  },
+  {
+   "key": "scaling-laws",
+   "title": "Scaling Laws for Neural Language Models",
+   "year": 2020,
+   "arxiv": "2001.08361",
+   "venue": "arxiv",
+   "authors": [
+    "Jared Kaplan",
+    "Sam McCandlish",
+    "Tom Henighan",
+    "Tom B. Brown",
+    "Benjamin Chess",
+    "Rewon Child",
+    "Scott Gray",
+    "Alec Radford",
+    "Jeffrey Wu",
+    "Dario Amodei"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "large-language-models"
+   ],
+   "keywords": [
+    "scaling laws",
+    "compute"
+   ],
+   "description": "Empirically relates language-model loss to model size, dataset size and compute via power laws.",
+   "cites": [
+    "transformer",
+    "gpt2"
+   ]
+  },
+  {
+   "key": "gpt3",
+   "title": "Language Models are Few-Shot Learners",
+   "year": 2020,
+   "arxiv": "2005.14165",
+   "venue": "neurips",
+   "authors": [
+    "Tom B. Brown",
+    "Benjamin Mann",
+    "Nick Ryder",
+    "Melanie Subbiah",
+    "Jared Kaplan",
+    "Prafulla Dhariwal",
+    "Arvind Neelakantan",
+    "Pranav Shyam",
+    "Girish Sastry",
+    "Amanda Askell"
+   ],
+   "authors_complete": false,
+   "topics": [
+    "large-language-models"
+   ],
+   "keywords": [
+    "in-context learning",
+    "few-shot"
+   ],
+   "description": "Trains a 175B-parameter autoregressive language model (GPT-3) and studies few-shot learning from in-context examples.",
+   "cites": [
+    "transformer",
+    "gpt2",
+    "bert",
+    "t5",
+    "roberta",
+    "xlnet",
+    "scaling-laws"
+   ]
+  },
+  {
+   "key": "longformer",
+   "title": "Longformer: The Long-Document Transformer",
+   "year": 2020,
+   "arxiv": "2004.05150",
+   "venue": "arxiv",
+   "authors": [
+    "Iz Beltagy",
+    "Matthew E. Peters",
+    "Arman Cohan"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "efficient-transformers"
+   ],
+   "keywords": [
+    "sliding window attention",
+    "long documents"
+   ],
+   "description": "Combines local windowed attention with task-specific global attention so attention cost grows linearly with length.",
+   "cites": [
+    "transformer",
+    "bert",
+    "roberta",
+    "transformer-xl",
+    "sparse-transformer"
+   ]
+  },
+  {
+   "key": "reformer",
+   "title": "Reformer: The Efficient Transformer",
+   "year": 2020,
+   "arxiv": "2001.04451",
+   "venue": "iclr",
+   "authors": [
+    "Nikita Kitaev",
+    "Łukasz Kaiser",
+    "Anselm Levskaya"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "efficient-transformers"
+   ],
+   "keywords": [
+    "locality-sensitive hashing",
+    "reversible layers"
+   ],
+   "description": "Reduces Transformer memory and compute with locality-sensitive-hashing attention and reversible residual layers.",
+   "cites": [
+    "transformer",
+    "sparse-transformer"
+   ]
+  },
+  {
+   "key": "vit",
+   "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+   "year": 2020,
+   "arxiv": "2010.11929",
+   "venue": "iclr",
+   "authors": [
+    "Alexey Dosovitskiy",
+    "Lucas Beyer",
+    "Alexander Kolesnikov",
+    "Dirk Weissenborn",
+    "Xiaohua Zhai",
+    "Thomas Unterthiner",
+    "Mostafa Dehghani",
+    "Matthias Minderer",
+    "Georg Heigold",
+    "Sylvain Gelly",
+    "Jakob Uszkoreit",
+    "Neil Houlsby"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "transformers",
+    "computer-vision"
+   ],
+   "keywords": [
+    "vision transformer",
+    "image patches"
+   ],
+   "description": "Applies a standard Transformer encoder directly to sequences of image patches (ViT).",
+   "cites": [
+    "transformer",
+    "bert",
+    "resnet"
+   ]
+  },
+  {
+   "key": "lora",
+   "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+   "year": 2021,
+   "arxiv": "2106.09685",
+   "venue": "iclr",
+   "authors": [
+    "Edward J. Hu",
+    "Yelong Shen",
+    "Phillip Wallis",
+    "Zeyuan Allen-Zhu",
+    "Yuanzhi Li",
+    "Shean Wang",
+    "Lu Wang",
+    "Weizhu Chen"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "efficient-transformers",
+    "large-language-models"
+   ],
+   "keywords": [
+    "parameter-efficient fine-tuning",
+    "low-rank"
+   ],
+   "description": "Freezes pretrained weights and trains low-rank update matrices, greatly reducing the number of trainable parameters for adaptation.",
+   "cites": [
+    "gpt3",
+    "roberta",
+    "bert",
+    "transformer",
+    "gpt2"
+   ]
+  },
+  {
+   "key": "instructgpt",
+   "title": "Training language models to follow instructions with human feedback",
+   "year": 2022,
+   "arxiv": "2203.02155",
+   "venue": "neurips",
+   "authors": [
+    "Long Ouyang",
+    "Jeff Wu",
+    "Xu Jiang",
+    "Diogo Almeida",
+    "Carroll L. Wainwright",
+    "Pamela Mishkin",
+    "Chong Zhang",
+    "Sandhini Agarwal",
+    "Katarina Slama",
+    "Alex Ray"
+   ],
+   "authors_complete": false,
+   "topics": [
+    "large-language-models"
+   ],
+   "keywords": [
+    "RLHF",
+    "instruction following",
+    "alignment"
+   ],
+   "description": "Fine-tunes GPT-3 with supervised demonstrations and reinforcement learning from human feedback (InstructGPT).",
+   "cites": [
+    "gpt3"
+   ]
+  },
+  {
+   "key": "cot",
+   "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+   "year": 2022,
+   "arxiv": "2201.11903",
+   "venue": "neurips",
+   "authors": [
+    "Jason Wei",
+    "Xuezhi Wang",
+    "Dale Schuurmans",
+    "Maarten Bosma",
+    "Brian Ichter",
+    "Fei Xia",
+    "Ed Chi",
+    "Quoc V. Le",
+    "Denny Zhou"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "prompting-reasoning",
+    "large-language-models"
+   ],
+   "keywords": [
+    "chain of thought",
+    "few-shot prompting"
+   ],
+   "description": "Shows that few-shot prompts containing intermediate reasoning steps improve large language models on multi-step reasoning tasks.",
+   "cites": [
+    "gpt3"
+   ]
+  },
+  {
+   "key": "chinchilla",
+   "title": "Training Compute-Optimal Large Language Models",
+   "year": 2022,
+   "arxiv": "2203.15556",
+   "venue": "neurips",
+   "authors": [
+    "Jordan Hoffmann",
+    "Sebastian Borgeaud",
+    "Arthur Mensch"
+   ],
+   "authors_complete": false,
+   "topics": [
+    "large-language-models"
+   ],
+   "keywords": [
+    "compute-optimal",
+    "scaling laws"
+   ],
+   "description": "Revisits scaling laws and argues model size and training tokens should grow in equal proportion for a fixed compute budget (Chinchilla).",
+   "cites": [
+    "scaling-laws",
+    "gpt3",
+    "transformer"
+   ]
+  },
+  {
+   "key": "palm",
+   "title": "PaLM: Scaling Language Modeling with Pathways",
+   "year": 2022,
+   "arxiv": "2204.02311",
+   "venue": "jmlr",
+   "authors": [
+    "Aakanksha Chowdhery",
+    "Sharan Narang",
+    "Jacob Devlin"
+   ],
+   "authors_complete": false,
+   "topics": [
+    "large-language-models"
+   ],
+   "keywords": [
+    "scaling",
+    "few-shot"
+   ],
+   "description": "Trains a 540B-parameter dense Transformer language model with the Pathways system and evaluates few-shot performance.",
+   "cites": [
+    "gpt3",
+    "t5",
+    "transformer",
+    "scaling-laws",
+    "cot"
+   ]
+  },
+  {
+   "key": "flashattention",
+   "title": "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness",
+   "year": 2022,
+   "arxiv": "2205.14135",
+   "venue": "neurips",
+   "authors": [
+    "Tri Dao",
+    "Daniel Y. Fu",
+    "Stefano Ermon",
+    "Atri Rudra",
+    "Christopher Ré"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "efficient-transformers"
+   ],
+   "keywords": [
+    "IO-aware",
+    "exact attention",
+    "GPU kernels"
+   ],
+   "description": "Computes exact attention with tiling to minimise GPU memory reads and writes, speeding up training on long sequences.",
+   "cites": [
+    "transformer",
+    "gpt2",
+    "bert",
+    "longformer",
+    "reformer",
+    "sparse-transformer"
+   ]
+  },
+  {
+   "key": "llama",
+   "title": "LLaMA: Open and Efficient Foundation Language Models",
+   "year": 2023,
+   "arxiv": "2302.13971",
+   "venue": "arxiv",
+   "authors": [
+    "Hugo Touvron",
+    "Thibaut Lavril",
+    "Gautier Izacard",
+    "Xavier Martinet",
+    "Marie-Anne Lachaux",
+    "Timothée Lacroix",
+    "Baptiste Rozière",
+    "Naman Goyal",
+    "Eric Hambro",
+    "Faisal Azhar",
+    "Aurelien Rodriguez",
+    "Armand Joulin",
+    "Edouard Grave",
+    "Guillaume Lample"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "large-language-models"
+   ],
+   "keywords": [
+    "open models",
+    "foundation models"
+   ],
+   "description": "Releases a family of foundation language models trained only on publicly available data.",
+   "cites": [
+    "gpt3",
+    "chinchilla",
+    "palm",
+    "scaling-laws",
+    "transformer"
+   ]
+  },
+  {
+   "key": "gpt4",
+   "title": "GPT-4 Technical Report",
+   "year": 2023,
+   "arxiv": "2303.08774",
+   "venue": "arxiv",
+   "authors": [
+    "OpenAI"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "large-language-models"
+   ],
+   "keywords": [
+    "multimodal",
+    "technical report"
+   ],
+   "description": "Technical report describing GPT-4, a large multimodal model, and its evaluation.",
+   "cites": [
+    "gpt3",
+    "instructgpt",
+    "scaling-laws"
+   ]
+  },
+  {
+   "key": "llama2",
+   "title": "Llama 2: Open Foundation and Fine-Tuned Chat Models",
+   "year": 2023,
+   "arxiv": "2307.09288",
+   "venue": "arxiv",
+   "authors": [
+    "Hugo Touvron",
+    "Louis Martin",
+    "Kevin Stone"
+   ],
+   "authors_complete": false,
+   "topics": [
+    "large-language-models"
+   ],
+   "keywords": [
+    "chat models",
+    "RLHF"
+   ],
+   "description": "Releases pretrained and chat-tuned open language models and describes their fine-tuning and safety process.",
+   "cites": [
+    "llama",
+    "instructgpt",
+    "gpt3"
+   ]
+  },
+  {
+   "key": "bm25",
+   "title": "The Probabilistic Relevance Framework: BM25 and Beyond",
+   "year": 2009,
+   "arxiv": null,
+   "venue": "ftir",
+   "authors": [
+    "Stephen Robertson",
+    "Hugo Zaragoza"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "information-retrieval"
+   ],
+   "keywords": [
+    "BM25",
+    "probabilistic retrieval"
+   ],
+   "description": "Surveys the probabilistic relevance framework underlying BM25 and its extensions.",
+   "cites": []
+  },
+  {
+   "key": "hnsw",
+   "title": "Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs",
+   "year": 2016,
+   "arxiv": "1603.09320",
+   "venue": "arxiv",
+   "authors": [
+    "Yu. A. Malkov",
+    "D. A. Yashunin"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "vector-search"
+   ],
+   "keywords": [
+    "HNSW",
+    "approximate nearest neighbor",
+    "proximity graph"
+   ],
+   "description": "Builds a multi-layer proximity graph for approximate nearest-neighbour search with logarithmic search complexity.",
+   "cites": []
+  },
+  {
+   "key": "faiss",
+   "title": "Billion-scale similarity search with GPUs",
+   "year": 2017,
+   "arxiv": "1702.08734",
+   "venue": "arxiv",
+   "authors": [
+    "Jeff Johnson",
+    "Matthijs Douze",
+    "Hervé Jégou"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "vector-search"
+   ],
+   "keywords": [
+    "GPU",
+    "product quantization",
+    "k-selection"
+   ],
+   "description": "Describes GPU algorithms for exact and compressed-domain similarity search, released as the Faiss library.",
+   "cites": []
+  },
+  {
+   "key": "lama",
+   "title": "Language Models as Knowledge Bases?",
+   "year": 2019,
+   "arxiv": "1909.01066",
+   "venue": "emnlp",
+   "authors": [
+    "Fabio Petroni",
+    "Tim Rocktäschel",
+    "Patrick Lewis",
+    "Anton Bakhtin",
+    "Yuxiang Wu",
+    "Alexander H. Miller",
+    "Sebastian Riedel"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "knowledge-graphs",
+    "pretrained-language-models"
+   ],
+   "keywords": [
+    "probing",
+    "factual knowledge",
+    "cloze"
+   ],
+   "description": "Probes pretrained language models with cloze statements to measure how much relational factual knowledge they contain (LAMA).",
+   "cites": [
+    "bert",
+    "elmo"
+   ]
+  },
+  {
+   "key": "realm",
+   "title": "REALM: Retrieval-Augmented Language Model Pre-Training",
+   "year": 2020,
+   "arxiv": "2002.08909",
+   "venue": "icml",
+   "authors": [
+    "Kelvin Guu",
+    "Kenton Lee",
+    "Zora Tung",
+    "Panupong Pasupat",
+    "Ming-Wei Chang"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "retrieval-augmented-generation",
+    "pretrained-language-models"
+   ],
+   "keywords": [
+    "latent retrieval",
+    "open-domain QA"
+   ],
+   "description": "Pretrains a language model jointly with a learned retriever over a document corpus, backpropagating through retrieval.",
+   "cites": [
+    "bert",
+    "t5",
+    "transformer",
+    "lama"
+   ]
+  },
+  {
+   "key": "dpr",
+   "title": "Dense Passage Retrieval for Open-Domain Question Answering",
+   "year": 2020,
+   "arxiv": "2004.04906",
+   "venue": "emnlp",
+   "authors": [
+    "Vladimir Karpukhin",
+    "Barlas Oğuz",
+    "Sewon Min",
+    "Patrick Lewis",
+    "Ledell Wu",
+    "Sergey Edunov",
+    "Danqi Chen",
+    "Wen-tau Yih"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "information-retrieval",
+    "retrieval-augmented-generation"
+   ],
+   "keywords": [
+    "dual encoder",
+    "dense retrieval",
+    "open-domain QA"
+   ],
+   "description": "Trains a BERT dual encoder on question-passage pairs and shows dense retrieval can outperform BM25 for open-domain QA.",
+   "cites": [
+    "bert",
+    "bm25",
+    "faiss",
+    "realm"
+   ]
+  },
+  {
+   "key": "colbert",
+   "title": "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT",
+   "year": 2020,
+   "arxiv": "2004.12832",
+   "venue": "sigir",
+   "authors": [
+    "Omar Khattab",
+    "Matei Zaharia"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "information-retrieval"
+   ],
+   "keywords": [
+    "late interaction",
+    "neural ranking"
+   ],
+   "description": "Encodes queries and passages independently with BERT and scores them with token-level late interaction for efficient retrieval.",
+   "cites": [
+    "bert",
+    "faiss"
+   ]
+  },
+  {
+   "key": "rag",
+   "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+   "year": 2020,
+   "arxiv": "2005.11401",
+   "venue": "neurips",
+   "authors": [
+    "Patrick Lewis",
+    "Ethan Perez",
+    "Aleksandra Piktus",
+    "Fabio Petroni",
+    "Vladimir Karpukhin",
+    "Naman Goyal",
+    "Heinrich Küttler",
+    "Mike Lewis",
+    "Wen-tau Yih",
+    "Tim Rocktäschel",
+    "Sebastian Riedel",
+    "Douwe Kiela"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "retrieval-augmented-generation"
+   ],
+   "keywords": [
+    "retrieval-augmented generation",
+    "parametric and non-parametric memory"
+   ],
+   "description": "Combines a pretrained seq2seq generator with a dense retriever over Wikipedia, treating retrieved passages as a latent variable (RAG).",
+   "cites": [
+    "dpr",
+    "realm",
+    "bart",
+    "t5",
+    "bert",
+    "lama",
+    "faiss"
+   ]
+  },
+  {
+   "key": "fid",
+   "title": "Leveraging Passage Retrieval with Generative Models for Open Domain Question Answering",
+   "year": 2020,
+   "arxiv": "2007.01282",
+   "venue": "eacl",
+   "authors": [
+    "Gautier Izacard",
+    "Edouard Grave"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "retrieval-augmented-generation"
+   ],
+   "keywords": [
+    "fusion-in-decoder",
+    "open-domain QA"
+   ],
+   "description": "Encodes each retrieved passage separately and fuses them in the decoder of a seq2seq model (Fusion-in-Decoder).",
+   "cites": [
+    "dpr",
+    "rag",
+    "realm",
+    "t5",
+    "bart",
+    "bm25"
+   ]
+  },
+  {
+   "key": "retro",
+   "title": "Improving language models by retrieving from trillions of tokens",
+   "year": 2021,
+   "arxiv": "2112.04426",
+   "venue": "icml",
+   "authors": [
+    "Sebastian Borgeaud",
+    "Arthur Mensch",
+    "Jordan Hoffmann"
+   ],
+   "authors_complete": false,
+   "topics": [
+    "retrieval-augmented-generation",
+    "large-language-models"
+   ],
+   "keywords": [
+    "chunked cross-attention",
+    "retrieval database"
+   ],
+   "description": "Conditions an autoregressive language model on chunks retrieved from a very large database via chunked cross-attention (RETRO).",
+   "cites": [
+    "realm",
+    "rag",
+    "fid",
+    "dpr",
+    "gpt3",
+    "transformer",
+    "scaling-laws"
+   ]
+  },
+  {
+   "key": "atlas",
+   "title": "Atlas: Few-shot Learning with Retrieval Augmented Language Models",
+   "year": 2022,
+   "arxiv": "2208.03299",
+   "venue": "jmlr",
+   "authors": [
+    "Gautier Izacard",
+    "Patrick Lewis",
+    "Maria Lomeli",
+    "Lucas Hosseini",
+    "Fabio Petroni",
+    "Timo Schick",
+    "Jane Dwivedi-Yu",
+    "Armand Joulin",
+    "Sebastian Riedel",
+    "Edouard Grave"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "retrieval-augmented-generation"
+   ],
+   "keywords": [
+    "few-shot",
+    "retriever training"
+   ],
+   "description": "A retrieval-augmented language model that jointly trains retriever and reader and performs well in few-shot settings.",
+   "cites": [
+    "fid",
+    "rag",
+    "realm",
+    "retro",
+    "dpr",
+    "t5",
+    "gpt3"
+   ]
+  },
+  {
+   "key": "react",
+   "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+   "year": 2022,
+   "arxiv": "2210.03629",
+   "venue": "iclr",
+   "authors": [
+    "Shunyu Yao",
+    "Jeffrey Zhao",
+    "Dian Yu",
+    "Nan Du",
+    "Izhak Shafran",
+    "Karthik Narasimhan",
+    "Yuan Cao"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "prompting-reasoning"
+   ],
+   "keywords": [
+    "agents",
+    "tool use",
+    "reasoning traces"
+   ],
+   "description": "Prompts language models to interleave reasoning traces with actions such as search queries.",
+   "cites": [
+    "cot",
+    "palm",
+    "gpt3"
+   ]
+  },
+  {
+   "key": "hyde",
+   "title": "Precise Zero-Shot Dense Retrieval without Relevance Labels",
+   "year": 2022,
+   "arxiv": "2212.10496",
+   "venue": "acl",
+   "authors": [
+    "Luyu Gao",
+    "Xueguang Ma",
+    "Jimmy Lin",
+    "Jamie Callan"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "information-retrieval"
+   ],
+   "keywords": [
+    "hypothetical documents",
+    "zero-shot retrieval"
+   ],
+   "description": "Generates a hypothetical answer document with an instruction-following LLM and retrieves real documents similar to it (HyDE).",
+   "cites": [
+    "dpr",
+    "instructgpt",
+    "gpt3",
+    "bm25"
+   ]
+  },
+  {
+   "key": "ralm",
+   "title": "In-Context Retrieval-Augmented Language Models",
+   "year": 2023,
+   "arxiv": "2302.00083",
+   "venue": "tacl",
+   "authors": [
+    "Ori Ram",
+    "Yoav Levine",
+    "Itay Dalmedigos",
+    "Dor Muhlgay",
+    "Amnon Shashua",
+    "Kevin Leyton-Brown",
+    "Yoav Shoham"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "retrieval-augmented-generation"
+   ],
+   "keywords": [
+    "in-context retrieval",
+    "off-the-shelf retrievers"
+   ],
+   "description": "Prepends retrieved documents to the input of an unmodified language model and studies how much this helps.",
+   "cites": [
+    "retro",
+    "rag",
+    "realm",
+    "atlas",
+    "fid",
+    "dpr",
+    "bm25"
+   ]
+  },
+  {
+   "key": "toolformer",
+   "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+   "year": 2023,
+   "arxiv": "2302.04761",
+   "venue": "neurips",
+   "authors": [
+    "Timo Schick",
+    "Jane Dwivedi-Yu",
+    "Roberto Dessì",
+    "Roberta Raileanu",
+    "Maria Lomeli",
+    "Luke Zettlemoyer",
+    "Nicola Cancedda",
+    "Thomas Scialom"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "prompting-reasoning",
+    "large-language-models"
+   ],
+   "keywords": [
+    "tool use",
+    "self-supervision",
+    "API calls"
+   ],
+   "description": "Teaches a language model, in a self-supervised way, when and how to call external tools such as search and calculators.",
+   "cites": [
+    "gpt3",
+    "atlas",
+    "cot",
+    "realm"
+   ]
+  },
+  {
+   "key": "lost-in-the-middle",
+   "title": "Lost in the Middle: How Language Models Use Long Contexts",
+   "year": 2023,
+   "arxiv": "2307.03172",
+   "venue": "tacl",
+   "authors": [
+    "Nelson F. Liu",
+    "Kevin Lin",
+    "John Hewitt",
+    "Ashwin Paranjape",
+    "Michele Bevilacqua",
+    "Fabio Petroni",
+    "Percy Liang"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "retrieval-augmented-generation",
+    "large-language-models"
+   ],
+   "keywords": [
+    "long context",
+    "position bias"
+   ],
+   "description": "Finds that language models use information at the start or end of long contexts more reliably than information in the middle.",
+   "cites": [
+    "fid",
+    "ralm"
+   ]
+  },
+  {
+   "key": "self-rag",
+   "title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection",
+   "year": 2023,
+   "arxiv": "2310.11511",
+   "venue": "iclr",
+   "authors": [
+    "Akari Asai",
+    "Zeqiu Wu",
+    "Yizhong Wang",
+    "Avirup Sil",
+    "Hannaneh Hajishirzi"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "retrieval-augmented-generation"
+   ],
+   "keywords": [
+    "adaptive retrieval",
+    "reflection tokens",
+    "critique"
+   ],
+   "description": "Trains a model to decide when to retrieve and to critique its own generations with special reflection tokens.",
+   "cites": [
+    "rag",
+    "ralm",
+    "atlas",
+    "toolformer",
+    "llama2",
+    "instructgpt"
+   ]
+  },
+  {
+   "key": "rag-survey",
+   "title": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+   "year": 2023,
+   "arxiv": "2312.10997",
+   "venue": "arxiv",
+   "authors": [
+    "Yunfan Gao",
+    "Yun Xiong",
+    "Xinyu Gao",
+    "Kangxiang Jia",
+    "Jinliu Pan",
+    "Yuxi Bi",
+    "Yi Dai",
+    "Jiawei Sun",
+    {
+     "name": "Meng Wang",
+     "key": "meng-wang-2"
+    },
+    "Haofen Wang"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "retrieval-augmented-generation"
+   ],
+   "keywords": [
+    "survey"
+   ],
+   "description": "Surveys retrieval-augmented generation for LLMs, organising methods into naive, advanced and modular RAG.",
+   "cites": [
+    "rag",
+    "self-rag",
+    "retro",
+    "atlas",
+    "ralm",
+    "dpr",
+    "hyde",
+    "fid",
+    "realm",
+    "toolformer"
+   ]
+  },
+  {
+   "key": "graphrag",
+   "title": "From Local to Global: A Graph RAG Approach to Query-Focused Summarization",
+   "year": 2024,
+   "arxiv": "2404.16130",
+   "venue": "arxiv",
+   "authors": [
+    "Darren Edge",
+    "Ha Trinh",
+    "Newman Cheng",
+    "Joshua Bradley",
+    "Alex Chao",
+    "Apurva Mody",
+    "Steven Truitt"
+   ],
+   "authors_complete": false,
+   "topics": [
+    "retrieval-augmented-generation",
+    "knowledge-graphs"
+   ],
+   "keywords": [
+    "graph RAG",
+    "community summaries",
+    "query-focused summarization"
+   ],
+   "description": "Builds an LLM-extracted entity graph, summarises its communities (via Leiden) and answers global questions by combining community summaries.",
+   "cites": [
+    "rag",
+    "leiden",
+    "rag-survey",
+    "gpt4"
+   ]
+  },
+  {
+   "key": "transe",
+   "title": "Translating Embeddings for Modeling Multi-relational Data",
+   "year": 2013,
+   "arxiv": null,
+   "venue": "neurips",
+   "authors": [
+    "Antoine Bordes",
+    "Nicolas Usunier",
+    "Alberto Garcia-Durán",
+    "Jason Weston",
+    "Oksana Yakhnenko"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "kg-embedding",
+    "knowledge-graphs"
+   ],
+   "keywords": [
+    "TransE",
+    "link prediction"
+   ],
+   "description": "Models relations as translations between entity embeddings (h + r ≈ t) for knowledge-base completion.",
+   "cites": []
+  },
+  {
+   "key": "distmult",
+   "title": "Embedding Entities and Relations for Learning and Inference in Knowledge Bases",
+   "year": 2014,
+   "arxiv": "1412.6575",
+   "venue": "iclr",
+   "authors": [
+    "Bishan Yang",
+    "Wen-tau Yih",
+    "Xiaodong He",
+    "Jianfeng Gao",
+    "Li Deng"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "kg-embedding"
+   ],
+   "keywords": [
+    "DistMult",
+    "bilinear model"
+   ],
+   "description": "Presents a general framework for relation embedding and a simple bilinear-diagonal model (DistMult).",
+   "cites": [
+    "transe"
+   ]
+  },
+  {
+   "key": "complex",
+   "title": "Complex Embeddings for Simple Link Prediction",
+   "year": 2016,
+   "arxiv": "1606.06357",
+   "venue": "icml",
+   "authors": [
+    "Théo Trouillon",
+    "Johannes Welbl",
+    "Sebastian Riedel",
+    "Éric Gaussier",
+    "Guillaume Bouchard"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "kg-embedding"
+   ],
+   "keywords": [
+    "ComplEx",
+    "complex-valued embeddings"
+   ],
+   "description": "Uses complex-valued embeddings so a bilinear model can represent antisymmetric relations (ComplEx).",
+   "cites": [
+    "transe",
+    "distmult"
+   ]
+  },
+  {
+   "key": "rgcn",
+   "title": "Modeling Relational Data with Graph Convolutional Networks",
+   "year": 2017,
+   "arxiv": "1703.06103",
+   "venue": "eswc",
+   "authors": [
+    "Michael Schlichtkrull",
+    "Thomas N. Kipf",
+    "Peter Bloem",
+    "Rianne van den Berg",
+    "Ivan Titov",
+    "Max Welling"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "graph-neural-networks",
+    "kg-embedding",
+    "heterogeneous-graphs"
+   ],
+   "keywords": [
+    "R-GCN",
+    "link prediction",
+    "entity classification"
+   ],
+   "description": "Extends graph convolutional networks with relation-specific weights for multi-relational knowledge graphs (R-GCN).",
+   "cites": [
+    "gcn",
+    "distmult",
+    "complex"
+   ]
+  },
+  {
+   "key": "conve",
+   "title": "Convolutional 2D Knowledge Graph Embeddings",
+   "year": 2017,
+   "arxiv": "1707.01476",
+   "venue": "aaai",
+   "authors": [
+    "Tim Dettmers",
+    "Pasquale Minervini",
+    "Pontus Stenetorp",
+    "Sebastian Riedel"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "kg-embedding"
+   ],
+   "keywords": [
+    "ConvE",
+    "convolution"
+   ],
+   "description": "Scores knowledge-graph triples with 2D convolutions over reshaped entity and relation embeddings (ConvE).",
+   "cites": [
+    "transe",
+    "distmult",
+    "complex",
+    "rgcn"
+   ]
+  },
+  {
+   "key": "rotate",
+   "title": "RotatE: Knowledge Graph Embedding by Relational Rotation in Complex Space",
+   "year": 2019,
+   "arxiv": "1902.10197",
+   "venue": "iclr",
+   "authors": [
+    "Zhiqing Sun",
+    "Zhi-Hong Deng",
+    "Jian-Yun Nie",
+    "Jian Tang"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "kg-embedding"
+   ],
+   "keywords": [
+    "RotatE",
+    "relation patterns"
+   ],
+   "description": "Models each relation as a rotation in complex space, capturing symmetry, inversion and composition patterns.",
+   "cites": [
+    "transe",
+    "distmult",
+    "complex",
+    "conve"
+   ]
+  },
+  {
+   "key": "ernie-thu",
+   "title": "ERNIE: Enhanced Language Representation with Informative Entities",
+   "year": 2019,
+   "arxiv": "1905.07129",
+   "venue": "acl",
+   "authors": [
+    "Zhengyan Zhang",
+    "Xu Han",
+    "Zhiyuan Liu",
+    "Xin Jiang",
+    "Maosong Sun",
+    "Qun Liu"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "knowledge-graphs",
+    "pretrained-language-models"
+   ],
+   "keywords": [
+    "knowledge-enhanced pretraining",
+    "entity embeddings"
+   ],
+   "description": "Injects knowledge-graph entity embeddings into BERT-style pretraining.",
+   "cites": [
+    "bert",
+    "transe",
+    "elmo",
+    "gpt1",
+    "transformer"
+   ]
+  },
+  {
+   "key": "kg-bert",
+   "title": "KG-BERT: BERT for Knowledge Graph Completion",
+   "year": 2019,
+   "arxiv": "1909.03193",
+   "venue": "arxiv",
+   "authors": [
+    "Liang Yao",
+    "Chengsheng Mao",
+    "Yuan Luo"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "kg-embedding",
+    "pretrained-language-models"
+   ],
+   "keywords": [
+    "triple classification",
+    "link prediction"
+   ],
+   "description": "Treats knowledge-graph triples as text sequences and fine-tunes BERT to score them.",
+   "cites": [
+    "bert",
+    "transe",
+    "distmult",
+    "complex",
+    "conve",
+    "rotate"
+   ]
+  },
+  {
+   "key": "k-bert",
+   "title": "K-BERT: Enabling Language Representation with Knowledge Graph",
+   "year": 2019,
+   "arxiv": "1909.07606",
+   "venue": "aaai",
+   "authors": [
+    "Weijie Liu",
+    "Peng Zhou",
+    "Zhe Zhao",
+    "Zhiruo Wang",
+    "Qi Ju",
+    "Haotang Deng",
+    "Ping Wang"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "knowledge-graphs",
+    "pretrained-language-models"
+   ],
+   "keywords": [
+    "knowledge injection",
+    "visible matrix"
+   ],
+   "description": "Injects knowledge-graph triples into input sentences as a tree and controls their influence with a visibility matrix.",
+   "cites": [
+    "bert"
+   ]
+  },
+  {
+   "key": "kgat",
+   "title": "KGAT: Knowledge Graph Attention Network for Recommendation",
+   "year": 2019,
+   "arxiv": "1905.07854",
+   "venue": "kdd",
+   "authors": [
+    "Xiang Wang",
+    "Xiangnan He",
+    "Yixin Cao",
+    "Meng Liu",
+    "Tat-Seng Chua"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "recommender-systems",
+    "knowledge-graphs",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "collaborative knowledge graph",
+    "attention"
+   ],
+   "description": "Propagates embeddings over a graph that joins user-item interactions with a knowledge graph, using attention to weight neighbours.",
+   "cites": [
+    "gat",
+    "gcn"
+   ]
+  },
+  {
+   "key": "qa-gnn",
+   "title": "QA-GNN: Reasoning with Language Models and Knowledge Graphs for Question Answering",
+   "year": 2021,
+   "arxiv": "2104.06378",
+   "venue": "naacl",
+   "authors": [
+    "Michihiro Yasunaga",
+    "Hongyu Ren",
+    "Antoine Bosselut",
+    "Percy Liang",
+    "Jure Leskovec"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "knowledge-graphs",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "question answering",
+    "joint reasoning"
+   ],
+   "description": "Scores knowledge-graph nodes with a language model and reasons jointly over the question and the subgraph with a GNN.",
+   "cites": [
+    "roberta",
+    "bert",
+    "gat"
+   ]
+  },
+  {
+   "key": "kg-llm-roadmap",
+   "title": "Unifying Large Language Models and Knowledge Graphs: A Roadmap",
+   "year": 2023,
+   "arxiv": "2306.08302",
+   "venue": "tkde",
+   "authors": [
+    "Shirui Pan",
+    "Linhao Luo",
+    "Yufei Wang",
+    "Chen Chen",
+    "Jiapu Wang",
+    "Xindong Wu"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "knowledge-graphs",
+    "large-language-models"
+   ],
+   "keywords": [
+    "survey",
+    "KG-enhanced LLMs",
+    "LLM-augmented KGs"
+   ],
+   "description": "Surveys and organises work on combining LLMs and knowledge graphs into KG-enhanced LLMs, LLM-augmented KGs and synergised approaches.",
+   "cites": [
+    "bert",
+    "gpt3",
+    "lama",
+    "kg-bert",
+    "ernie-thu",
+    "k-bert",
+    "transe",
+    "rotate",
+    "qa-gnn",
+    "cot",
+    "llama",
+    "t5",
+    "rag"
+   ]
+  },
+  {
+   "key": "think-on-graph",
+   "title": "Think-on-Graph: Deep and Responsible Reasoning of Large Language Model on Knowledge Graph",
+   "year": 2023,
+   "arxiv": "2307.07697",
+   "venue": "iclr",
+   "authors": [
+    "Jiashuo Sun",
+    "Chengjin Xu",
+    "Lumingyuan Tang",
+    "Saizhuo Wang",
+    "Chen Lin",
+    "Yeyun Gong",
+    "Lionel M. Ni",
+    "Heung-Yeung Shum",
+    "Jian Guo"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "knowledge-graphs",
+    "prompting-reasoning"
+   ],
+   "keywords": [
+    "beam search on KG",
+    "LLM agents"
+   ],
+   "description": "Lets an LLM iteratively explore a knowledge graph with beam search to find reasoning paths for answering questions.",
+   "cites": [
+    "cot",
+    "react",
+    "kg-llm-roadmap",
+    "llama2"
+   ]
+  },
+  {
+   "key": "deepwalk",
+   "title": "DeepWalk: Online Learning of Social Representations",
+   "year": 2014,
+   "arxiv": "1403.6652",
+   "venue": "kdd",
+   "authors": [
+    "Bryan Perozzi",
+    "Rami Al-Rfou",
+    "Steven Skiena"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "network-embedding"
+   ],
+   "keywords": [
+    "random walks",
+    "skip-gram"
+   ],
+   "description": "Learns node embeddings by treating truncated random walks as sentences for a skip-gram model.",
+   "cites": [
+    "word2vec"
+   ]
+  },
+  {
+   "key": "line",
+   "title": "LINE: Large-scale Information Network Embedding",
+   "year": 2015,
+   "arxiv": "1503.03578",
+   "venue": "www",
+   "authors": [
+    "Jian Tang",
+    "Meng Qu",
+    "Mingzhe Wang",
+    "Ming Zhang",
+    "Jun Yan",
+    "Qiaozhu Mei"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "network-embedding"
+   ],
+   "keywords": [
+    "first-order proximity",
+    "second-order proximity"
+   ],
+   "description": "Embeds large networks by preserving first- and second-order proximity with an edge-sampling objective.",
+   "cites": [
+    "deepwalk",
+    "word2vec"
+   ]
+  },
+  {
+   "key": "node2vec",
+   "title": "node2vec: Scalable Feature Learning for Networks",
+   "year": 2016,
+   "arxiv": "1607.00653",
+   "venue": "kdd",
+   "authors": [
+    "Aditya Grover",
+    "Jure Leskovec"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "network-embedding"
+   ],
+   "keywords": [
+    "biased random walks",
+    "homophily",
+    "structural equivalence"
+   ],
+   "description": "Uses biased second-order random walks that interpolate between BFS- and DFS-like exploration to learn node embeddings.",
+   "cites": [
+    "deepwalk",
+    "line",
+    "word2vec"
+   ]
+  },
+  {
+   "key": "chebnet",
+   "title": "Convolutional Neural Networks on Graphs with Fast Localized Spectral Filtering",
+   "year": 2016,
+   "arxiv": "1606.09375",
+   "venue": "neurips",
+   "authors": [
+    "Michaël Defferrard",
+    "Xavier Bresson",
+    "Pierre Vandergheynst"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "spectral graph convolution",
+    "Chebyshev polynomials"
+   ],
+   "description": "Defines localized spectral graph convolutions with Chebyshev polynomial filters (ChebNet).",
+   "cites": []
+  },
+  {
+   "key": "gcn",
+   "title": "Semi-Supervised Classification with Graph Convolutional Networks",
+   "year": 2016,
+   "arxiv": "1609.02907",
+   "venue": "iclr",
+   "authors": [
+    "Thomas N. Kipf",
+    "Max Welling"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "GCN",
+    "semi-supervised node classification"
+   ],
+   "description": "Simplifies spectral graph convolutions to a first-order, layer-wise propagation rule for semi-supervised node classification (GCN).",
+   "cites": [
+    "chebnet",
+    "deepwalk",
+    "adam",
+    "dropout"
+   ]
+  },
+  {
+   "key": "mpnn",
+   "title": "Neural Message Passing for Quantum Chemistry",
+   "year": 2017,
+   "arxiv": "1704.01212",
+   "venue": "icml",
+   "authors": [
+    "Justin Gilmer",
+    "Samuel S. Schoenholz",
+    "Patrick F. Riley",
+    "Oriol Vinyals",
+    "George E. Dahl"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "message passing",
+    "molecular property prediction"
+   ],
+   "description": "Unifies several graph neural networks under a message-passing framework and applies it to molecular property prediction.",
+   "cites": [
+    "gcn",
+    "gru"
+   ]
+  },
+  {
+   "key": "graphsage",
+   "title": "Inductive Representation Learning on Large Graphs",
+   "year": 2017,
+   "arxiv": "1706.02216",
+   "venue": "neurips",
+   "authors": [
+    "William L. Hamilton",
+    "Rex Ying",
+    "Jure Leskovec"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "inductive learning",
+    "neighbourhood sampling",
+    "aggregation"
+   ],
+   "description": "Learns aggregation functions over sampled neighbourhoods so embeddings can be generated for unseen nodes (GraphSAGE).",
+   "cites": [
+    "gcn",
+    "deepwalk",
+    "node2vec",
+    "lstm",
+    "adam"
+   ]
+  },
+  {
+   "key": "gat",
+   "title": "Graph Attention Networks",
+   "year": 2017,
+   "arxiv": "1710.10903",
+   "venue": "iclr",
+   "authors": [
+    "Petar Veličković",
+    "Guillem Cucurull",
+    "Arantxa Casanova",
+    "Adriana Romero",
+    "Pietro Liò",
+    "Yoshua Bengio"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "graph-neural-networks",
+    "attention"
+   ],
+   "keywords": [
+    "graph attention",
+    "masked self-attention"
+   ],
+   "description": "Uses masked self-attention over neighbours to weight messages in graph neural networks (GAT).",
+   "cites": [
+    "gcn",
+    "graphsage",
+    "chebnet",
+    "transformer",
+    "bahdanau",
+    "adam",
+    "dropout"
+   ]
+  },
+  {
+   "key": "relational-inductive-biases",
+   "title": "Relational inductive biases, deep learning, and graph networks",
+   "year": 2018,
+   "arxiv": "1806.01261",
+   "venue": "arxiv",
+   "authors": [
+    "Peter W. Battaglia",
+    "Jessica B. Hamrick",
+    "Victor Bapst"
+   ],
+   "authors_complete": false,
+   "topics": [
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "graph networks",
+    "inductive bias"
+   ],
+   "description": "Argues for relational inductive biases and presents the graph network framework generalising many GNN variants.",
+   "cites": [
+    "gcn",
+    "mpnn",
+    "gat",
+    "graphsage",
+    "transformer"
+   ]
+  },
+  {
+   "key": "pinsage",
+   "title": "Graph Convolutional Neural Networks for Web-Scale Recommender Systems",
+   "year": 2018,
+   "arxiv": "1806.01973",
+   "venue": "kdd",
+   "authors": [
+    "Rex Ying",
+    "Ruining He",
+    "Kaifeng Chen",
+    "Pong Eksombatchai",
+    "William L. Hamilton",
+    "Jure Leskovec"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "recommender-systems",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "PinSage",
+    "random-walk sampling",
+    "web scale"
+   ],
+   "description": "Scales graph convolutional networks to billions of nodes for recommendation at Pinterest (PinSage).",
+   "cites": [
+    "graphsage",
+    "gcn",
+    "node2vec",
+    "deepwalk"
+   ]
+  },
+  {
+   "key": "gin",
+   "title": "How Powerful are Graph Neural Networks?",
+   "year": 2018,
+   "arxiv": "1810.00826",
+   "venue": "iclr",
+   "authors": [
+    "Keyulu Xu",
+    "Weihua Hu",
+    "Jure Leskovec",
+    "Stefanie Jegelka"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "expressive power",
+    "Weisfeiler-Lehman",
+    "GIN"
+   ],
+   "description": "Analyses GNN expressiveness relative to the Weisfeiler-Lehman test and proposes the Graph Isomorphism Network (GIN).",
+   "cites": [
+    "gcn",
+    "graphsage",
+    "gat",
+    "mpnn"
+   ]
+  },
+  {
+   "key": "gnn-review",
+   "title": "Graph Neural Networks: A Review of Methods and Applications",
+   "year": 2018,
+   "arxiv": "1812.08434",
+   "venue": "ai-open",
+   "authors": [
+    "Jie Zhou",
+    "Ganqu Cui",
+    "Shengding Hu",
+    "Zhengyan Zhang",
+    "Cheng Yang",
+    "Zhiyuan Liu",
+    "Lifeng Wang",
+    "Changcheng Li",
+    "Maosong Sun"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "survey"
+   ],
+   "description": "Reviews GNN architectures, training methods and applications.",
+   "cites": [
+    "gcn",
+    "gat",
+    "graphsage",
+    "mpnn",
+    "chebnet",
+    "rgcn",
+    "relational-inductive-biases",
+    "pinsage",
+    "deepwalk",
+    "node2vec"
+   ]
+  },
+  {
+   "key": "gnn-survey",
+   "title": "A Comprehensive Survey on Graph Neural Networks",
+   "year": 2019,
+   "arxiv": "1901.00596",
+   "venue": "tnnls",
+   "authors": [
+    "Zonghan Wu",
+    "Shirui Pan",
+    "Fengwen Chen",
+    "Guodong Long",
+    "Chengqi Zhang",
+    "Philip S. Yu"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "survey",
+    "taxonomy"
+   ],
+   "description": "Surveys GNNs with a taxonomy of recurrent, convolutional, autoencoder and spatial-temporal GNNs.",
+   "cites": [
+    "gcn",
+    "gat",
+    "graphsage",
+    "mpnn",
+    "chebnet",
+    "gin",
+    "deepwalk",
+    "node2vec",
+    "line",
+    "pinsage",
+    "relational-inductive-biases"
+   ]
+  },
+  {
+   "key": "han",
+   "title": "Heterogeneous Graph Attention Network",
+   "year": 2019,
+   "arxiv": "1903.07293",
+   "venue": "www",
+   "authors": [
+    "Xiao Wang",
+    "Houye Ji",
+    "Chuan Shi",
+    "Bai Wang",
+    "Peng Cui",
+    "Philip S. Yu",
+    "Yanfang Ye"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "heterogeneous-graphs",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "meta-path",
+    "hierarchical attention"
+   ],
+   "description": "Applies node-level and semantic-level attention over meta-path-based neighbours in heterogeneous graphs (HAN).",
+   "cites": [
+    "gat",
+    "gcn",
+    "deepwalk",
+    "line",
+    "node2vec"
+   ]
+  },
+  {
+   "key": "evolvegcn",
+   "title": "EvolveGCN: Evolving Graph Convolutional Networks for Dynamic Graphs",
+   "year": 2019,
+   "arxiv": "1902.10191",
+   "venue": "aaai",
+   "authors": [
+    "Aldo Pareja",
+    "Giacomo Domeniconi",
+    "Jie Chen",
+    "Tengfei Ma",
+    "Toyotaro Suzumura",
+    "Hiroki Kanezashi",
+    "Tim Kaler",
+    "Tao B. Schardl",
+    "Charles E. Leiserson"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "dynamic-graphs",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "dynamic graphs",
+    "RNN-evolved weights"
+   ],
+   "description": "Evolves GCN weights over time with a recurrent network to model dynamic graphs.",
+   "cites": [
+    "gcn",
+    "lstm",
+    "gru"
+   ]
+  },
+  {
+   "key": "lightgcn",
+   "title": "LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation",
+   "year": 2020,
+   "arxiv": "2002.02126",
+   "venue": "sigir",
+   "authors": [
+    "Xiangnan He",
+    "Kuan Deng",
+    "Xiang Wang",
+    "Yan Li",
+    "Yongdong Zhang",
+    "Meng Wang"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "recommender-systems",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "collaborative filtering",
+    "simplification"
+   ],
+   "description": "Removes feature transformation and non-linearity from GCN-based collaborative filtering, keeping only neighbourhood aggregation.",
+   "cites": [
+    "gcn",
+    "pinsage",
+    "graphsage",
+    "kgat"
+   ]
+  },
+  {
+   "key": "hgt",
+   "title": "Heterogeneous Graph Transformer",
+   "year": 2020,
+   "arxiv": "2003.01332",
+   "venue": "www",
+   "authors": [
+    "Ziniu Hu",
+    "Yuxiao Dong",
+    "Kuansan Wang",
+    "Yizhou Sun"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "heterogeneous-graphs",
+    "graph-neural-networks",
+    "transformers"
+   ],
+   "keywords": [
+    "type-dependent attention",
+    "web-scale graphs"
+   ],
+   "description": "Uses node- and edge-type-dependent attention to model heterogeneous graphs at web scale (HGT).",
+   "cites": [
+    "han",
+    "gat",
+    "gcn",
+    "rgcn",
+    "transformer",
+    "graphsage"
+   ]
+  },
+  {
+   "key": "tgat",
+   "title": "Inductive Representation Learning on Temporal Graphs",
+   "year": 2020,
+   "arxiv": "2002.07962",
+   "venue": "iclr",
+   "authors": [
+    "Da Xu",
+    "Chuanwei Ruan",
+    "Evren Korpeoglu",
+    "Sushant Kumar",
+    "Kannan Achan"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "dynamic-graphs",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "temporal attention",
+    "time encoding"
+   ],
+   "description": "Combines self-attention with a functional time encoding for inductive learning on continuous-time temporal graphs (TGAT).",
+   "cites": [
+    "gat",
+    "graphsage",
+    "transformer",
+    "gcn"
+   ]
+  },
+  {
+   "key": "tgn",
+   "title": "Temporal Graph Networks for Deep Learning on Dynamic Graphs",
+   "year": 2020,
+   "arxiv": "2006.10637",
+   "venue": "arxiv",
+   "authors": [
+    "Emanuele Rossi",
+    "Ben Chamberlain",
+    "Fabrizio Frasca",
+    "Davide Eynard",
+    "Federico Monti",
+    "Michael Bronstein"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "dynamic-graphs",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "memory module",
+    "continuous-time dynamic graphs"
+   ],
+   "description": "A framework for continuous-time dynamic graphs that combines per-node memory with graph-based embedding modules (TGN).",
+   "cites": [
+    "tgat",
+    "gat",
+    "graphsage",
+    "gcn"
+   ]
+  },
+  {
+   "key": "graphormer",
+   "title": "Do Transformers Really Perform Bad for Graph Representation?",
+   "year": 2021,
+   "arxiv": "2106.05234",
+   "venue": "neurips",
+   "authors": [
+    "Chengxuan Ying",
+    "Tianle Cai",
+    "Shengjie Luo",
+    "Shuxin Zheng",
+    "Guolin Ke",
+    "Di He",
+    "Yanming Shen",
+    "Tie-Yan Liu"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "graph-neural-networks",
+    "transformers"
+   ],
+   "keywords": [
+    "graph transformer",
+    "structural encoding"
+   ],
+   "description": "Adds centrality, spatial and edge encodings to a standard Transformer for graph-level prediction (Graphormer).",
+   "cites": [
+    "transformer",
+    "gcn",
+    "gat",
+    "gin",
+    "graphsage"
+   ]
+  },
+  {
+   "key": "gem",
+   "title": "Heterogeneous Graph Neural Networks for Malicious Account Detection",
+   "year": 2018,
+   "arxiv": "2002.12307",
+   "venue": "cikm",
+   "authors": [
+    "Ziqi Liu",
+    "Chaochao Chen",
+    "Xinxing Yang",
+    "Jun Zhou",
+    "Xiaolong Li",
+    "Le Song"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "fraud-detection",
+    "heterogeneous-graphs",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "malicious accounts",
+    "device aggregation"
+   ],
+   "description": "Detects malicious accounts with a heterogeneous GNN over account-device graphs (GEM).",
+   "cites": [
+    "gcn",
+    "graphsage"
+   ]
+  },
+  {
+   "key": "gas",
+   "title": "Spam Review Detection with Graph Convolutional Networks",
+   "year": 2019,
+   "arxiv": "1908.10679",
+   "venue": "cikm",
+   "authors": [
+    "Ao Li",
+    "Zhou Qin",
+    "Runshi Liu",
+    "Yiqun Yang",
+    "Dong Li"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "fraud-detection",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "spam review detection",
+    "heterogeneous graph"
+   ],
+   "description": "Applies graph convolutional networks over a review graph and a comment graph to detect spam reviews (GAS).",
+   "cites": [
+    "gcn",
+    "graphsage"
+   ]
+  },
+  {
+   "key": "elliptic",
+   "title": "Anti-Money Laundering in Bitcoin: Experimenting with Graph Convolutional Networks for Financial Forensics",
+   "year": 2019,
+   "arxiv": "1908.02591",
+   "venue": "kdd-workshop",
+   "authors": [
+    "Mark Weber",
+    "Giacomo Domeniconi",
+    "Jie Chen",
+    "Daniel Karl I. Weidele",
+    "Claudio Bellei",
+    "Tom Robinson",
+    "Charles E. Leiserson"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "fraud-detection",
+    "graph-neural-networks",
+    "dynamic-graphs"
+   ],
+   "keywords": [
+    "anti-money laundering",
+    "Bitcoin",
+    "Elliptic dataset"
+   ],
+   "description": "Releases the Elliptic Bitcoin transaction graph and compares GCNs with other models for illicit-transaction classification.",
+   "cites": [
+    "gcn",
+    "evolvegcn"
+   ]
+  },
+  {
+   "key": "graphconsis",
+   "title": "Alleviating the Inconsistency Problem of Applying Graph Neural Network to Fraud Detection",
+   "year": 2020,
+   "arxiv": "2005.00625",
+   "venue": "sigir",
+   "authors": [
+    "Zhiwei Liu",
+    "Yingtong Dou",
+    "Philip S. Yu",
+    "Yutong Deng",
+    "Hao Peng"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "fraud-detection",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "context inconsistency",
+    "neighbour sampling"
+   ],
+   "description": "Identifies context, feature and relation inconsistency in fraud graphs and proposes GraphConsis to mitigate them.",
+   "cites": [
+    "gcn",
+    "graphsage",
+    "gat",
+    "gem",
+    "gas"
+   ]
+  },
+  {
+   "key": "care-gnn",
+   "title": "Enhancing Graph Neural Network-based Fraud Detectors against Camouflaged Fraudsters",
+   "year": 2020,
+   "arxiv": "2008.08692",
+   "venue": "cikm",
+   "authors": [
+    "Yingtong Dou",
+    "Zhiwei Liu",
+    "Li Sun",
+    "Yutong Deng",
+    "Hao Peng",
+    "Philip S. Yu"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "fraud-detection",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "camouflage",
+    "reinforcement-learned neighbour selection"
+   ],
+   "description": "Counters fraudster camouflage with a label-aware similarity measure and reinforcement-learned neighbour filtering (CARE-GNN).",
+   "cites": [
+    "graphconsis",
+    "gcn",
+    "graphsage",
+    "gat",
+    "rgcn",
+    "gem",
+    "gas"
+   ]
+  },
+  {
+   "key": "gad-survey",
+   "title": "A Comprehensive Survey on Graph Anomaly Detection with Deep Learning",
+   "year": 2021,
+   "arxiv": "2106.07178",
+   "venue": "tkde",
+   "authors": [
+    "Xiaoxiao Ma",
+    "Jia Wu",
+    "Shan Xue",
+    "Jian Yang",
+    "Chuan Zhou",
+    "Quan Z. Sheng",
+    "Hui Xiong",
+    "Leman Akoglu"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "fraud-detection",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "survey",
+    "anomaly detection"
+   ],
+   "description": "Surveys deep-learning methods for detecting anomalous nodes, edges, subgraphs and graphs.",
+   "cites": [
+    "care-gnn",
+    "graphconsis",
+    "gem",
+    "gas",
+    "gcn",
+    "gat",
+    "graphsage",
+    "deepwalk",
+    "node2vec"
+   ]
+  },
+  {
+   "key": "bwgnn",
+   "title": "Rethinking Graph Neural Networks for Anomaly Detection",
+   "year": 2022,
+   "arxiv": "2205.15508",
+   "venue": "icml",
+   "authors": [
+    "Jianheng Tang",
+    "Jiajin Li",
+    "Ziqi Gao",
+    "Jia Li"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "fraud-detection",
+    "graph-neural-networks"
+   ],
+   "keywords": [
+    "spectral analysis",
+    "beta wavelet"
+   ],
+   "description": "Observes a 'right-shift' of spectral energy caused by anomalies and proposes band-pass beta-wavelet filters (BWGNN).",
+   "cites": [
+    "care-gnn",
+    "gcn",
+    "gat",
+    "graphsage",
+    "gin",
+    "chebnet"
+   ]
+  },
+  {
+   "key": "dgraph",
+   "title": "DGraph: A Large-Scale Financial Dataset for Graph Anomaly Detection",
+   "year": 2022,
+   "arxiv": "2207.03579",
+   "venue": "neurips",
+   "authors": [
+    "Xuanwen Huang",
+    "Yang Yang",
+    "Yang Wang",
+    "Chunping Wang",
+    "Zhisheng Zhang",
+    "Jiarong Xu",
+    "Lei Chen",
+    "Michalis Vazirgiannis"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "fraud-detection",
+    "dynamic-graphs"
+   ],
+   "keywords": [
+    "dataset",
+    "financial fraud"
+   ],
+   "description": "Releases a large real-world dynamic financial graph for graph anomaly detection benchmarks.",
+   "cites": [
+    "elliptic",
+    "care-gnn",
+    "gcn",
+    "graphsage",
+    "gat"
+   ]
+  },
+  {
+   "key": "s2orc",
+   "title": "S2ORC: The Semantic Scholar Open Research Corpus",
+   "year": 2019,
+   "arxiv": "1911.02782",
+   "venue": "acl",
+   "authors": [
+    "Kyle Lo",
+    "Lucy Lu Wang",
+    "Mark Neumann",
+    "Rodney Kinney",
+    "Daniel S. Weld"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "scholarly-data"
+   ],
+   "keywords": [
+    "corpus",
+    "citation graph",
+    "full text"
+   ],
+   "description": "Releases a large corpus of English academic papers with metadata, full text and resolved citation links.",
+   "cites": [
+    "scibert"
+   ]
+  },
+  {
+   "key": "specter",
+   "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
+   "year": 2020,
+   "arxiv": "2004.07180",
+   "venue": "acl",
+   "authors": [
+    "Arman Cohan",
+    "Sergey Feldman",
+    "Iz Beltagy",
+    "Doug Downey",
+    "Daniel S. Weld"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "scholarly-data",
+    "pretrained-language-models",
+    "information-retrieval"
+   ],
+   "keywords": [
+    "document embeddings",
+    "citation-informed training"
+   ],
+   "description": "Learns paper-level embeddings by fine-tuning SciBERT with a triplet loss derived from the citation graph.",
+   "cites": [
+    "scibert",
+    "bert",
+    "sbert",
+    "s2orc"
+   ]
+  },
+  {
+   "key": "openalex",
+   "title": "OpenAlex: A fully-open index of scholarly works, authors, venues, institutions, and concepts",
+   "year": 2022,
+   "arxiv": "2205.01833",
+   "venue": "arxiv",
+   "authors": [
+    "Jason Priem",
+    "Heather Piwowar",
+    "Richard Orr"
+   ],
+   "authors_complete": true,
+   "topics": [
+    "scholarly-data"
+   ],
+   "keywords": [
+    "open metadata",
+    "bibliographic database"
+   ],
+   "description": "Describes OpenAlex, an open catalogue of scholarly works, authors, venues, institutions and concepts.",
+   "cites": []
+  }
+ ]
+}
