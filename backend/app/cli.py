@@ -26,7 +26,9 @@ from app.db.session import create_tables
 from app.graph.schema import apply_schema
 from app.ingestion.pipeline import IngestionParams
 from app.ingestion.seed import DEFAULT_SEED_PATH, seed_graph
+from app.repositories.analytics_runs import AnalyticsRunRepository
 from app.repositories.jobs import JobRepository
+from app.services.analytics import execute_run
 from app.services.ingestion import SOURCES, create_job, run_job
 
 app = typer.Typer(help="ResearchGraph: research intelligence over a citation knowledge graph.")
@@ -123,7 +125,7 @@ def ingest(
             from arq import create_pool
             from arq.connections import RedisSettings
 
-            from app.workers.ingestion import INGESTION_TASK
+            from app.workers.tasks import INGESTION_TASK
 
             pool = await create_pool(RedisSettings.from_dsn(r.settings.redis_url))
             await pool.enqueue_job(INGESTION_TASK, str(job_id), _job_id=f"ingest-{job_id}-cli")
@@ -156,6 +158,36 @@ def jobs(limit: Annotated[int, typer.Option(min=1, max=200)] = 20) -> None:
 
     lines = _run(work)
     typer.echo("\n".join(lines) if lines else "no jobs yet")
+
+
+@app.command()
+def analyze(
+    backend: Annotated[
+        str, typer.Option(help="auto (GDS if installed, else NetworkX), gds or networkx")
+    ] = "auto",
+    algorithm: Annotated[str, typer.Option(help="louvain or leiden")] = "louvain",
+    min_community_size: Annotated[int, typer.Option(min=1)] = 3,
+) -> None:
+    """Compute PageRank, degree, betweenness and communities and write them to the graph."""
+    if backend not in {"auto", "gds", "networkx"}:
+        raise typer.BadParameter("backend must be auto, gds or networkx")
+    if algorithm not in {"louvain", "leiden"}:
+        raise typer.BadParameter("algorithm must be louvain or leiden")
+
+    async def work(r: Resources) -> dict[str, object]:
+        await create_tables(r.engine)
+        runs = AnalyticsRunRepository(r.sessions)
+        run = await runs.create(
+            {
+                "backend": backend,
+                "community_algorithm": algorithm,
+                "min_community_size": min_community_size,
+            }
+        )
+        finished = await execute_run(r, run.id)
+        return {"run_id": str(finished.id), "status": finished.status.value, **finished.report}
+
+    typer.echo(json.dumps(_run(work), indent=2, default=str))
 
 
 if __name__ == "__main__":  # pragma: no cover

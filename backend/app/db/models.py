@@ -36,6 +36,10 @@ class JobStatus(enum.StrEnum):
     CANCELLED = "cancelled"
 
 
+# One shared PostgreSQL enum type for all job-like tables.
+JOB_STATUS_TYPE = Enum(JobStatus, name="job_status", values_callable=lambda e: [m.value for m in e])
+
+
 class IngestionJob(Base):
     __tablename__ = "ingestion_jobs"
 
@@ -43,7 +47,7 @@ class IngestionJob(Base):
     source: Mapped[str] = mapped_column(String(64))
     params: Mapped[dict[str, Any]] = mapped_column(default=dict)
     status: Mapped[JobStatus] = mapped_column(
-        Enum(JobStatus, name="job_status", values_callable=lambda e: [m.value for m in e]),
+        JOB_STATUS_TYPE,
         default=JobStatus.QUEUED,
         index=True,
     )
@@ -74,3 +78,23 @@ class RawRecord(Base):
         Uuid, ForeignKey("ingestion_jobs.id", ondelete="SET NULL"), default=None, index=True
     )
     fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class AnalyticsRun(Base):
+    """One batch analytics run (see app/analytics/service.py)."""
+
+    __tablename__ = "analytics_runs"
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    status: Mapped[JobStatus] = mapped_column(
+        JOB_STATUS_TYPE,
+        default=JobStatus.QUEUED,
+        index=True,
+    )
+    backend: Mapped[str | None] = mapped_column(String(32), default=None)
+    options: Mapped[dict[str, Any]] = mapped_column(default=dict)
+    report: Mapped[dict[str, Any]] = mapped_column(default=dict)
+    error: Mapped[str | None] = mapped_column(Text, default=None)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)

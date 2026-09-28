@@ -14,7 +14,7 @@ from app.db.models import JobStatus
 from app.repositories.jobs import JobRepository
 from app.schemas.ingestion import IngestionJobCreate, IngestionJobOut
 from app.services.ingestion import SOURCES
-from app.workers.ingestion import INGESTION_TASK
+from app.workers.tasks import INGESTION_TASK
 
 log = get_logger(__name__)
 

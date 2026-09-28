@@ -20,7 +20,7 @@ def sqlite_settings(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):  # type: i
 def test_help_lists_commands() -> None:
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    for command in ("init", "seed", "ingest", "jobs"):
+    for command in ("init", "seed", "ingest", "jobs", "analyze"):
         assert command in result.output
 
 
@@ -40,3 +40,9 @@ def test_ingest_validates_params_before_touching_services() -> None:
     result = runner.invoke(app, ["ingest", "--query", "x"])
     assert result.exit_code != 0
     assert "at least 2 characters" in result.output
+
+
+def test_analyze_validates_options() -> None:
+    result = runner.invoke(app, ["analyze", "--backend", "spark"])
+    assert result.exit_code != 0
+    assert "backend must be" in result.output

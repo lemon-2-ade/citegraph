@@ -113,8 +113,19 @@ async def runtime_queries() -> dict[str, str]:
 
 
 def _extra_runtime_hooks() -> list[Any]:
-    """Later modules register query producers here (analytics, search, ...)."""
-    return []
+    """Producers of dynamically built queries."""
+
+    async def shortest_paths(graph: RecordingGraph) -> None:
+        from app.analytics.queries import build_shortest_path_query
+
+        graph.queries["runtime:shortest_path.cites"] = build_shortest_path_query(
+            "Paper", "Paper", ["CITES"], 6
+        )
+        graph.queries["runtime:shortest_path.mixed"] = build_shortest_path_query(
+            "Author", "Topic", ["WROTE", "HAS_TOPIC", "COLLABORATED_WITH"], 8
+        )
+
+    return [shortest_paths]
 
 
 def main() -> None:

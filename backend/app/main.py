@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import entities, health, ingestion, papers
+from app.api import analytics, entities, health, ingestion, papers
 from app.core.config import Settings, get_settings
 from app.core.errors import register_error_handlers
 from app.core.logging import configure_logging, get_logger
@@ -63,7 +63,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         expose_headers=["X-Request-ID"],
     )
     register_error_handlers(app)
-    for router in (health.router, papers.router, entities.router, ingestion.router):
+    for router in (
+        health.router,
+        papers.router,
+        entities.router,
+        analytics.router,
+        analytics.runs,
+        ingestion.router,
+    ):
         app.include_router(router, prefix=settings.api_prefix)
     return app
 
