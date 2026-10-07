@@ -29,7 +29,20 @@ lint-cypher: ## Syntax/semantic-check every Cypher query with Neo4j's parser (ne
 	cd scripts/cypher-lint && npm ci --silent
 	cd $(BACKEND) && uv run python scripts/dump_cypher.py | node ../scripts/cypher-lint/lint.mjs
 
+frontend-install: ## Install frontend dependencies
+	cd frontend && npm ci
+
+frontend-dev: ## Run the frontend dev server (proxies /api to localhost:8000)
+	cd frontend && npm run dev
+
+frontend-check: ## Type-check, lint and test the frontend
+	cd frontend && npm run typecheck && npm run lint && npm test
+
+api-types: ## Regenerate the OpenAPI schema and the frontend's TypeScript types
+	cd $(BACKEND) && uv run python scripts/export_openapi.py --out ../frontend/openapi.json
+	cd frontend && npm run api-types
+
 format: ## Auto-format code
 	cd $(BACKEND) && uv run ruff format . && uv run ruff check --fix .
 
-.PHONY: help install up down dev test test-integration lint lint-cypher format
+.PHONY: help install up down dev test test-integration lint lint-cypher format frontend-install frontend-dev frontend-check api-types

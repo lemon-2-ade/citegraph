@@ -75,6 +75,13 @@ services:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
 
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+
   worker:
     build: ./backend
     command: ["arq", "app.workers.tasks.WorkerSettings"]
