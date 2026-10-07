@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import {
   useCitations,
+  useGraphNeighbourhood,
   usePaper,
+  usePaperCommunities,
   useReferences,
   useRelatedPapers,
   useSimilarPapers,
@@ -14,10 +16,55 @@ import { Pagination } from "../components/Pagination";
 import { Empty, ErrorState, Loading } from "../components/StateViews";
 import { formatCount, formatScore, paperTitle } from "../lib/format";
 
+const GraphCanvas = lazy(() => import("../graph/GraphCanvas").then((m) => ({ default: m.GraphCanvas })));
+
+function Neighbourhood({ id }: { id: string }) {
+  const [depth, setDepth] = useState<1 | 2>(1);
+  const hood = useGraphNeighbourhood(id, depth, 40);
+  const communities = usePaperCommunities();
+  return (
+    <section className="card" aria-labelledby="hood-heading">
+      <div className="card-head">
+        <h2 id="hood-heading">Citation neighbourhood</h2>
+        <Link to={`/graph?focus=${encodeURIComponent(id)}&depth=${depth}`}>Open in explorer →</Link>
+      </div>
+      <div className="card-body">
+        <div className="seg" role="group" aria-label="Neighbourhood depth" style={{ marginBottom: 12 }}>
+          {([1, 2] as const).map((d) => (
+            <button key={d} type="button" aria-pressed={depth === d} onClick={() => setDepth(d)}>
+              {d} hop{d > 1 ? "s" : ""}
+            </button>
+          ))}
+        </div>
+        {hood.isPending && <Loading label="Loading neighbourhood" />}
+        {hood.isError && <ErrorState error={hood.error} onRetry={() => void hood.refetch()} />}
+        {hood.data &&
+          (hood.data.nodes.length <= 1 ? (
+            <p className="muted">This paper has no citation links to other papers in the graph.</p>
+          ) : (
+            <div className="embed">
+              <Suspense fallback={<Loading />}>
+                <GraphCanvas
+                  view={hood.data}
+                  sizeBy="pagerank"
+                  colorBy="community"
+                  communities={communities.data}
+                  interactive={false}
+                  labelCount={5}
+                />
+              </Suspense>
+            </div>
+          ))}
+        <p className="small faint">Arrows point from the citing paper to the cited paper. The outlined node is this paper.</p>
+      </div>
+    </section>
+  );
+}
+
 function Metrics({ paper }: { paper: PaperDetail }) {
   const m = paper.metrics;
   return (
-    <section className="card" aria-labelledby="metrics-heading">
+    <section className="card card-pad" aria-labelledby="metrics-heading">
       <h2 id="metrics-heading">Graph metrics</h2>
       <dl className="kv">
         <dt>Cited by (in this graph)</dt>
@@ -54,7 +101,7 @@ function CitationLists({ id }: { id: string }) {
   };
 
   return (
-    <section className="card" aria-labelledby="links-heading">
+    <section className="card card-pad" aria-labelledby="links-heading">
       <h2 id="links-heading">Citation links</h2>
       <div className="tabs" role="group" aria-label="Link direction">
         <button type="button" className="btn tab" aria-pressed={direction === "citations"} onClick={() => choose("citations")}>
@@ -90,13 +137,15 @@ function CitationLists({ id }: { id: string }) {
 
 function SimilarList({ items }: { items: readonly SimilarPaper[] }) {
   return (
-    <ul className="paper-list">
+    <ul className="rows">
       {items.map((item) => (
-        <li key={item.paper.id} className="paper-item">
-          <Link className="paper-title" to={`/papers/${encodeURIComponent(item.paper.id)}`}>
+        <li key={item.paper.id} className="row">
+          <div>
+          <Link className="row-title" to={`/papers/${encodeURIComponent(item.paper.id)}`}>
             {paperTitle(item.paper.title)}
           </Link>
-          <div className="paper-meta">{item.explanation}</div>
+          <div className="row-meta">{item.explanation}</div>
+          </div>
         </li>
       ))}
     </ul>
@@ -109,7 +158,7 @@ function SimilarPapers({ id }: { id: string }) {
   const related = useRelatedPapers(id);
 
   return (
-    <section className="card" aria-labelledby="similar-heading">
+    <section className="card card-pad" aria-labelledby="similar-heading">
       <h2 id="similar-heading">Similar and related papers</h2>
       <p className="muted small">Based on citation structure only, not on paper text.</p>
       <div className="tabs" role="group" aria-label="Similarity method">
@@ -145,14 +194,17 @@ function SimilarPapers({ id }: { id: string }) {
 function Details({ paper }: { paper: PaperDetail }) {
   return (
     <div className="stack">
-      <div>
+      <div className="card hero">
+        <p className="small faint">
+          <Link to="/papers">Papers</Link> / {paper.year ?? "Undated"}
+        </p>
         <h1>{paperTitle(paper.title)}</h1>
-        <div className="paper-meta">
+        <div className="row-meta">
           {paper.authors.length > 0 ? paper.authors.map((a) => a.name).join(", ") : "Unknown authors"}
           {paper.year != null && <> · {paper.year}</>}
           {paper.venue && <> · {paper.venue.name}</>}
         </div>
-        <div className="paper-meta">
+        <div className="row-meta">
           {paper.doi && (
             <a href={`https://doi.org/${paper.doi}`} target="_blank" rel="noreferrer noopener">
               DOI {paper.doi}
@@ -173,24 +225,24 @@ function Details({ paper }: { paper: PaperDetail }) {
 
       <div className="two-col">
         <div className="stack">
-          <section className="card" aria-labelledby="abstract-heading">
+          <section className="card card-pad" aria-labelledby="abstract-heading">
             <h2 id="abstract-heading">Abstract</h2>
             {/* Source text is untrusted: rendered as plain text only, never as HTML. */}
-            <p style={{ whiteSpace: "pre-wrap", margin: 0 }}>
+            <p className="abstract" style={{ margin: 0 }}>
               {paper.abstract ?? <span className="muted">No abstract available.</span>}
             </p>
           </section>
           {(paper.topics.length > 0 || paper.keywords.length > 0) && (
-            <section className="card" aria-labelledby="topics-heading">
+            <section className="card card-pad" aria-labelledby="topics-heading">
               <h2 id="topics-heading">Topics and keywords</h2>
               <div className="chips">
                 {paper.topics.map((t) => (
-                  <span key={t.id} className="badge">
+                  <span key={t.id} className="chip">
                     {t.name}
                   </span>
                 ))}
                 {paper.keywords.map((k) => (
-                  <span key={k} className="badge">
+                  <span key={k} className="chip">
                     {k}
                   </span>
                 ))}
@@ -202,6 +254,7 @@ function Details({ paper }: { paper: PaperDetail }) {
         </div>
         <div className="stack">
           <Metrics paper={paper} />
+          <Neighbourhood id={paper.id} />
         </div>
       </div>
     </div>
