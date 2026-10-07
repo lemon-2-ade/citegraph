@@ -9,8 +9,9 @@ citations. Graph analytics — PageRank, centrality, community detection, simila
 shortest paths — run on that graph. Later phases add embeddings, semantic search,
 graph-aware RAG, natural-language graph querying, recommendations and a web client.
 
-**Status:** Phases 1–4 (foundation, graph model, ingestion, analytics) are implemented.
-The AI layer and the frontend are not built yet — see the [roadmap](#roadmap).
+**Status:** Phases 1–5 (foundation, graph model, ingestion, analytics, frontend foundation)
+are implemented. The AI layer and the graph visualisation are not built yet — see the
+[roadmap](#roadmap).
 
 ## Contents
 
@@ -37,12 +38,13 @@ knowledge graph stores explicitly.
 | Reliability | Jobs and checkpoints in PostgreSQL; a failed job resumes from its last committed page; background worker (Arq) |
 | Analytics | PageRank, degree, betweenness (sampled on large graphs), Louvain/Leiden communities, weighted collaboration graph, topic co-occurrence, bibliographic coupling, co-citation, Personalized PageRank, shortest paths — on Neo4j GDS or NetworkX |
 | API | Papers, citations/references, authors, topics, communities, influence rankings, similarity, shortest paths, ingestion jobs, analytics runs; OpenAPI at `/api/docs` |
+| Web client | Vite + React + TypeScript app: dashboard, paper browser with filters, paper detail with citations and similar papers; types generated from the OpenAPI schema ([docs/frontend.md](docs/frontend.md)) |
 | Engineering | Docker Compose stack, structured JSON logs with request/job IDs, admin-token-protected write endpoints, `mypy --strict`, ruff, unit + integration tests, Cypher linting, CI workflow |
 
 ## Architecture
 
 ```text
- Web client (Phase 5+)
+ Web client (React SPA, nginx)
         │  REST
  FastAPI ── read ──► Neo4j 5 + GDS        (knowledge graph + analytics properties)
         │
@@ -115,7 +117,8 @@ docker compose up -d --build
 docker compose exec backend researchgraph init
 docker compose exec backend researchgraph seed
 docker compose exec backend researchgraph analyze
-# API docs: http://localhost:8000/api/docs   Neo4j Browser: http://localhost:7474
+# Web UI: http://localhost:8080   API docs: http://localhost:8000/api/docs
+# Neo4j Browser: http://localhost:7474
 ```
 
 Example requests after seeding and analysing (IDs come from the list endpoints):
@@ -156,6 +159,7 @@ make test          # unit tests
 make lint          # ruff + mypy --strict
 make lint-cypher   # every Cypher query parsed and semantically checked
 make test-integration   # needs Neo4j/PostgreSQL; see docs/development.md
+make frontend-check     # frontend typecheck, eslint, vitest
 ```
 
 Integration tests (Neo4j client, schema, loader, seed, NetworkX/GDS analytics,
@@ -185,6 +189,9 @@ provider abstraction) will be written with those phases.
 - PostgreSQL schema changes are applied with `create_all`; migrations (Alembic) are not
   set up yet.
 - No end-user authentication or rate limiting yet; write operations are admin-only.
+- The frontend has component tests against a mocked API but no browser (end-to-end) tests
+  or accessibility audit yet; the nginx image and Compose wiring are exercised only by running
+  the stack.
 
 ## Roadmap
 
@@ -194,7 +201,8 @@ provider abstraction) will be written with those phases.
 | 2 | Neo4j integration, schema, repositories | done |
 | 3 | Ingestion pipeline (OpenAlex, dedup, resumable jobs, seed data) | done |
 | 4 | Graph analytics (PageRank, centrality, communities, similarity, paths) | done |
-| 5–6 | Frontend foundation, research explorer, graph visualisation | planned |
+| 5 | Frontend foundation: app shell, typed API client, dashboard, paper browser and detail | done |
+| 6 | Research explorer: authors, topics, communities, graph visualisation | planned |
 | 7 | Embeddings, vector index, semantic search | planned |
 | 8 | AI paper intelligence (topics, summaries, structured extraction) | planned |
 | 9 | Graph-aware RAG with citations | planned |

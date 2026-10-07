@@ -3,11 +3,11 @@
 ResearchGraph uses a citation knowledge graph as structured research memory; AI features
 (later phases) act as the reasoning and interaction layer over that graph.
 
-This document describes what exists today (Phases 1–4). Planned components are marked.
+This document describes what exists today (Phases 1–5). Planned components are marked.
 
 ```text
                   ┌──────────────────────────────┐
-                  │ Web client (Phase 5+)        │
+                  │ React SPA behind nginx       │
                   └──────────────┬───────────────┘
                                  │ REST (OpenAPI at /api/docs)
                   ┌──────────────▼───────────────┐
@@ -52,6 +52,8 @@ This document describes what exists today (Phases 1–4). Planned components are
 | `app/api` | HTTP routes and dependencies |
 | `app/workers` | Arq task definitions |
 | `app/cli.py` | `researchgraph` command |
+
+The web client lives in `frontend/` and is described in [frontend.md](frontend.md).
 
 Planned packages from the product spec (`ai/`, `rag/`) will be added with the phases that
 need them rather than as empty placeholders.

@@ -4,7 +4,7 @@
 
 - Python 3.12 and [uv](https://docs.astral.sh/uv/)
 - Docker with Compose v2 (for Neo4j, PostgreSQL and Redis)
-- Node.js 20+ (only for the Cypher lint step)
+- Node.js 20+ (frontend, and the Cypher lint step)
 
 ## First run
 
@@ -16,6 +16,7 @@ docker compose exec backend researchgraph init      # constraints, indexes, tabl
 docker compose exec backend researchgraph seed      # curated sample dataset
 docker compose exec backend researchgraph analyze   # PageRank, centrality, communities
 
+open http://localhost:8080                          # web UI
 open http://localhost:8000/api/docs                 # OpenAPI UI
 open http://localhost:7474                          # Neo4j Browser
 ```
@@ -81,6 +82,11 @@ builders against a recording fake — and `scripts/cypher-lint/lint.mjs` checks 
 Neo4j's `@neo4j-cypher/language-support` parser (syntax and semantic analysis, e.g.
 undefined variables). It does not know which procedures (GDS) exist, and it cannot catch
 runtime behaviour; integration tests cover that.
+
+## Frontend
+
+`make frontend-install && make frontend-dev` starts the Vite dev server on :5173 with `/api`
+proxied to the backend. See [frontend.md](frontend.md).
 
 ## Conventions
 
