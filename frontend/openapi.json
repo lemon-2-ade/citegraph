@@ -1943,6 +1943,24 @@
         ],
         "title": "VenueRef",
         "type": "object"
+      },
+      "YearCount": {
+        "properties": {
+          "papers": {
+            "title": "Papers",
+            "type": "integer"
+          },
+          "year": {
+            "title": "Year",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "year",
+          "papers"
+        ],
+        "title": "YearCount",
+        "type": "object"
       }
     }
   },
@@ -2225,6 +2243,31 @@
           }
         },
         "summary": "Summary",
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/api/analytics/years": {
+      "get": {
+        "operationId": "papers_per_year_api_analytics_years_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/YearCount"
+                  },
+                  "title": "Response Papers Per Year Api Analytics Years Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Number of ingested papers per publication year (stubs excluded)",
         "tags": [
           "analytics"
         ]
