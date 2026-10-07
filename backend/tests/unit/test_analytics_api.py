@@ -243,3 +243,12 @@ async def test_analytics_run_is_enqueued_once() -> None:
     assert client.post("/api/analytics/runs", json={}).status_code == 422
     assert client.get("/api/analytics/runs").json()[0]["options"]["community_algorithm"] == "leiden"
     await engine.dispose()
+
+
+def test_papers_per_year() -> None:
+    graph = ScriptedGraph(
+        {"analytics.papers_per_year": [{"year": 2016, "papers": 4}, {"year": 2017, "papers": 9}]}
+    )
+    resp = _client(graph).get("/api/analytics/years")
+    assert resp.status_code == 200
+    assert resp.json() == [{"year": 2016, "papers": 4}, {"year": 2017, "papers": 9}]

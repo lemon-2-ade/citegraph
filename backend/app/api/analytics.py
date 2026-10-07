@@ -24,6 +24,7 @@ from app.schemas.analytics import (
     GraphSummary,
     InfluentialResponse,
     PathResponse,
+    YearCount,
 )
 from app.workers.tasks import ANALYTICS_TASK
 
@@ -33,6 +34,16 @@ router = APIRouter()
 @router.get("/analytics/summary", tags=["analytics"], response_model=GraphSummary)
 async def summary(graph: GraphDep) -> GraphSummary:
     return await AnalyticsQueries(graph).summary()
+
+
+@router.get(
+    "/analytics/years",
+    tags=["analytics"],
+    response_model=list[YearCount],
+    summary="Number of ingested papers per publication year (stubs excluded)",
+)
+async def papers_per_year(graph: GraphDep) -> list[YearCount]:
+    return await AnalyticsQueries(graph).papers_per_year()
 
 
 @router.get(

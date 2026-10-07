@@ -35,6 +35,11 @@ class GraphSummary(ResponseModel):
     analytics_computed_at: str | None
 
 
+class YearCount(ResponseModel):
+    year: int
+    papers: int
+
+
 class RankedPaper(ResponseModel):
     paper: PaperSummary
     score: float

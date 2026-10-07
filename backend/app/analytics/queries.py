@@ -22,6 +22,7 @@ from app.schemas.analytics import (
     RankedAuthor,
     RankedPaper,
     SimilarPaper,
+    YearCount,
 )
 from app.schemas.graph import PaperSummary
 
@@ -42,6 +43,13 @@ RETURN
   COLLECT {
       MATCH (c:Community) RETURN toString(c.computed_at) ORDER BY c.computed_at DESC LIMIT 1
   }[0] AS analytics_computed_at
+"""
+
+_PAPERS_PER_YEAR = """
+MATCH (p:Paper)
+WHERE coalesce(p.is_stub, false) = false AND p.year IS NOT NULL
+RETURN p.year AS year, count(p) AS papers
+ORDER BY year
 """
 
 _INFLUENTIAL_PAPERS: dict[PaperMetric, LiteralString] = {
@@ -288,6 +296,10 @@ class AnalyticsQueries:
     async def summary(self) -> GraphSummary:
         rows = await self._graph.read(_SUMMARY_COUNTS, label="analytics.summary")
         return GraphSummary.model_validate(rows[0])
+
+    async def papers_per_year(self) -> list[YearCount]:
+        rows = await self._graph.read(_PAPERS_PER_YEAR, label="analytics.papers_per_year")
+        return [YearCount.model_validate(r) for r in rows]
 
     async def influential_papers(self, metric: PaperMetric, limit: int) -> InfluentialResponse:
         rows = await self._graph.read(
