@@ -543,6 +543,30 @@
         "title": "CountItem",
         "type": "object"
       },
+      "GraphEdge": {
+        "properties": {
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          },
+          "type": {
+            "default": "CITES",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "target",
+          "type"
+        ],
+        "title": "GraphEdge",
+        "type": "object"
+      },
       "GraphMetrics": {
         "description": "Structural metrics from graph analytics. ``None`` until analytics have run.",
         "properties": {
@@ -612,6 +636,100 @@
         "title": "GraphMetrics",
         "type": "object"
       },
+      "GraphNode": {
+        "description": "A paper as drawn in the graph view.",
+        "properties": {
+          "authors": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Authors",
+            "type": "array"
+          },
+          "cited_by_in_graph": {
+            "default": 0,
+            "title": "Cited By In Graph",
+            "type": "integer"
+          },
+          "community_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Community Id"
+          },
+          "community_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Community Label"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "is_stub": {
+            "default": false,
+            "title": "Is Stub",
+            "type": "boolean"
+          },
+          "pagerank": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagerank"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "year",
+          "pagerank",
+          "cited_by_in_graph",
+          "community_id",
+          "community_label",
+          "is_stub",
+          "authors"
+        ],
+        "title": "GraphNode",
+        "type": "object"
+      },
       "GraphSummary": {
         "properties": {
           "analytics_computed_at": {
@@ -675,6 +793,66 @@
           "analytics_computed_at"
         ],
         "title": "GraphSummary",
+        "type": "object"
+      },
+      "GraphView": {
+        "description": "A bounded subgraph for visualisation. Edges point from the citing to the cited paper.",
+        "properties": {
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/GraphEdge"
+            },
+            "title": "Edges",
+            "type": "array"
+          },
+          "focus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Focus"
+          },
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/GraphNode"
+            },
+            "title": "Nodes",
+            "type": "array"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "total_papers": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Papers"
+          },
+          "truncated": {
+            "default": false,
+            "title": "Truncated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "nodes",
+          "edges",
+          "focus",
+          "truncated",
+          "total_papers",
+          "note"
+        ],
+        "title": "GraphView",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -2207,6 +2385,117 @@
         "summary": "Get Community",
         "tags": [
           "communities"
+        ]
+      }
+    },
+    "/api/graph/neighborhood/{paper_id}": {
+      "get": {
+        "operationId": "neighborhood_api_graph_neighborhood__paper_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "paper_id",
+            "required": true,
+            "schema": {
+              "title": "Paper Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "depth",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "maximum": 2,
+              "minimum": 1,
+              "title": "Depth",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 60,
+              "maximum": 300,
+              "minimum": 5,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GraphView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Citation neighbourhood of a paper, for visualisation",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/api/graph/overview": {
+      "get": {
+        "operationId": "overview_api_graph_overview_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 80,
+              "maximum": 300,
+              "minimum": 5,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GraphView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Most influential papers and the citations among them, for visualisation",
+        "tags": [
+          "graph"
         ]
       }
     },

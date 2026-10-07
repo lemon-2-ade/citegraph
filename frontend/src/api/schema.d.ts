@@ -124,6 +124,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/graph/neighborhood/{paper_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Citation neighbourhood of a paper, for visualisation */
+        get: operations["neighborhood_api_graph_neighborhood__paper_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/graph/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Most influential papers and the citations among them, for visualisation */
+        get: operations["overview_api_graph_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/graph/shortest-path": {
         parameters: {
             query?: never;
@@ -541,6 +575,18 @@ export interface components {
             /** Name */
             name: string;
         };
+        /** GraphEdge */
+        GraphEdge: {
+            /** Source */
+            source: string;
+            /** Target */
+            target: string;
+            /**
+             * Type
+             * @default CITES
+             */
+            type: string;
+        };
         /**
          * GraphMetrics
          * @description Structural metrics from graph analytics. ``None`` until analytics have run.
@@ -556,6 +602,36 @@ export interface components {
             out_degree: number | null;
             /** Pagerank */
             pagerank: number | null;
+        };
+        /**
+         * GraphNode
+         * @description A paper as drawn in the graph view.
+         */
+        GraphNode: {
+            /** Authors */
+            authors: string[];
+            /**
+             * Cited By In Graph
+             * @default 0
+             */
+            cited_by_in_graph: number;
+            /** Community Id */
+            community_id: string | null;
+            /** Community Label */
+            community_label: string | null;
+            /** Id */
+            id: string;
+            /**
+             * Is Stub
+             * @default false
+             */
+            is_stub: boolean;
+            /** Pagerank */
+            pagerank: number | null;
+            /** Title */
+            title: string | null;
+            /** Year */
+            year: number | null;
         };
         /** GraphSummary */
         GraphSummary: {
@@ -579,6 +655,27 @@ export interface components {
             topics: number;
             /** Venues */
             venues: number;
+        };
+        /**
+         * GraphView
+         * @description A bounded subgraph for visualisation. Edges point from the citing to the cited paper.
+         */
+        GraphView: {
+            /** Edges */
+            edges: components["schemas"]["GraphEdge"][];
+            /** Focus */
+            focus: string | null;
+            /** Nodes */
+            nodes: components["schemas"]["GraphNode"][];
+            /** Note */
+            note: string;
+            /** Total Papers */
+            total_papers: number | null;
+            /**
+             * Truncated
+             * @default false
+             */
+            truncated: boolean;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -1177,6 +1274,71 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CommunityDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    neighborhood_api_graph_neighborhood__paper_id__get: {
+        parameters: {
+            query?: {
+                depth?: number;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                paper_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GraphView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    overview_api_graph_overview_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GraphView"];
                 };
             };
             /** @description Validation Error */
