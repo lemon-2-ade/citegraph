@@ -1,9 +1,19 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
-class Page[T](BaseModel):
+class ResponseModel(BaseModel):
+    """Base for API response models.
+
+    Fields with defaults are always present in responses, so the published OpenAPI schema
+    marks them required; generated clients then get non-optional types.
+    """
+
+    model_config = ConfigDict(json_schema_serialization_defaults_required=True)
+
+
+class Page[T](ResponseModel):
     items: list[T]
     total: int = Field(ge=0)
     page: int = Field(ge=1)

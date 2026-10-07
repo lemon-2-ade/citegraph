@@ -6,6 +6,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.schemas.common import ResponseModel
 from app.schemas.graph import PaperSummary
 
 PAGERANK_NOTE = (
@@ -21,7 +22,7 @@ BETWEENNESS_NOTE = (
 )
 
 
-class GraphSummary(BaseModel):
+class GraphSummary(ResponseModel):
     papers: int
     stub_papers: int
     authors: int
@@ -34,19 +35,19 @@ class GraphSummary(BaseModel):
     analytics_computed_at: str | None
 
 
-class RankedPaper(BaseModel):
+class RankedPaper(ResponseModel):
     paper: PaperSummary
     score: float
 
 
-class RankedAuthor(BaseModel):
+class RankedAuthor(ResponseModel):
     id: str
     name: str
     score: float
     paper_count: int | None = None
 
 
-class InfluentialResponse(BaseModel):
+class InfluentialResponse(ResponseModel):
     entity: Literal["paper", "author"]
     metric: str
     note: str
@@ -54,7 +55,7 @@ class InfluentialResponse(BaseModel):
     authors: list[RankedAuthor] = Field(default_factory=list)
 
 
-class SimilarPaper(BaseModel):
+class SimilarPaper(ResponseModel):
     paper: PaperSummary
     method: Literal["coupling", "cocitation", "ppr"]
     score: float
@@ -62,20 +63,20 @@ class SimilarPaper(BaseModel):
     explanation: str
 
 
-class PathNode(BaseModel):
+class PathNode(ResponseModel):
     id: str
     label: str
     name: str | None = None
     year: int | None = None
 
 
-class PathRelationship(BaseModel):
+class PathRelationship(ResponseModel):
     type: str
     source: str
     target: str
 
 
-class PathResponse(BaseModel):
+class PathResponse(ResponseModel):
     found: bool
     length: int | None = None
     nodes: list[PathNode] = Field(default_factory=list)
@@ -83,7 +84,7 @@ class PathResponse(BaseModel):
     explanation: str
 
 
-class CommunitySummary(BaseModel):
+class CommunitySummary(ResponseModel):
     id: str
     scope: Literal["papers", "authors"]
     rank: int
@@ -94,13 +95,13 @@ class CommunitySummary(BaseModel):
     computed_at: str | None = None
 
 
-class CountItem(BaseModel):
+class CountItem(ResponseModel):
     id: str | None = None
     name: str
     count: int
 
 
-class CommunityLink(BaseModel):
+class CommunityLink(ResponseModel):
     community_id: str
     label: str | None
     citations_out: int
@@ -122,7 +123,7 @@ class AnalyticsRunCreate(BaseModel):
     min_community_size: int = Field(default=3, ge=1, le=1000)
 
 
-class AnalyticsRunOut(BaseModel):
+class AnalyticsRunOut(ResponseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID

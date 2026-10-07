@@ -4,35 +4,37 @@ from __future__ import annotations
 
 from datetime import date
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from app.schemas.common import ResponseModel
 
 
-class AuthorRef(BaseModel):
+class AuthorRef(ResponseModel):
     id: str
     name: str
     orcid: str | None = None
     position: int | None = None
 
 
-class TopicRef(BaseModel):
+class TopicRef(ResponseModel):
     id: str
     name: str
     score: float | None = None
 
 
-class VenueRef(BaseModel):
+class VenueRef(ResponseModel):
     id: str
     name: str
     type: str | None = None
 
 
-class InstitutionRef(BaseModel):
+class InstitutionRef(ResponseModel):
     id: str
     name: str
     country: str | None = None
 
 
-class GraphMetrics(BaseModel):
+class GraphMetrics(ResponseModel):
     """Structural metrics from graph analytics. ``None`` until analytics have run."""
 
     pagerank: float | None = None
@@ -42,7 +44,7 @@ class GraphMetrics(BaseModel):
     community_id: str | None = None
 
 
-class PaperSummary(BaseModel):
+class PaperSummary(ResponseModel):
     id: str
     title: str | None
     year: int | None = None
@@ -57,7 +59,7 @@ class PaperSummary(BaseModel):
     is_stub: bool = False
 
 
-class PaperDetail(BaseModel):
+class PaperDetail(ResponseModel):
     id: str
     title: str | None
     abstract: str | None = None
@@ -82,13 +84,13 @@ class PaperDetail(BaseModel):
     metrics: GraphMetrics = Field(default_factory=GraphMetrics)
 
 
-class CollaboratorRef(BaseModel):
+class CollaboratorRef(ResponseModel):
     id: str
     name: str
     shared_papers: int
 
 
-class AuthorDetail(BaseModel):
+class AuthorDetail(ResponseModel):
     id: str
     name: str
     orcid: str | None = None
@@ -100,25 +102,25 @@ class AuthorDetail(BaseModel):
     metrics: GraphMetrics = Field(default_factory=GraphMetrics)
 
 
-class AuthorActivity(BaseModel):
+class AuthorActivity(ResponseModel):
     id: str
     name: str
     paper_count: int
 
 
-class TopicListItem(BaseModel):
+class TopicListItem(ResponseModel):
     id: str
     name: str
     paper_count: int
 
 
-class RelatedTopic(BaseModel):
+class RelatedTopic(ResponseModel):
     id: str
     name: str
     shared_papers: int
 
 
-class TopicDetail(BaseModel):
+class TopicDetail(ResponseModel):
     id: str
     name: str
     description: str | None = None
