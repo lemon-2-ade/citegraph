@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+
+import { DocIcon, GridIcon, NetworkIcon, SunMoonIcon } from "./Icons";
 
 type Theme = "system" | "light" | "dark";
 const THEMES: Theme[] = ["system", "light", "dark"];
@@ -32,28 +34,39 @@ function useTheme() {
 
 export function Layout() {
   const { theme, next } = useTheme();
+  const bleed = useLocation().pathname.startsWith("/graph");
   return (
-    <div className="shell">
-      <header className="header">
-        <div className="header-inner">
-          <span className="brand">ResearchGraph</span>
-          <nav className="nav" aria-label="Main">
-            <NavLink to="/" end>
-              Dashboard
-            </NavLink>
-            <NavLink to="/papers">Papers</NavLink>
-          </nav>
-          <button type="button" className="btn" onClick={next} aria-label={`Theme: ${theme}. Click to change.`}>
-            Theme: {theme}
+    <div className="app">
+      <aside className="sidebar">
+        <Link to="/" className="brand">
+          <span className="brand-mark">
+            <NetworkIcon size={18} />
+          </span>
+          ResearchGraph
+        </Link>
+        <nav className="nav" aria-label="Main">
+          <NavLink to="/" end>
+            <GridIcon /> Dashboard
+          </NavLink>
+          <NavLink to="/graph">
+            <NetworkIcon /> Graph explorer
+          </NavLink>
+          <NavLink to="/papers">
+            <DocIcon /> Papers
+          </NavLink>
+        </nav>
+        <div className="sidebar-foot">
+          <button type="button" className="btn btn-sm" onClick={next} aria-label={`Theme: ${theme}. Click to change.`}>
+            <SunMoonIcon /> Theme: {theme}
           </button>
+          <p className="sidebar-note">
+            Metrics describe the ingested citation graph only; they are not measures of research quality.
+          </p>
         </div>
-      </header>
-      <main className="main">
+      </aside>
+      <main className={bleed ? "main main--bleed" : "main"}>
         <Outlet />
       </main>
-      <footer className="footer">
-        Metrics describe the ingested citation graph only; they are not measures of research quality.
-      </footer>
     </div>
   );
 }

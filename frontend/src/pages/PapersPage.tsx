@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { type PaperListParams, type PaperSort, usePapers } from "../api/queries";
 import { PaperList } from "../components/PaperList";
 import { Pagination } from "../components/Pagination";
+import { PageHeader } from "../components/PageHeader";
 import { Empty, ErrorState, Loading } from "../components/StateViews";
 import { formatCount } from "../lib/format";
 
@@ -60,7 +61,7 @@ export function PapersPage() {
 
   return (
     <div className="stack">
-      <h1>Papers</h1>
+      <PageHeader title="Papers" subtitle="Browse ingested papers; sort by recency, PageRank or citations received." />
 
       <form className="card filters" onSubmit={onSubmit}>
         <label className="field">
@@ -92,7 +93,7 @@ export function PapersPage() {
         (papers.data.items.length === 0 ? (
           <Empty title="No papers match these filters">Try widening the year range.</Empty>
         ) : (
-          <section className="card" aria-label="Paper results">
+          <section className="card card-pad" aria-label="Paper results">
             <p className="muted small">{formatCount(papers.data.total)} papers</p>
             <PaperList papers={papers.data.items} showPagerank={sort === "pagerank"} />
             <Pagination

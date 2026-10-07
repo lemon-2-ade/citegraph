@@ -1,47 +1,126 @@
+/* Design tokens. Colours follow the validated reference data-viz palette: categorical
+   slots 1-8 in fixed order, a one-hue blue sequential ramp, text in ink tokens (never in
+   series colours). Dark values are selected steps for the dark surface, not an inversion. */
 :root {
-  --bg: #f6f7f9;
-  --surface: #ffffff;
-  --surface-2: #eef1f5;
-  --border: #d9dee6;
-  --text: #1a1f29;
-  --muted: #5b6575;
-  --accent: #2f6fed;
-  --accent-contrast: #ffffff;
-  --danger: #b3261e;
-  --warn-bg: #fff6df;
-  --warn-text: #6b4b00;
-  --radius: 10px;
-  --space: 16px;
+  --radius: 12px;
+  --radius-sm: 8px;
   --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  color-scheme: light;
+  --plane: #f9f9f7;
+  --surface: #fcfcfb;
+  --surface-2: #f2f1ee;
+  --surface-3: #e9e8e3;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --ink-3: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+  --border-strong: rgba(11, 11, 11, 0.2);
+  --accent: #2a78d6;
+  --accent-strong: #1c5cab;
+  --accent-ink: #ffffff;
+  --accent-soft: #e6f0fb;
+  --good: #006300;
+  --warn-bg: #fff4d6;
+  --warn-ink: #5c4200;
+  --critical: #b3261e;
+  --shadow: 0 1px 2px rgba(11, 11, 11, 0.05), 0 6px 20px rgba(11, 11, 11, 0.04);
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
+  --series-7: #4a3aa7;
+  --series-8: #e34948;
+  --series-other: #898781;
+  --seq-1: #cde2fb;
+  --seq-2: #9ec5f4;
+  --seq-3: #6da7ec;
+  --seq-4: #3987e5;
+  --seq-5: #1c5cab;
+  --seq-6: #104281;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0f1218;
-    --surface: #171c25;
-    --surface-2: #202734;
-    --border: #2b3445;
-    --text: #e8ecf3;
-    --muted: #9aa5b8;
-    --accent: #6c9bff;
-    --accent-contrast: #0b1020;
-    --danger: #ff8a80;
-    --warn-bg: #3a3012;
-    --warn-text: #ffd98a;
-  }
+  :root:where(:not([data-theme="light"])) {
+  color-scheme: dark;
+  --plane: #0d0d0d;
+  --surface: #1a1a19;
+  --surface-2: #232321;
+  --surface-3: #2c2c2a;
+  --ink: #ffffff;
+  --ink-2: #c3c2b7;
+  --ink-3: #898781;
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --accent: #3987e5;
+  --accent-strong: #6da7ec;
+  --accent-ink: #0b1020;
+  --accent-soft: #14233a;
+  --good: #0ca30c;
+  --warn-bg: #352b0c;
+  --warn-ink: #ffd98a;
+  --critical: #ff8a80;
+  --shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --series-7: #9085e9;
+  --series-8: #e66767;
+  --series-other: #898781;
+  --seq-1: #14233a;
+  --seq-2: #184f95;
+  --seq-3: #256abf;
+  --seq-4: #3987e5;
+  --seq-5: #6da7ec;
+  --seq-6: #9ec5f4;
+}
 }
 
 :root[data-theme="dark"] {
-  --bg: #0f1218;
-  --surface: #171c25;
-  --surface-2: #202734;
-  --border: #2b3445;
-  --text: #e8ecf3;
-  --muted: #9aa5b8;
-  --accent: #6c9bff;
-  --accent-contrast: #0b1020;
-  --danger: #ff8a80;
-  --warn-bg: #3a3012;
-  --warn-text: #ffd98a;
+  color-scheme: dark;
+  --plane: #0d0d0d;
+  --surface: #1a1a19;
+  --surface-2: #232321;
+  --surface-3: #2c2c2a;
+  --ink: #ffffff;
+  --ink-2: #c3c2b7;
+  --ink-3: #898781;
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --accent: #3987e5;
+  --accent-strong: #6da7ec;
+  --accent-ink: #0b1020;
+  --accent-soft: #14233a;
+  --good: #0ca30c;
+  --warn-bg: #352b0c;
+  --warn-ink: #ffd98a;
+  --critical: #ff8a80;
+  --shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --series-7: #9085e9;
+  --series-8: #e66767;
+  --series-other: #898781;
+  --seq-1: #14233a;
+  --seq-2: #184f95;
+  --seq-3: #256abf;
+  --seq-4: #3987e5;
+  --seq-5: #6da7ec;
+  --seq-6: #9ec5f4;
 }

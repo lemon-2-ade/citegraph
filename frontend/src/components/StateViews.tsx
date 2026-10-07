@@ -15,7 +15,7 @@ export function Loading({ label = "Loading" }: { label?: string }) {
 export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
   const message = error instanceof ApiError ? error.message : "Something went wrong.";
   return (
-    <div role="alert" className="card">
+    <div role="alert" className="card card-pad">
       <p className="error" style={{ marginTop: 0 }}>
         {message}
       </p>
@@ -30,7 +30,7 @@ export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () =>
 
 export function Empty({ title, children }: { title: string; children?: ReactNode }) {
   return (
-    <div className="card">
+    <div className="card empty">
       <strong>{title}</strong>
       {children && <div className="muted">{children}</div>}
     </div>
