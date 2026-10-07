@@ -17,7 +17,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
-COPY app ./app
+COPY --chmod=a+rX app ./app
 RUN uv sync --frozen --no-dev
 
 RUN useradd --create-home --uid 10001 researchgraph
