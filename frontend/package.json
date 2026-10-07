@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.1",
+    "cytoscape": "^3.34.3",
+    "cytoscape-fcose": "^2.2.0",
     "openapi-fetch": "^0.17.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",

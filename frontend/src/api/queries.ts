@@ -104,3 +104,45 @@ export function useRelatedPapers(id: string) {
       ),
   });
 }
+
+export function usePapersPerYear() {
+  return useQuery({
+    queryKey: ["papers-per-year"],
+    queryFn: () => unwrap(api.GET("/api/analytics/years")),
+    staleTime: STALE_MS,
+  });
+}
+
+export function usePaperCommunities() {
+  return useQuery({
+    queryKey: ["communities", "papers"],
+    queryFn: () =>
+      unwrap(api.GET("/api/communities", { params: { query: { scope: "papers", page_size: 50 } } })),
+    staleTime: STALE_MS,
+  });
+}
+
+export function useGraphOverview(limit: number) {
+  return useQuery({
+    queryKey: ["graph", "overview", limit],
+    queryFn: () => unwrap(api.GET("/api/graph/overview", { params: { query: { limit } } })),
+    placeholderData: keepPreviousData,
+    staleTime: STALE_MS,
+  });
+}
+
+export function useGraphNeighbourhood(id: string | null, depth: 1 | 2, limit: number) {
+  return useQuery({
+    queryKey: ["graph", "neighborhood", id, depth, limit],
+    queryFn: () =>
+      unwrap(
+        api.GET("/api/graph/neighborhood/{paper_id}", {
+          params: { path: { paper_id: id ?? "" }, query: { depth, limit } },
+        }),
+      ),
+    enabled: id !== null,
+    placeholderData: keepPreviousData,
+    staleTime: STALE_MS,
+    retry: (count, error) => !(error instanceof ApiError && error.isNotFound) && count < 2,
+  });
+}
