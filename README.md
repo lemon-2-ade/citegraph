@@ -103,7 +103,8 @@ quality; API responses say so explicitly.
 | GET | `/api/authors/{id}` | Papers, collaborators, topics, institutions, metrics |
 | GET | `/api/topics` · `/api/topics/{id}` | Topics, related topics, top papers/authors, papers per year |
 | GET | `/api/communities` · `/api/communities/{id}` | Research communities and their profile |
-| GET | `/api/analytics/summary` · `/api/analytics/influential` | Graph counts, influence rankings |
+| GET | `/api/analytics/summary` · `/api/analytics/influential` · `/api/analytics/years` | Graph counts, influence rankings, papers per year |
+| GET | `/api/graph/overview` · `/api/graph/neighborhood/{id}` | Capped node/edge views for the graph explorer |
 | GET | `/api/graph/shortest-path` | Shortest path between two nodes over chosen relationship types |
 | POST/GET | `/api/ingestion/jobs[/{id}[/resume]]` | Ingestion jobs (admin) |
 | POST/GET | `/api/analytics/runs[/{id}]` | Analytics runs (admin) |
