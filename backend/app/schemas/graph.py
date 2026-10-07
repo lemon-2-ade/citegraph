@@ -129,3 +129,35 @@ class TopicDetail(ResponseModel):
     related_topics: list[RelatedTopic] = Field(default_factory=list)
     top_authors: list[AuthorActivity] = Field(default_factory=list)
     papers_per_year: dict[int, int] = Field(default_factory=dict)
+
+
+class GraphNode(ResponseModel):
+    """A paper as drawn in the graph view."""
+
+    id: str
+    title: str | None
+    year: int | None = None
+    pagerank: float | None = None
+    cited_by_in_graph: int = 0
+    community_id: str | None = None
+    community_label: str | None = None
+    is_stub: bool = False
+    authors: list[str] = Field(default_factory=list)
+
+
+class GraphEdge(ResponseModel):
+    source: str
+    target: str
+    type: str = "CITES"
+
+
+class GraphView(ResponseModel):
+    """A bounded subgraph for visualisation. Edges point from the citing to the cited paper."""
+
+    nodes: list[GraphNode]
+    edges: list[GraphEdge]
+    focus: str | None = None
+    # True when more papers matched than are shown.
+    truncated: bool = False
+    total_papers: int | None = None
+    note: str
