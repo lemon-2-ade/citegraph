@@ -128,14 +128,14 @@ _GDS_BETWEENNESS: dict[str, LiteralString] = {
 
 _GDS_COMMUNITIES: dict[tuple[str, str], LiteralString] = {
     ("rg_citations_undirected", "louvain"): """
-        CALL gds.louvain.stream('rg_citations_undirected', {randomSeed: 42})
+        CALL gds.louvain.stream('rg_citations_undirected', {concurrency: 1})
         YIELD nodeId, communityId RETURN gds.util.asNode(nodeId).id AS id, communityId""",
     ("rg_citations_undirected", "leiden"): """
         CALL gds.leiden.stream('rg_citations_undirected', {randomSeed: 42})
         YIELD nodeId, communityId RETURN gds.util.asNode(nodeId).id AS id, communityId""",
     ("rg_collaboration", "louvain"): """
         CALL gds.louvain.stream('rg_collaboration',
-                                {randomSeed: 42, relationshipWeightProperty: 'weight'})
+                                {concurrency: 1, relationshipWeightProperty: 'weight'})
         YIELD nodeId, communityId RETURN gds.util.asNode(nodeId).id AS id, communityId""",
     ("rg_collaboration", "leiden"): """
         CALL gds.leiden.stream('rg_collaboration',
