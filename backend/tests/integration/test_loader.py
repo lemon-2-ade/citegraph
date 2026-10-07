@@ -32,7 +32,7 @@ async def _count(graph: GraphClient, query: str) -> int:
 async def test_load_is_idempotent_and_creates_stubs(neo4j_graph: GraphClient) -> None:
     await apply_schema(neo4j_graph)
     loader = GraphLoader(neo4j_graph)
-    base = _paper("Base Method", 2016, ["Ann Author"], [], arxiv="1600.00001")
+    base = _paper("Base Method", 2016, ["Ann Author", "Ben Builder"], [], arxiv="1600.00001")
     child = _paper(
         "Improved Method",
         2018,
@@ -52,7 +52,17 @@ async def test_load_is_idempotent_and_creates_stubs(neo4j_graph: GraphClient) ->
     assert await _count(neo4j_graph, "MATCH (p:Paper) RETURN count(p) AS n") == 3
     assert await _count(neo4j_graph, "MATCH ()-[r:CITES]->() RETURN count(r) AS n") == 2
     assert await _count(neo4j_graph, "MATCH (a:Author) RETURN count(a) AS n") == 2
-    assert await _count(neo4j_graph, "MATCH (:Author)-[w:WROTE]->() RETURN count(w) AS n") == 3
+    assert await _count(neo4j_graph, "MATCH (:Author)-[w:WROTE]->() RETURN count(w) AS n") == 4
+
+
+async def test_same_name_without_shared_coauthor_stays_separate(neo4j_graph: GraphClient) -> None:
+    """A bare name match is not enough: splitting is preferred over a wrong merge."""
+    await apply_schema(neo4j_graph)
+    loader = GraphLoader(neo4j_graph)
+    solo = _paper("Solo Work", 2016, ["Ann Author"], [], arxiv="1600.00002")
+    team = _paper("Team Work", 2018, ["Ann Author", "Ben Builder"], [], arxiv="1600.00003")
+    await loader.load([solo, team])
+    assert await _count(neo4j_graph, "MATCH (a:Author) RETURN count(a) AS n") == 3
 
 
 async def test_stub_is_filled_when_referenced_paper_arrives(neo4j_graph: GraphClient) -> None:
