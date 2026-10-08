@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 
-import { DocIcon, GridIcon, NetworkIcon, SunMoonIcon } from "./Icons";
+import { DocIcon, GridIcon, LayersIcon, NetworkIcon, SunMoonIcon, TagIcon, UsersIcon } from "./Icons";
+import { SearchBox } from "./SearchBox";
 
 type Theme = "system" | "light" | "dark";
 const THEMES: Theme[] = ["system", "light", "dark"];
@@ -44,6 +45,7 @@ export function Layout() {
           </span>
           ResearchGraph
         </Link>
+        <SearchBox />
         <nav className="nav" aria-label="Main">
           <NavLink to="/" end>
             <GridIcon /> Dashboard
@@ -53,6 +55,15 @@ export function Layout() {
           </NavLink>
           <NavLink to="/papers">
             <DocIcon /> Papers
+          </NavLink>
+          <NavLink to="/authors">
+            <UsersIcon /> Authors
+          </NavLink>
+          <NavLink to="/topics">
+            <TagIcon /> Topics
+          </NavLink>
+          <NavLink to="/communities">
+            <LayersIcon /> Communities
           </NavLink>
         </nav>
         <div className="sidebar-foot">
