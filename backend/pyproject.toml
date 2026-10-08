@@ -23,6 +23,10 @@ dependencies = [
     "typer>=0.12",
 ]
 
+[project.optional-dependencies]
+# Local CPU embeddings (ONNX). Used when no OPENAI_API_KEY is configured.
+local = ["fastembed>=0.5"]
+
 [dependency-groups]
 dev = [
     "pytest>=8.3",

@@ -59,8 +59,15 @@ class Settings(BaseSettings):
     # --- AI (used from Phase 7 onwards) ------------------------------------------
     llm_provider: Literal["openai", "gemini", "ollama"] = "openai"
     llm_model: str = "gpt-4o-mini"
-    embedding_provider: Literal["openai", "sentence-transformers"] = "openai"
-    embedding_model: str = "text-embedding-3-small"
+    # "auto" uses OpenAI when OPENAI_API_KEY is set and a local CPU model otherwise.
+    # "hashing" is a deterministic offline provider for tests and demos only.
+    embedding_provider: Literal["auto", "openai", "local", "hashing"] = "auto"
+    openai_embedding_model: str = "text-embedding-3-small"
+    # Optional reduced output size for OpenAI's text-embedding-3 models.
+    openai_embedding_dimensions: int | None = None
+    openai_base_url: str = "https://api.openai.com/v1"
+    local_embedding_model: str = "BAAI/bge-small-en-v1.5"
+    embedding_batch_size: int = 64
     openai_api_key: SecretStr | None = None
     gemini_api_key: SecretStr | None = None
     ollama_base_url: str = "http://localhost:11434"
@@ -71,6 +78,7 @@ class Settings(BaseSettings):
         "gemini_api_key",
         "openalex_mailto",
         "seed_path",
+        "openai_embedding_dimensions",
         mode="before",
     )
     @classmethod
