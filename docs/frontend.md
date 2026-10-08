@@ -20,8 +20,7 @@ Every view has loading, empty and error states. Stub papers (cited but not yet f
 labelled. Abstracts and titles come from external sources and are rendered as plain text,
 never as HTML.
 
-Not built yet:
-and everything AI-related.
+Not built yet: anything that needs an LLM (summaries, question answering, natural-language queries).
 
 ## Layout
 
