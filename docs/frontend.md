@@ -11,6 +11,7 @@ A Vite + React + TypeScript single-page app ([ADR-008](adr/008-frontend-vite-spa
 | `/authors`, `/authors/:id` | Prolific authors; an author's papers, topics, frequent collaborators and collaboration-graph metrics |
 | `/topics`, `/topics/:id` | Topic index; a topic's papers per year, most influential papers, active authors and related topics |
 | `/communities`, `/communities/:id` | Paper or author communities; sizes, papers per year, top papers/authors and citation links between communities |
+| `/search` | Paper search in hybrid, keyword or meaning mode; each result shows which method found it and at what rank |
 | (sidebar search) | Keyword search across papers, authors and topics, grouped by type |
 | `/papers` | Paper browser: year range, sort (year, PageRank, cited-by-in-graph), pagination. Filters live in the URL |
 | `/papers/:id` | Authors, venue, abstract, topics, graph metrics, citing and cited papers, structurally similar papers (shared references, co-citation) and papers reachable through citation paths, and an embedded citation-neighbourhood graph |
@@ -19,7 +20,7 @@ Every view has loading, empty and error states. Stub papers (cited but not yet f
 labelled. Abstracts and titles come from external sources and are rendered as plain text,
 never as HTML.
 
-Not built yet: semantic search (Phase 7),
+Not built yet:
 and everything AI-related.
 
 ## Layout

@@ -104,6 +104,7 @@ quality; API responses say so explicitly.
 | GET | `/api/topics` · `/api/topics/{id}` | Topics, related topics, top papers/authors, papers per year |
 | GET | `/api/communities` · `/api/communities/{id}` | Research communities and their profile |
 | GET | `/api/analytics/summary` · `/api/analytics/influential` · `/api/analytics/years` | Graph counts, influence rankings, papers per year |
+| GET | `/api/search/papers?q=&mode=keyword\|semantic\|hybrid` · `/api/papers/{id}/semantic-similar` | Paper search by BM25, embeddings or rank-fused hybrid; neighbours by meaning |
 | GET | `/api/search?q=` | Keyword search (Lucene full-text, prefix on the last term) over papers, authors, topics |
 | GET | `/api/graph/overview` · `/api/graph/neighborhood/{id}` | Capped node/edge views for the graph explorer |
 | GET | `/api/graph/shortest-path` | Shortest path between two nodes over chosen relationship types |
@@ -142,6 +143,7 @@ researchgraph seed                      load the curated seed dataset
 researchgraph ingest --query "..."      ingest from OpenAlex (--enqueue, --resume <job-id>, --hydrate N)
 researchgraph jobs                      recent ingestion jobs
 researchgraph analyze                   PageRank, centrality, communities (--backend, --algorithm)
+researchgraph embed                     embed papers + build the vector index (--rebuild after changing model)
 ```
 
 ## Dataset
@@ -175,7 +177,7 @@ workflow runs them against service containers.
 - [ADR-004](docs/adr/004-fastapi.md) FastAPI
 - [ADR-005](docs/adr/005-background-workers.md) Arq workers with durable state in PostgreSQL
 
-ADR-003 (hybrid graph + vector retrieval), ADR-006 (embedding model) and ADR-007 (LLM
+ADR-003 (hybrid graph + vector retrieval) and ADR-007 (LLM
 provider abstraction) will be written with those phases.
 
 ## Limitations
@@ -205,7 +207,7 @@ provider abstraction) will be written with those phases.
 | 4 | Graph analytics (PageRank, centrality, communities, similarity, paths) | done |
 | 5 | Frontend foundation: app shell, typed API client, dashboard, paper browser and detail | done |
 | 6 | Research explorer: authors, topics, communities, interactive graph explorer, keyword search | done |
-| 7 | Embeddings, vector index, semantic search | planned |
+| 7 | Embeddings, Neo4j vector index, semantic and hybrid search | done |
 | 8 | AI paper intelligence (topics, summaries, structured extraction) | planned |
 | 9 | Graph-aware RAG with citations | planned |
 | 10 | Natural language → validated read-only Cypher | planned |

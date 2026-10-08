@@ -44,7 +44,7 @@ stable when the same paper is later seen through a different source.
 `HAS_TOPIC` by `researchgraph analyze`, so they never drift from the base data.
 
 `HAS_EMBEDDING` from the product spec is modelled as a vector property on `Paper` plus a
-Neo4j vector index (Phase 7), which lets similarity search and traversal run in the same
+Neo4j vector index (`paper_embedding`, cosine; see [ADR-006](adr/006-embeddings-and-vector-store.md)), which lets similarity search and traversal run in the same
 Cypher query.
 
 ## Constraints
