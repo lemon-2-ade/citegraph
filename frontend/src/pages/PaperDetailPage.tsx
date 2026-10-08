@@ -78,7 +78,13 @@ function Metrics({ paper }: { paper: PaperDetail }) {
         <dt>Betweenness</dt>
         <dd>{formatScore(m.betweenness)}</dd>
         <dt>Community</dt>
-        <dd>{m.community_id ?? "—"}</dd>
+        <dd>
+          {m.community_id ? (
+            <Link to={`/communities/${encodeURIComponent(m.community_id)}`}>View community</Link>
+          ) : (
+            "—"
+          )}
+        </dd>
       </dl>
       <p className="note small">
         Structural metrics depend on which papers are in this graph. They are not measures of quality.
@@ -200,7 +206,14 @@ function Details({ paper }: { paper: PaperDetail }) {
         </p>
         <h1>{paperTitle(paper.title)}</h1>
         <div className="row-meta">
-          {paper.authors.length > 0 ? paper.authors.map((a) => a.name).join(", ") : "Unknown authors"}
+          {paper.authors.length > 0
+            ? paper.authors.map((a, i) => (
+                <span key={a.id}>
+                  {i > 0 && ", "}
+                  <Link to={`/authors/${encodeURIComponent(a.id)}`}>{a.name}</Link>
+                </span>
+              ))
+            : "Unknown authors"}
           {paper.year != null && <> · {paper.year}</>}
           {paper.venue && <> · {paper.venue.name}</>}
         </div>
@@ -237,9 +250,9 @@ function Details({ paper }: { paper: PaperDetail }) {
               <h2 id="topics-heading">Topics and keywords</h2>
               <div className="chips">
                 {paper.topics.map((t) => (
-                  <span key={t.id} className="chip">
+                  <Link key={t.id} className="chip" to={`/topics/${encodeURIComponent(t.id)}`}>
                     {t.name}
-                  </span>
+                  </Link>
                 ))}
                 {paper.keywords.map((k) => (
                   <span key={k} className="chip">

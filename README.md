@@ -104,6 +104,7 @@ quality; API responses say so explicitly.
 | GET | `/api/topics` · `/api/topics/{id}` | Topics, related topics, top papers/authors, papers per year |
 | GET | `/api/communities` · `/api/communities/{id}` | Research communities and their profile |
 | GET | `/api/analytics/summary` · `/api/analytics/influential` · `/api/analytics/years` | Graph counts, influence rankings, papers per year |
+| GET | `/api/search?q=` | Keyword search (Lucene full-text, prefix on the last term) over papers, authors, topics |
 | GET | `/api/graph/overview` · `/api/graph/neighborhood/{id}` | Capped node/edge views for the graph explorer |
 | GET | `/api/graph/shortest-path` | Shortest path between two nodes over chosen relationship types |
 | POST/GET | `/api/ingestion/jobs[/{id}[/resume]]` | Ingestion jobs (admin) |
