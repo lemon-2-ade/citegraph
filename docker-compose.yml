@@ -10,6 +10,8 @@ x-backend-env: &backend-env
   REDIS_URL: redis://redis:6379/0
   OPENALEX_MAILTO: ${OPENALEX_MAILTO:-}
   OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  # auto: OpenAI when OPENAI_API_KEY is set, otherwise a local CPU model.
+  EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-auto}
   ADMIN_API_TOKEN: ${ADMIN_API_TOKEN:-}
   SEED_PATH: /data/seed/papers.json
   LLM_PROVIDER: ${LLM_PROVIDER:-openai}
@@ -70,6 +72,7 @@ services:
       - "8000:8000"
     volumes:
       - ./data:/data:ro
+      - model-cache:/home/researchgraph/.cache/fastembed
     depends_on:
       neo4j: { condition: service_healthy }
       postgres: { condition: service_healthy }
@@ -88,6 +91,7 @@ services:
     environment: *backend-env
     volumes:
       - ./data:/data:ro
+      - model-cache:/home/researchgraph/.cache/fastembed
     depends_on:
       neo4j: { condition: service_healthy }
       postgres: { condition: service_healthy }
@@ -96,3 +100,4 @@ services:
 volumes:
   neo4j-data:
   postgres-data:
+  model-cache:

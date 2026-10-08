@@ -15,12 +15,15 @@ WORKDIR /app
 
 # Install dependencies first so they are cached independently of source changes.
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --no-install-project
+RUN uv sync --frozen --no-dev --no-install-project --extra local
 
 COPY --chmod=a+rX app ./app
-RUN uv sync --frozen --no-dev
+RUN uv sync --frozen --no-dev --extra local
 
 RUN useradd --create-home --uid 10001 researchgraph
+# fastembed downloads its model here on first use (a named volume keeps it across rebuilds).
+ENV FASTEMBED_CACHE_PATH=/home/researchgraph/.cache/fastembed
+RUN mkdir -p /home/researchgraph/.cache/fastembed && chown -R researchgraph /home/researchgraph/.cache
 USER researchgraph
 
 EXPOSE 8000
