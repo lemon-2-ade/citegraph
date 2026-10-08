@@ -3,6 +3,12 @@ import { Route, Routes } from "react-router-dom";
 
 import { Layout } from "./components/Layout";
 import { DashboardPage } from "./pages/DashboardPage";
+import { AuthorDetailPage } from "./pages/AuthorDetailPage";
+import { AuthorsPage } from "./pages/AuthorsPage";
+import { CommunitiesPage } from "./pages/CommunitiesPage";
+import { CommunityDetailPage } from "./pages/CommunityDetailPage";
+import { TopicDetailPage } from "./pages/TopicDetailPage";
+import { TopicsPage } from "./pages/TopicsPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { PaperDetailPage } from "./pages/PaperDetailPage";
 import { PapersPage } from "./pages/PapersPage";
@@ -25,6 +31,12 @@ export function App() {
         />
         <Route path="papers" element={<PapersPage />} />
         <Route path="papers/:paperId" element={<PaperDetailPage />} />
+        <Route path="authors" element={<AuthorsPage />} />
+        <Route path="authors/:authorId" element={<AuthorDetailPage />} />
+        <Route path="topics" element={<TopicsPage />} />
+        <Route path="topics/:topicId" element={<TopicDetailPage />} />
+        <Route path="communities" element={<CommunitiesPage />} />
+        <Route path="communities/:communityId" element={<CommunityDetailPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
