@@ -53,3 +53,17 @@ async def test_unknown_paper_raises(neo4j_graph: GraphClient) -> None:
     repo = await _prepared(neo4j_graph)
     with pytest.raises(NotFoundError):
         await repo.neighbourhood("paper:missing", 1, 10)
+
+
+async def test_search_finds_seed_papers_authors_and_topics(neo4j_graph: GraphClient) -> None:
+    from app.repositories.search import SearchRepository
+
+    await apply_schema(neo4j_graph)
+    await seed_graph(neo4j_graph)
+    await neo4j_graph.write("CALL db.awaitIndexes(30)")
+    repo = SearchRepository(neo4j_graph)
+    papers = (await repo.search("attention is all", 5)).papers
+    assert any("Attention Is All You Need" in h.title for h in papers)
+    assert (await repo.search("vaswani", 5)).authors
+    assert (await repo.search("attention mech", 5)).topics
+    assert (await repo.search("title:(", 5)).papers == []  # syntax is escaped, not executed

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import date
+from typing import Literal
 
 from pydantic import Field
 
@@ -161,3 +162,18 @@ class GraphView(ResponseModel):
     truncated: bool = False
     total_papers: int | None = None
     note: str
+
+
+class SearchHit(ResponseModel):
+    kind: Literal["paper", "author", "topic"]
+    id: str
+    title: str
+    subtitle: str | None = None
+    score: float
+
+
+class SearchResults(ResponseModel):
+    query: str
+    papers: list[SearchHit] = Field(default_factory=list)
+    authors: list[SearchHit] = Field(default_factory=list)
+    topics: list[SearchHit] = Field(default_factory=list)
