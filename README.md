@@ -204,7 +204,7 @@ provider abstraction) will be written with those phases.
 | 3 | Ingestion pipeline (OpenAlex, dedup, resumable jobs, seed data) | done |
 | 4 | Graph analytics (PageRank, centrality, communities, similarity, paths) | done |
 | 5 | Frontend foundation: app shell, typed API client, dashboard, paper browser and detail | done |
-| 6 | Research explorer: authors, topics, communities, graph visualisation | planned |
+| 6 | Research explorer: authors, topics, communities, interactive graph explorer, keyword search | done |
 | 7 | Embeddings, vector index, semantic search | planned |
 | 8 | AI paper intelligence (topics, summaries, structured extraction) | planned |
 | 9 | Graph-aware RAG with citations | planned |
