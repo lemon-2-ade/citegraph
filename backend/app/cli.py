@@ -5,6 +5,7 @@ researchgraph seed                       load the curated seed dataset
 researchgraph ingest --query "..."       ingest from OpenAlex (inline, or --enqueue)
 researchgraph ingest --resume <job-id>   resume a failed/interrupted job
 researchgraph jobs                       list recent ingestion jobs
+researchgraph embed [--rebuild]          embed papers and build the vector index
 """
 
 from __future__ import annotations
@@ -19,7 +20,9 @@ from typing import Annotated
 import typer
 from pydantic import ValidationError
 
+from app.ai.embeddings import build_provider
 from app.core.config import get_settings
+from app.core.errors import ResearchGraphError
 from app.core.logging import configure_logging
 from app.core.resources import Resources
 from app.db.session import create_tables
@@ -29,6 +32,7 @@ from app.ingestion.seed import DEFAULT_SEED_PATH, seed_graph
 from app.repositories.analytics_runs import AnalyticsRunRepository
 from app.repositories.jobs import JobRepository
 from app.services.analytics import execute_run
+from app.services.embedding import embed_papers
 from app.services.ingestion import SOURCES, create_job, run_job
 
 app = typer.Typer(help="ResearchGraph: research intelligence over a citation knowledge graph.")
@@ -192,3 +196,31 @@ def analyze(
 
 if __name__ == "__main__":  # pragma: no cover
     app()
+
+
+@app.command()
+def embed(
+    rebuild: Annotated[
+        bool, typer.Option(help="Drop vectors and the index first (required after changing model)")
+    ] = False,
+    batch_size: Annotated[int | None, typer.Option(min=1, max=512)] = None,
+) -> None:
+    """Embed papers and build the vector index (incremental; safe to re-run)."""
+    settings = get_settings()
+
+    async def work(r: Resources) -> dict[str, object]:
+        # Loading a local model is slow and blocking, so build the provider off-loop.
+        provider = await asyncio.to_thread(build_provider, settings)
+        stats = await embed_papers(
+            r.graph,
+            provider,
+            rebuild=rebuild,
+            batch_size=batch_size or settings.embedding_batch_size,
+        )
+        return stats.as_dict()
+
+    try:
+        typer.echo(json.dumps(_run(work), indent=2))
+    except ResearchGraphError as exc:
+        typer.secho(exc.message, err=True, fg=typer.colors.RED)
+        raise typer.Exit(1) from exc
