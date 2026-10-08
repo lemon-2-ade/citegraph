@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useSearch } from "../api/queries";
 
@@ -27,6 +27,7 @@ export function SearchBox() {
   const results = useSearch(debounced);
   const listId = useId();
   const root = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onDown = (e: MouseEvent) => {
@@ -54,7 +55,13 @@ export function SearchBox() {
           setOpen(true);
         }}
         onFocus={() => setOpen(true)}
-        onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") setOpen(false);
+          if (e.key === "Enter" && text.trim().length >= 2) {
+            setOpen(false);
+            navigate(`/search?q=${encodeURIComponent(text.trim())}`);
+          }
+        }}
       />
       {show && (
         <div className="search-pop card" id={listId}>
@@ -76,6 +83,10 @@ export function SearchBox() {
                 </div>
               );
             })}
+          <Link to={`/search?q=${encodeURIComponent(text.trim())}`} className="search-hit" onClick={() => setOpen(false)}>
+            <span>Search papers by meaning too →</span>
+            <small>Press Enter for keyword, meaning and hybrid results</small>
+          </Link>
         </div>
       )}
     </div>

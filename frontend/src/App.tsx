@@ -7,6 +7,7 @@ import { AuthorDetailPage } from "./pages/AuthorDetailPage";
 import { AuthorsPage } from "./pages/AuthorsPage";
 import { CommunitiesPage } from "./pages/CommunitiesPage";
 import { CommunityDetailPage } from "./pages/CommunityDetailPage";
+import { SearchPage } from "./pages/SearchPage";
 import { TopicDetailPage } from "./pages/TopicDetailPage";
 import { TopicsPage } from "./pages/TopicsPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
@@ -31,6 +32,7 @@ export function App() {
         />
         <Route path="papers" element={<PapersPage />} />
         <Route path="papers/:paperId" element={<PaperDetailPage />} />
+        <Route path="search" element={<SearchPage />} />
         <Route path="authors" element={<AuthorsPage />} />
         <Route path="authors/:authorId" element={<AuthorDetailPage />} />
         <Route path="topics" element={<TopicsPage />} />

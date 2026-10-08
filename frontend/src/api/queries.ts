@@ -213,3 +213,34 @@ export function useCommunity(id: string) {
     retry: (count, error) => !(error instanceof ApiError && error.isNotFound) && count < 2,
   });
 }
+
+export type SearchMode = "keyword" | "semantic" | "hybrid";
+
+export function usePaperSearch(text: string, mode: SearchMode) {
+  const q = text.trim();
+  return useQuery({
+    queryKey: ["search", "papers", q, mode],
+    queryFn: () =>
+      unwrap(api.GET("/api/search/papers", { params: { query: { q, mode, limit: 20 } } })),
+    enabled: q.length >= 2,
+    placeholderData: keepPreviousData,
+    staleTime: STALE_MS,
+    // A 409 means embeddings are not set up; retrying will not change that.
+    retry: (count, error) => !(error instanceof ApiError && error.status === 409) && count < 2,
+  });
+}
+
+export function useSemanticSimilar(id: string, enabled: boolean) {
+  return useQuery({
+    queryKey: ["semantic-similar", id],
+    queryFn: () =>
+      unwrap(
+        api.GET("/api/papers/{paper_id}/semantic-similar", {
+          params: { path: { paper_id: id }, query: { limit: 8 } },
+        }),
+      ),
+    enabled,
+    staleTime: STALE_MS,
+    retry: false,
+  });
+}

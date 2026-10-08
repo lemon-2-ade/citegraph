@@ -8,6 +8,7 @@ import {
   usePaperCommunities,
   useReferences,
   useRelatedPapers,
+  useSemanticSimilar,
   useSimilarPapers,
 } from "../api/queries";
 import type { PaperDetail, SimilarPaper } from "../api/types";
@@ -159,20 +160,25 @@ function SimilarList({ items }: { items: readonly SimilarPaper[] }) {
 }
 
 function SimilarPapers({ id }: { id: string }) {
-  const [method, setMethod] = useState<"coupling" | "cocitation">("coupling");
-  const similar = useSimilarPapers(id, method);
+  const [method, setMethod] = useState<"coupling" | "cocitation" | "meaning">("coupling");
+  const structural = useSimilarPapers(id, method === "meaning" ? "coupling" : method);
+  const meaning = useSemanticSimilar(id, method === "meaning");
+  const similar = method === "meaning" ? meaning : structural;
   const related = useRelatedPapers(id);
 
   return (
     <section className="card card-pad" aria-labelledby="similar-heading">
       <h2 id="similar-heading">Similar and related papers</h2>
-      <p className="muted small">Based on citation structure only, not on paper text.</p>
+      <p className="muted small">Structural methods use citations only; "Similar meaning" compares title and abstract text.</p>
       <div className="tabs" role="group" aria-label="Similarity method">
         <button type="button" className="btn tab" aria-pressed={method === "coupling"} onClick={() => setMethod("coupling")}>
           Shared references
         </button>
         <button type="button" className="btn tab" aria-pressed={method === "cocitation"} onClick={() => setMethod("cocitation")}>
           Cited together
+        </button>
+        <button type="button" className="btn tab" aria-pressed={method === "meaning"} onClick={() => setMethod("meaning")}>
+          Similar meaning
         </button>
       </div>
       {similar.isPending && <Loading />}
