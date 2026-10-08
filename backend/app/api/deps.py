@@ -10,6 +10,7 @@ from arq.connections import ArqRedis, RedisSettings
 from fastapi import Depends, Header, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
+from app.ai.embeddings import EmbedderCache
 from app.core.config import Settings
 from app.core.errors import DependencyUnavailableError
 from app.core.logging import get_logger
@@ -26,6 +27,14 @@ def get_settings_dep(request: Request) -> Settings:
 def get_graph(request: Request) -> GraphClient:
     graph: GraphClient = request.app.state.graph
     return graph
+
+
+def get_embedder(request: Request) -> EmbedderCache:
+    embedder: EmbedderCache | None = getattr(request.app.state, "embedder", None)
+    if embedder is None:
+        embedder = EmbedderCache(request.app.state.settings)
+        request.app.state.embedder = embedder
+    return embedder
 
 
 def get_sessions(request: Request) -> async_sessionmaker[AsyncSession]:
@@ -59,6 +68,7 @@ def require_admin(request: Request, x_admin_token: Annotated[str | None, Header(
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid or missing X-Admin-Token")
 
 
+EmbedderDep = Annotated[EmbedderCache, Depends(get_embedder)]
 GraphDep = Annotated[GraphClient, Depends(get_graph)]
 SessionsDep = Annotated[async_sessionmaker[AsyncSession], Depends(get_sessions)]
 QueueDep = Annotated[ArqRedis, Depends(get_queue)]

@@ -11,6 +11,7 @@ from app.repositories.papers import PaperRepository, PaperSort
 from app.schemas.analytics import SimilarPaper
 from app.schemas.common import Page, PageParams
 from app.schemas.graph import PaperDetail, PaperSummary
+from app.services.paper_search import semantic_similar
 
 router = APIRouter(prefix="/papers", tags=["papers"])
 
@@ -114,3 +115,16 @@ async def related_papers(
         for pid, score in scores.items()
         if pid in summaries
     ]
+
+
+@router.get(
+    "/{paper_id}/semantic-similar",
+    summary="Papers whose title and abstract are closest in meaning (embedding similarity)",
+    response_model=list[SimilarPaper],
+)
+async def semantically_similar_papers(
+    paper_id: str,
+    graph: GraphDep,
+    limit: Annotated[int, Query(ge=1, le=50)] = 10,
+) -> list[SimilarPaper]:
+    return await semantic_similar(graph, paper_id, limit)

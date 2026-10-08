@@ -177,3 +177,20 @@ class SearchResults(ResponseModel):
     papers: list[SearchHit] = Field(default_factory=list)
     authors: list[SearchHit] = Field(default_factory=list)
     topics: list[SearchHit] = Field(default_factory=list)
+
+
+class PaperHit(ResponseModel):
+    paper: PaperSummary
+    # Keyword: BM25; semantic: cosine similarity; hybrid: reciprocal-rank-fusion score.
+    score: float
+    matched_by: list[Literal["keyword", "semantic"]] = Field(default_factory=list)
+    keyword_rank: int | None = None
+    semantic_rank: int | None = None
+
+
+class PaperSearchResults(ResponseModel):
+    query: str
+    mode: Literal["keyword", "semantic", "hybrid"]
+    hits: list[PaperHit] = Field(default_factory=list)
+    semantic_available: bool = True
+    note: str | None = None

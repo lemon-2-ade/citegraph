@@ -62,7 +62,7 @@ class InfluentialResponse(ResponseModel):
 
 class SimilarPaper(ResponseModel):
     paper: PaperSummary
-    method: Literal["coupling", "cocitation", "ppr"]
+    method: Literal["coupling", "cocitation", "ppr", "semantic"]
     score: float
     shared: int | None = None
     explanation: str

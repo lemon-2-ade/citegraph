@@ -10,6 +10,7 @@ import re
 from typing import Any, Literal, LiteralString
 
 from app.graph.client import GraphClient
+from app.repositories.papers import SUMMARY
 from app.schemas.graph import SearchHit, SearchResults
 
 # Lucene query syntax characters (and the word operators) that user text must not trigger.
@@ -60,9 +61,30 @@ LIMIT $limit
 """
 
 
+_KEYWORD_PAPERS: LiteralString = (
+    """
+CALL db.index.fulltext.queryNodes('paper_text', $q, {limit: $limit}) YIELD node AS p, score
+WHERE coalesce(p.is_stub, false) = false
+RETURN"""
+    + SUMMARY
+    + """, score
+ORDER BY score DESC, id
+"""
+)
+
+
 class SearchRepository:
     def __init__(self, graph: GraphClient) -> None:
         self._graph = graph
+
+    async def keyword_papers(self, text: str, limit: int) -> list[dict[str, Any]]:
+        """Papers by BM25 over title, abstract and description, with summary fields."""
+        query = to_lucene(text)
+        if query is None:
+            return []
+        return await self._graph.read(
+            _KEYWORD_PAPERS, {"q": query, "limit": limit}, label="search.keyword_papers"
+        )
 
     async def search(self, text: str, limit: int) -> SearchResults:
         query = to_lucene(text)

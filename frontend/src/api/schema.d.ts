@@ -363,6 +363,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/papers/{paper_id}/semantic-similar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Papers whose title and abstract are closest in meaning (embedding similarity) */
+        get: operations["semantically_similar_papers_api_papers__paper_id__semantic_similar_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/papers/{paper_id}/similar": {
         parameters: {
             query?: never;
@@ -389,6 +406,23 @@ export interface paths {
         };
         /** Keyword search over papers, authors and topics */
         get: operations["search_api_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/search/papers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search papers by keyword (BM25), meaning (embeddings) or both (hybrid) */
+        get: operations["search_paper_hits_api_search_papers_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -894,6 +928,37 @@ export interface components {
             /** Year */
             year: number | null;
         };
+        /** PaperHit */
+        PaperHit: {
+            /** Keyword Rank */
+            keyword_rank: number | null;
+            /** Matched By */
+            matched_by: ("keyword" | "semantic")[];
+            paper: components["schemas"]["PaperSummary"];
+            /** Score */
+            score: number;
+            /** Semantic Rank */
+            semantic_rank: number | null;
+        };
+        /** PaperSearchResults */
+        PaperSearchResults: {
+            /** Hits */
+            hits: components["schemas"]["PaperHit"][];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "keyword" | "semantic" | "hybrid";
+            /** Note */
+            note: string | null;
+            /** Query */
+            query: string;
+            /**
+             * Semantic Available
+             * @default true
+             */
+            semantic_available: boolean;
+        };
         /** PaperSummary */
         PaperSummary: {
             /** Arxiv Id */
@@ -1019,7 +1084,7 @@ export interface components {
              * Method
              * @enum {string}
              */
-            method: "coupling" | "cocitation" | "ppr";
+            method: "coupling" | "cocitation" | "ppr" | "semantic";
             paper: components["schemas"]["PaperSummary"];
             /** Score */
             score: number;
@@ -1819,6 +1884,39 @@ export interface operations {
             };
         };
     };
+    semantically_similar_papers_api_papers__paper_id__semantic_similar_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                paper_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SimilarPaper"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     similar_papers_api_papers__paper_id__similar_get: {
         parameters: {
             query?: {
@@ -1872,6 +1970,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchResults"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    search_paper_hits_api_search_papers_get: {
+        parameters: {
+            query: {
+                q: string;
+                mode?: "keyword" | "semantic" | "hybrid";
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaperSearchResults"];
                 };
             };
             /** @description Validation Error */

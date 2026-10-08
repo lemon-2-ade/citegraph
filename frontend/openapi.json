@@ -1406,6 +1406,108 @@
         "title": "PaperDetail",
         "type": "object"
       },
+      "PaperHit": {
+        "properties": {
+          "keyword_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keyword Rank"
+          },
+          "matched_by": {
+            "items": {
+              "enum": [
+                "keyword",
+                "semantic"
+              ],
+              "type": "string"
+            },
+            "title": "Matched By",
+            "type": "array"
+          },
+          "paper": {
+            "$ref": "#/components/schemas/PaperSummary"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
+          "semantic_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Semantic Rank"
+          }
+        },
+        "required": [
+          "paper",
+          "score",
+          "matched_by",
+          "keyword_rank",
+          "semantic_rank"
+        ],
+        "title": "PaperHit",
+        "type": "object"
+      },
+      "PaperSearchResults": {
+        "properties": {
+          "hits": {
+            "items": {
+              "$ref": "#/components/schemas/PaperHit"
+            },
+            "title": "Hits",
+            "type": "array"
+          },
+          "mode": {
+            "enum": [
+              "keyword",
+              "semantic",
+              "hybrid"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "semantic_available": {
+            "default": true,
+            "title": "Semantic Available",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "query",
+          "mode",
+          "hits",
+          "semantic_available",
+          "note"
+        ],
+        "title": "PaperSearchResults",
+        "type": "object"
+      },
       "PaperSummary": {
         "properties": {
           "arxiv_id": {
@@ -1801,7 +1903,8 @@
             "enum": [
               "coupling",
               "cocitation",
-              "ppr"
+              "ppr",
+              "semantic"
             ],
             "title": "Method",
             "type": "string"
@@ -3355,6 +3458,64 @@
         ]
       }
     },
+    "/api/papers/{paper_id}/semantic-similar": {
+      "get": {
+        "operationId": "semantically_similar_papers_api_papers__paper_id__semantic_similar_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "paper_id",
+            "required": true,
+            "schema": {
+              "title": "Paper Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SimilarPaper"
+                  },
+                  "title": "Response Semantically Similar Papers Api Papers  Paper Id  Semantic Similar Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Papers whose title and abstract are closest in meaning (embedding similarity)",
+        "tags": [
+          "papers"
+        ]
+      }
+    },
     "/api/papers/{paper_id}/similar": {
       "get": {
         "operationId": "similar_papers_api_papers__paper_id__similar_get",
@@ -3477,6 +3638,76 @@
           }
         },
         "summary": "Keyword search over papers, authors and topics",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/api/search/papers": {
+      "get": {
+        "operationId": "search_paper_hits_api_search_papers_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "title": "Q",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "mode",
+            "required": false,
+            "schema": {
+              "default": "hybrid",
+              "enum": [
+                "keyword",
+                "semantic",
+                "hybrid"
+              ],
+              "title": "Mode",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaperSearchResults"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Search papers by keyword (BM25), meaning (embeddings) or both (hybrid)",
         "tags": [
           "search"
         ]
