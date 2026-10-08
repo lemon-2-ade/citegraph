@@ -146,3 +146,70 @@ export function useGraphNeighbourhood(id: string | null, depth: 1 | 2, limit: nu
     retry: (count, error) => !(error instanceof ApiError && error.isNotFound) && count < 2,
   });
 }
+
+export function useSearch(text: string) {
+  const q = text.trim();
+  return useQuery({
+    queryKey: ["search", q],
+    queryFn: () => unwrap(api.GET("/api/search", { params: { query: { q, limit: 6 } } })),
+    enabled: q.length >= 2,
+    staleTime: STALE_MS,
+  });
+}
+
+export function useAuthor(id: string) {
+  return useQuery({
+    queryKey: ["author", id],
+    queryFn: () => unwrap(api.GET("/api/authors/{author_id}", { params: { path: { author_id: id } } })),
+    staleTime: STALE_MS,
+    retry: (count, error) => !(error instanceof ApiError && error.isNotFound) && count < 2,
+  });
+}
+
+export function useInfluentialAuthors(limit = 25) {
+  return useQuery({
+    queryKey: ["influential", "author", "paper_count", limit],
+    queryFn: () =>
+      unwrap(
+        api.GET("/api/analytics/influential", {
+          params: { query: { entity: "author", metric: "paper_count", limit } },
+        }),
+      ),
+    staleTime: STALE_MS,
+  });
+}
+
+export function useTopics() {
+  return useQuery({
+    queryKey: ["topics"],
+    queryFn: () => unwrap(api.GET("/api/topics", { params: { query: { page: 1, page_size: 100 } } })),
+    staleTime: STALE_MS,
+  });
+}
+
+export function useTopic(id: string) {
+  return useQuery({
+    queryKey: ["topic", id],
+    queryFn: () => unwrap(api.GET("/api/topics/{topic_id}", { params: { path: { topic_id: id } } })),
+    staleTime: STALE_MS,
+    retry: (count, error) => !(error instanceof ApiError && error.isNotFound) && count < 2,
+  });
+}
+
+export function useCommunities(scope: "papers" | "authors") {
+  return useQuery({
+    queryKey: ["communities", scope],
+    queryFn: () => unwrap(api.GET("/api/communities", { params: { query: { scope, page_size: 50 } } })),
+    staleTime: STALE_MS,
+  });
+}
+
+export function useCommunity(id: string) {
+  return useQuery({
+    queryKey: ["community", id],
+    queryFn: () =>
+      unwrap(api.GET("/api/communities/{community_id}", { params: { path: { community_id: id } } })),
+    staleTime: STALE_MS,
+    retry: (count, error) => !(error instanceof ApiError && error.isNotFound) && count < 2,
+  });
+}

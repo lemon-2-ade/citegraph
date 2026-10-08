@@ -108,3 +108,12 @@ export function ColumnChart({ data, colour, unit, caption }: { data: readonly Co
     </div>
   );
 }
+
+/** Every year in the range (gaps become empty columns) from a `{year: count}` map. */
+export function yearColumns(counts: Readonly<Record<string, number>>): ColumnDatum[] {
+  const years = Object.keys(counts).map(Number).filter(Number.isFinite);
+  if (years.length === 0) return [];
+  const out: ColumnDatum[] = [];
+  for (let y = Math.min(...years); y <= Math.max(...years); y += 1) out.push({ label: String(y), value: counts[String(y)] ?? 0 });
+  return out;
+}

@@ -27,3 +27,7 @@ export function formatTimestamp(iso: string | null | undefined): string {
 export function paperTitle(title: string | null | undefined): string {
   return title && title.trim() ? title : "Untitled paper (metadata not yet fetched)";
 }
+
+export function plural(n: number, word: string): string {
+  return `${formatCount(n)} ${word}${n === 1 ? "" : "s"}`;
+}
