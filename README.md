@@ -105,6 +105,7 @@ quality; API responses say so explicitly.
 | GET | `/api/communities` · `/api/communities/{id}` | Research communities and their profile |
 | GET | `/api/analytics/summary` · `/api/analytics/influential` · `/api/analytics/years` | Graph counts, influence rankings, papers per year |
 | GET | `/api/search/papers?q=&mode=keyword\|semantic\|hybrid` · `/api/papers/{id}/semantic-similar` | Paper search by BM25, embeddings or rank-fused hybrid; neighbours by meaning |
+| GET · POST | `/api/papers/{id}/insight` | Stored AI summary and structured extraction; POST generates it with the configured LLM (admin-gated) |
 | GET | `/api/search?q=` | Keyword search (Lucene full-text, prefix on the last term) over papers, authors, topics |
 | GET | `/api/graph/overview` · `/api/graph/neighborhood/{id}` | Capped node/edge views for the graph explorer |
 | GET | `/api/graph/shortest-path` | Shortest path between two nodes over chosen relationship types |
@@ -144,6 +145,7 @@ researchgraph ingest --query "..."      ingest from OpenAlex (--enqueue, --resum
 researchgraph jobs                      recent ingestion jobs
 researchgraph analyze                   PageRank, centrality, communities (--backend, --algorithm)
 researchgraph embed                     embed papers + build the vector index (--rebuild after changing model)
+researchgraph insights                  generate AI summaries/extractions for papers (--limit, --force)
 ```
 
 ## Dataset
@@ -208,7 +210,7 @@ provider abstraction) will be written with those phases.
 | 5 | Frontend foundation: app shell, typed API client, dashboard, paper browser and detail | done |
 | 6 | Research explorer: authors, topics, communities, interactive graph explorer, keyword search | done |
 | 7 | Embeddings, Neo4j vector index, semantic and hybrid search | done |
-| 8 | AI paper intelligence (topics, summaries, structured extraction) | planned |
+| 8 | LLM provider abstraction, AI paper summaries and structured extraction | done |
 | 9 | Graph-aware RAG with citations | planned |
 | 10 | Natural language → validated read-only Cypher | planned |
 | 11–13 | Recommendations, research trends, reading paths | planned |
