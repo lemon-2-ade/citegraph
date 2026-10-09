@@ -283,3 +283,9 @@ export function useAsk() {
       unwrap(api.POST("/api/ask", { body: { k: 6, ...body } })),
   });
 }
+
+export function useGraphQuery() {
+  return useMutation({
+    mutationFn: (question: string) => unwrap(api.POST("/api/query", { body: { question } })),
+  });
+}

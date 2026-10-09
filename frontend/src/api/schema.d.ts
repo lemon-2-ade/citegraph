@@ -435,6 +435,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/query": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ask a structural question in plain English; runs validated read-only Cypher
+         * @description The configured LLM writes a Cypher query, which is validated against a read-only allow-list, checked by Neo4j's EXPLAIN, and run in a read transaction with a timeout and a row cap. The Cypher is returned so the answer can be audited. Calls a paid LLM, so it sits behind the admin dependency.
+         */
+        post: operations["query_graph_api_query_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/search": {
         parameters: {
             query?: never;
@@ -926,6 +946,50 @@ export interface components {
          * @enum {string}
          */
         JobStatus: "queued" | "running" | "succeeded" | "failed" | "cancelled";
+        /** NLQueryRequest */
+        NLQueryRequest: {
+            /** Question */
+            question: string;
+        };
+        /** NLQueryResponse */
+        NLQueryResponse: {
+            /**
+             * Answerable
+             * @default true
+             */
+            answerable: boolean;
+            /**
+             * Attempts
+             * @default 1
+             */
+            attempts: number;
+            /** Columns */
+            columns: string[];
+            /** Cypher */
+            cypher: string | null;
+            /** Explanation */
+            explanation: string | null;
+            /** Message */
+            message: string | null;
+            /** Model */
+            model: string | null;
+            /** Question */
+            question: string;
+            /**
+             * Row Count
+             * @default 0
+             */
+            row_count: number;
+            /** Rows */
+            rows: {
+                [key: string]: unknown;
+            }[];
+            /**
+             * Truncated
+             * @default false
+             */
+            truncated: boolean;
+        };
         /** Page[PaperSummary] */
         Page_PaperSummary_: {
             /** Items */
@@ -2216,6 +2280,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SimilarPaper"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    query_graph_api_query_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NLQueryRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NLQueryResponse"];
                 };
             };
             /** @description Validation Error */

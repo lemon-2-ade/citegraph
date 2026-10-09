@@ -1212,6 +1212,123 @@
         "title": "JobStatus",
         "type": "string"
       },
+      "NLQueryRequest": {
+        "properties": {
+          "question": {
+            "maxLength": 500,
+            "minLength": 3,
+            "title": "Question",
+            "type": "string"
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "title": "NLQueryRequest",
+        "type": "object"
+      },
+      "NLQueryResponse": {
+        "properties": {
+          "answerable": {
+            "default": true,
+            "title": "Answerable",
+            "type": "boolean"
+          },
+          "attempts": {
+            "default": 1,
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "columns": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Columns",
+            "type": "array"
+          },
+          "cypher": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cypher"
+          },
+          "explanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Explanation"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "question": {
+            "title": "Question",
+            "type": "string"
+          },
+          "row_count": {
+            "default": 0,
+            "title": "Row Count",
+            "type": "integer"
+          },
+          "rows": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "truncated": {
+            "default": false,
+            "title": "Truncated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "question",
+          "answerable",
+          "message",
+          "cypher",
+          "explanation",
+          "columns",
+          "rows",
+          "row_count",
+          "truncated",
+          "attempts",
+          "model"
+        ],
+        "title": "NLQueryResponse",
+        "type": "object"
+      },
       "Page_PaperSummary_": {
         "properties": {
           "items": {
@@ -4085,6 +4202,66 @@
         "summary": "Structurally similar papers (bibliographic coupling or co-citation)",
         "tags": [
           "papers"
+        ]
+      }
+    },
+    "/api/query": {
+      "post": {
+        "description": "The configured LLM writes a Cypher query, which is validated against a read-only allow-list, checked by Neo4j's EXPLAIN, and run in a read transaction with a timeout and a row cap. The Cypher is returned so the answer can be audited. Calls a paid LLM, so it sits behind the admin dependency.",
+        "operationId": "query_graph_api_query_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NLQueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NLQueryResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Ask a structural question in plain English; runs validated read-only Cypher",
+        "tags": [
+          "nlquery"
         ]
       }
     },

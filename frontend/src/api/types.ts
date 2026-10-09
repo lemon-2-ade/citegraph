@@ -9,3 +9,4 @@ export type SimilarPaper = Schemas["SimilarPaper"];
 export type PaperInsightResult = Schemas["PaperInsightResult"];
 export type AskResponse = Schemas["AskResponse"];
 export type AnswerSource = Schemas["Source"];
+export type NLQueryResponse = Schemas["NLQueryResponse"];

@@ -56,6 +56,9 @@ export function Layout() {
           <NavLink to="/ask">
             <BookIcon /> Ask the literature
           </NavLink>
+          <NavLink to="/query">
+            <GridIcon /> Query the graph
+          </NavLink>
           <NavLink to="/papers">
             <DocIcon /> Papers
           </NavLink>

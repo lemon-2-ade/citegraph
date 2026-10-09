@@ -194,3 +194,5 @@ button, input, select { font: inherit; color: inherit; }
 .chip-button { border: 1px solid var(--border); cursor: pointer; text-align: left; }
 .chip-button:hover { background: var(--accent-soft); }
 .check { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; }
+.scroll-x { overflow-x: auto; max-width: 100%; }
+.code { margin: 0; padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow-x: auto; font-family: var(--mono, ui-monospace, monospace); font-size: 0.85rem; line-height: 1.5; white-space: pre; }
