@@ -15,7 +15,11 @@ x-backend-env: &backend-env
   ADMIN_API_TOKEN: ${ADMIN_API_TOKEN:-}
   SEED_PATH: /data/seed/papers.json
   LLM_PROVIDER: ${LLM_PROVIDER:-openai}
-  EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-openai}
+  LLM_MODEL: ${LLM_MODEL:-gpt-4o-mini}
+  # Let anyone call the LLM-backed endpoints (rate limited). Otherwise they need ADMIN_API_TOKEN.
+  PUBLIC_AI: ${PUBLIC_AI:-false}
+  # The bundled nginx sets X-Forwarded-For; the backend port is bound to localhost only.
+  TRUST_FORWARDED_FOR: "true"
 
 services:
   neo4j:
@@ -28,8 +32,8 @@ services:
       NEO4J_server_memory_heap_max__size: ${NEO4J_HEAP:-1G}
       NEO4J_server_memory_pagecache_size: ${NEO4J_PAGECACHE:-512M}
     ports:
-      - "7474:7474"
-      - "7687:7687"
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
     volumes:
       - neo4j-data:/data
     healthcheck:
@@ -46,7 +50,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: ${POSTGRES_DB:-researchgraph}
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -58,7 +62,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -69,7 +73,7 @@ services:
     build: ./backend
     environment: *backend-env
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     volumes:
       - ./data:/data:ro
       - model-cache:/home/researchgraph/.cache/fastembed

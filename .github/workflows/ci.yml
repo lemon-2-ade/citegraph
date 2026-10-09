@@ -49,6 +49,10 @@ jobs:
         run: |
           (cd ../scripts/cypher-lint && npm ci)
           uv run python scripts/dump_cypher.py | node ../scripts/cypher-lint/lint.mjs
+      - name: Dependency audit
+        run: |
+          uv export --frozen --no-hashes --no-emit-project > /tmp/requirements.txt
+          uvx pip-audit --requirement /tmp/requirements.txt --disable-pip --no-deps
       - name: Unit tests
         run: uv run pytest -m "not integration"
       - name: Integration tests
@@ -78,6 +82,9 @@ jobs:
           (cd backend && uv sync --frozen && uv run python scripts/export_openapi.py --out ../frontend/openapi.json)
           (cd frontend && npm run api-types)
           git diff --exit-code -- frontend/openapi.json frontend/src/api/schema.d.ts
+      - name: Dependency audit
+        working-directory: frontend
+        run: npm audit --audit-level=high
       - name: Type-check, lint, test, build
         working-directory: frontend
         run: |
