@@ -232,4 +232,5 @@ workflow runs them against service containers.
 | 13 | Reading paths | done |
 | 14 | Evaluation harness and gold sets (run it to get numbers) | done |
 | 15 | Security hardening: access gate, rate limits, body limits, headers, CSP, audit in CI | done |
-| 16–17 | Testing/performance, polish | planned |
+| 16 | Test coverage (90% unit), complexity guards, load-test script | done |
+| 17 | Polish: visual pass on every page, doc refresh, bug fixes found along the way | done |
