@@ -276,3 +276,10 @@ export function useGenerateInsight(id: string) {
     onSuccess: (data) => client.setQueryData(["insight", id], data),
   });
 }
+
+export function useAsk() {
+  return useMutation({
+    mutationFn: (body: { question: string; expand: number }) =>
+      unwrap(api.POST("/api/ask", { body: { k: 6, ...body } })),
+  });
+}

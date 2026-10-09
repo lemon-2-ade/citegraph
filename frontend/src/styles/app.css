@@ -181,3 +181,16 @@ button, input, select { font: inherit; color: inherit; }
 .insight-grid dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .insight-grid ul { margin: 0; padding-left: 18px; }
 .insight-foot { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-top: 12px; }
+
+/* Ask the literature */
+.answer-text { margin: 0 0 10px; white-space: pre-wrap; font-size: 1.02rem; line-height: 1.6; }
+.cite { font-size: 0.8em; font-weight: 600; vertical-align: super; margin: 0 1px; }
+.sources { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.source { display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: 8px; scroll-margin-top: 80px; }
+.source:target { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: var(--radius-sm); }
+.source-n { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink-2); }
+.source-excerpt { margin: 0; overflow-wrap: anywhere; }
+.plain { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.chip-button { border: 1px solid var(--border); cursor: pointer; text-align: left; }
+.chip-button:hover { background: var(--accent-soft); }
+.check { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; }

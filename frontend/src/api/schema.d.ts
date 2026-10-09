@@ -90,6 +90,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/ask": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Answer a research question from the graph, with numbered citations
+         * @description Retrieves papers by hybrid search, expands through citation links, and asks the configured LLM to answer using only those sources. Calls a paid LLM, so it sits behind the admin dependency.
+         */
+        post: operations["ask_api_ask_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/authors/{author_id}": {
         parameters: {
             query?: never;
@@ -533,6 +553,45 @@ export interface components {
             started_at: string | null;
             /** Status */
             status: string;
+        };
+        /** AskRequest */
+        AskRequest: {
+            /**
+             * Expand
+             * @default 3
+             */
+            expand: number;
+            /**
+             * K
+             * @default 6
+             */
+            k: number;
+            /** Question */
+            question: string;
+        };
+        /** AskResponse */
+        AskResponse: {
+            /** Answer */
+            answer: string;
+            /**
+             * Answerable
+             * @default true
+             */
+            answerable: boolean;
+            /**
+             * Grounded
+             * @default false
+             */
+            grounded: boolean;
+            /** Model */
+            model: string | null;
+            /** Question */
+            question: string;
+            /** Relations */
+            relations: components["schemas"]["Relation"][];
+            retrieval: components["schemas"]["Retrieval"];
+            /** Sources */
+            sources: components["schemas"]["Source"][];
         };
         /** AuthorActivity */
         AuthorActivity: {
@@ -1110,6 +1169,38 @@ export interface components {
             /** Shared Papers */
             shared_papers: number;
         };
+        /**
+         * Relation
+         * @description ``source`` cites ``target`` (numbers refer to ``Source.n``).
+         */
+        Relation: {
+            /** Source */
+            source: number;
+            /** Target */
+            target: number;
+        };
+        /** Retrieval */
+        Retrieval: {
+            /**
+             * Expanded
+             * @default 0
+             */
+            expanded: number;
+            /** Mode */
+            mode: string;
+            /** Note */
+            note: string | null;
+            /**
+             * Retrieved
+             * @default 0
+             */
+            retrieved: number;
+            /**
+             * Semantic Available
+             * @default true
+             */
+            semantic_available: boolean;
+        };
         /** SearchHit */
         SearchHit: {
             /** Id */
@@ -1151,6 +1242,31 @@ export interface components {
             score: number;
             /** Shared */
             shared: number | null;
+        };
+        /** Source */
+        Source: {
+            /**
+             * Cited
+             * @default false
+             */
+            cited: boolean;
+            /** Excerpt */
+            excerpt: string | null;
+            /**
+             * Links To Retrieved
+             * @default 0
+             */
+            links_to_retrieved: number;
+            /** N */
+            n: number;
+            paper: components["schemas"]["PaperSummary"];
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "retrieved" | "graph";
+            /** Score */
+            score: number | null;
         };
         /** TopicDetail */
         TopicDetail: {
@@ -1402,6 +1518,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["YearCount"][];
+                };
+            };
+        };
+    };
+    ask_api_ask_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AskRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AskResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
