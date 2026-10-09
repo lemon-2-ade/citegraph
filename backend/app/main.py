@@ -16,9 +16,11 @@ from app.api import (
     ingestion,
     nlquery,
     papers,
+    paths,
     rag,
     recommend,
     search,
+    trends,
 )
 from app.core.config import Settings, get_settings
 from app.core.errors import register_error_handlers
@@ -83,6 +85,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         rag.router,
         nlquery.router,
         recommend.router,
+        trends.router,
+        paths.router,
         analytics.router,
         analytics.runs,
         ingestion.router,
