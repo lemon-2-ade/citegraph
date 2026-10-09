@@ -1,0 +1,27 @@
+{
+  "description": "Hand-labelled retrieval queries over data/seed/papers.json. 'relevant' lists seed keys whose paper a reasonable reader would expect for the query. Labelled by the project author, not independently; the set is small, so treat differences of a few points as noise.",
+  "queries": [
+    {"q": "random walk ranking of web pages by links", "style": "paraphrase", "relevant": ["pagerank"]},
+    {"q": "detecting communities in large networks", "style": "lexical", "relevant": ["louvain", "leiden"]},
+    {"q": "dense vector representations of words", "style": "paraphrase", "relevant": ["word2vec", "glove", "elmo"]},
+    {"q": "attention for machine translation", "style": "lexical", "relevant": ["bahdanau", "luong", "transformer"]},
+    {"q": "pretrained bidirectional language model", "style": "lexical", "relevant": ["bert", "roberta", "xlnet", "scibert"]},
+    {"q": "making transformers cheaper on long text", "style": "paraphrase", "relevant": ["longformer", "reformer", "sparse-transformer", "flashattention", "transformer-xl"]},
+    {"q": "low-rank adaptation for fine-tuning", "style": "lexical", "relevant": ["lora"]},
+    {"q": "getting language models to reason step by step", "style": "paraphrase", "relevant": ["cot", "react"]},
+    {"q": "retrieval augmented generation", "style": "lexical", "relevant": ["rag", "realm", "fid", "retro", "atlas", "ralm", "self-rag", "rag-survey"]},
+    {"q": "approximate nearest neighbour search index", "style": "lexical", "relevant": ["hnsw", "faiss"]},
+    {"q": "predicting missing links in a knowledge base with embeddings", "style": "paraphrase", "relevant": ["transe", "distmult", "complex", "conve", "rotate", "kg-bert"]},
+    {"q": "spotting fraudulent accounts with graph neural networks", "style": "paraphrase", "relevant": ["gem", "gas", "graphconsis", "care-gnn", "bwgnn", "elliptic", "gad-survey", "dgraph"]},
+    {"q": "node embeddings learned from random walks", "style": "lexical", "relevant": ["deepwalk", "node2vec", "line"]},
+    {"q": "semi-supervised classification with graph convolution", "style": "lexical", "relevant": ["gcn", "chebnet", "graphsage", "gat"]},
+    {"q": "learning on graphs that change over time", "style": "paraphrase", "relevant": ["evolvegcn", "tgat", "tgn", "dgraph"]},
+    {"q": "graph models for recommender systems", "style": "lexical", "relevant": ["pinsage", "lightgcn", "kgat"]},
+    {"q": "how performance scales with model size and compute", "style": "paraphrase", "relevant": ["scaling-laws", "chinchilla", "palm", "gpt3"]},
+    {"q": "dense passage retrieval for open-domain question answering", "style": "lexical", "relevant": ["dpr", "colbert", "fid"]},
+    {"q": "open corpus of scholarly papers and citations", "style": "paraphrase", "relevant": ["s2orc", "specter", "openalex"]},
+    {"q": "attention over graphs with different node and edge types", "style": "paraphrase", "relevant": ["han", "hgt"]},
+    {"q": "aligning language models with human feedback", "style": "paraphrase", "relevant": ["instructgpt"]},
+    {"q": "normalization and regularization when training deep networks", "style": "lexical", "relevant": ["batchnorm", "layernorm", "dropout", "adam"]}
+  ]
+}

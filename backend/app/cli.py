@@ -7,6 +7,7 @@ researchgraph ingest --resume <job-id>   resume a failed/interrupted job
 researchgraph jobs                       list recent ingestion jobs
 researchgraph embed [--rebuild]          embed papers and build the vector index
 researchgraph insights [--limit N]       generate AI summaries/extractions with the LLM
+researchgraph eval retrieval|nlquery|rag measure search, NL->Cypher and RAG quality
 """
 
 from __future__ import annotations
@@ -21,13 +22,15 @@ from typing import Annotated
 import typer
 from pydantic import ValidationError
 
-from app.ai.embeddings import build_provider
+from app.ai.embeddings import EmbedderCache, build_provider
 from app.ai.llm import build_llm
 from app.core.config import get_settings
 from app.core.errors import ResearchGraphError
 from app.core.logging import configure_logging
 from app.core.resources import Resources
 from app.db.session import create_tables
+from app.evaluation import datasets as eval_data
+from app.evaluation import runner as eval_runner
 from app.graph.schema import apply_schema
 from app.ingestion.pipeline import IngestionParams
 from app.ingestion.seed import DEFAULT_SEED_PATH, seed_graph
@@ -245,6 +248,47 @@ def insights(
     except ResearchGraphError as exc:
         typer.secho(exc.message, err=True, fg=typer.colors.RED)
         raise typer.Exit(1) from exc
+
+
+@app.command("eval")
+def evaluate(
+    suite: Annotated[str, typer.Argument(help="retrieval | nlquery | rag")],
+    dataset: Annotated[
+        Path | None, typer.Option(help="Gold dataset JSON (default: data/eval)")
+    ] = None,
+    out: Annotated[Path | None, typer.Option(help="Also write a Markdown report here")] = None,
+    judge: Annotated[
+        bool, typer.Option(help="rag: LLM-judge faithfulness (extra LLM calls)")
+    ] = False,
+) -> None:
+    """Measure retrieval, NL->Cypher or RAG quality on the gold sets in data/eval."""
+    if suite not in {"retrieval", "nlquery", "rag"}:
+        typer.secho("suite must be retrieval, nlquery or rag", err=True, fg=typer.colors.RED)
+        raise typer.Exit(2)
+    settings = get_settings()
+
+    async def work(r: Resources) -> dict[str, object]:
+        embedder = EmbedderCache(settings)
+        if suite == "retrieval":
+            return await eval_runner.eval_retrieval(
+                r.graph, embedder, eval_data.load_retrieval(dataset)
+            )
+        llm = build_llm(settings)
+        if suite == "nlquery":
+            return await eval_runner.eval_nlquery(r.graph, llm, eval_data.load_nlquery(dataset))
+        return await eval_runner.eval_rag(
+            r.graph, embedder, llm, eval_data.load_rag(dataset), judge=judge
+        )
+
+    try:
+        report = _run(work)
+    except ResearchGraphError as exc:
+        typer.secho(exc.message, err=True, fg=typer.colors.RED)
+        raise typer.Exit(1) from exc
+    typer.echo(json.dumps(report, indent=2, default=str))
+    if out is not None:
+        out.write_text(eval_runner.format_markdown(suite, report), encoding="utf-8")
+        typer.secho(f"wrote {out}", err=True)
 
 
 if __name__ == "__main__":  # pragma: no cover

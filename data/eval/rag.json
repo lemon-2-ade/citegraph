@@ -1,0 +1,13 @@
+{
+  "description": "Questions for answer-quality checks. 'expect_sources' are seed keys that should appear among the retrieved or graph-expanded sources (source recall). Citation validity and groundedness are measured on every answer. Requires embeddings, a seeded graph and a configured LLM.",
+  "cases": [
+    {"q": "How does retrieval-augmented generation reduce hallucination?", "expect_sources": ["rag", "realm", "self-rag"]},
+    {"q": "What approaches make attention efficient for long documents?", "expect_sources": ["longformer", "reformer", "flashattention"]},
+    {"q": "How are graph neural networks used for fraud detection?", "expect_sources": ["care-gnn", "gem", "gad-survey"]},
+    {"q": "What methods learn node embeddings from graph structure?", "expect_sources": ["deepwalk", "node2vec", "line"]},
+    {"q": "How do knowledge graph embedding models represent relations?", "expect_sources": ["transe", "rotate", "distmult"]},
+    {"q": "What did scaling studies find about language model size and data?", "expect_sources": ["scaling-laws", "chinchilla"]},
+    {"q": "How is dense retrieval different from BM25?", "expect_sources": ["dpr", "bm25"]},
+    {"q": "Who won the 2018 football World Cup?", "expect_sources": [], "unanswerable": true}
+  ]
+}

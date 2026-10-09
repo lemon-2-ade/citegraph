@@ -1,0 +1,13 @@
+{
+  "description": "Questions with a hand-written gold Cypher query. A model answer is correct when its result rows equal the gold rows as a set of value tuples, ignoring column names and order. Requires a seeded graph (researchgraph seed + analyze) and a configured LLM.",
+  "cases": [
+    {"q": "How many papers are in the graph?", "gold": "MATCH (p:Paper) WHERE coalesce(p.is_stub, false) = false RETURN count(p) AS n"},
+    {"q": "Who wrote the paper 'Attention Is All You Need'?", "gold": "MATCH (a:Author)-[:WROTE]->(p:Paper) WHERE p.title = 'Attention Is All You Need' RETURN a.name AS author"},
+    {"q": "Which papers cite 'Attention Is All You Need'?", "gold": "MATCH (c:Paper)-[:CITES]->(p:Paper) WHERE p.title = 'Attention Is All You Need' RETURN c.title AS title"},
+    {"q": "How many papers have the topic Graph Neural Networks?", "gold": "MATCH (p:Paper)-[:HAS_TOPIC]->(t:Topic) WHERE t.name = 'Graph Neural Networks' RETURN count(DISTINCT p) AS n"},
+    {"q": "Which papers were published in 2019 and carry the topic Pretrained Language Models?", "gold": "MATCH (p:Paper)-[:HAS_TOPIC]->(t:Topic) WHERE t.name = 'Pretrained Language Models' AND p.year = 2019 RETURN DISTINCT p.title AS title"},
+    {"q": "Which paper in the graph is cited by the most other papers in the graph?", "gold": "MATCH (c:Paper)-[:CITES]->(p:Paper) WITH p, count(c) AS n ORDER BY n DESC, p.title LIMIT 1 RETURN p.title AS title"},
+    {"q": "What are the titles of the papers that BERT cites?", "gold": "MATCH (b:Paper)-[:CITES]->(p:Paper) WHERE b.title STARTS WITH 'BERT:' RETURN p.title AS title"},
+    {"q": "How many papers were published in each year before 2000?", "gold": "MATCH (p:Paper) WHERE p.year < 2000 AND coalesce(p.is_stub, false) = false RETURN p.year AS year, count(p) AS n"}
+  ]
+}
