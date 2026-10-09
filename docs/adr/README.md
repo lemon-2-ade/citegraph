@@ -13,3 +13,4 @@ consequences. ADRs are immutable once accepted; a later ADR supersedes an earlie
 | [006](006-embeddings-and-vector-store.md) | Embedding providers and the vector store | Accepted |
 | [007](007-llm-provider-abstraction.md) | LLM provider abstraction | Accepted |
 | [008](008-frontend-vite-spa.md) | Vite + React single-page app for the frontend | Accepted |
+| [009](009-natural-language-to-cypher.md) | Natural-language to Cypher with layered read-only guarantees | Accepted |
