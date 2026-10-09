@@ -105,12 +105,12 @@ quality; API responses say so explicitly.
 | GET | `/api/communities` · `/api/communities/{id}` | Research communities and their profile |
 | GET | `/api/analytics/summary` · `/api/analytics/influential` · `/api/analytics/years` | Graph counts, influence rankings, papers per year |
 | GET | `/api/search/papers?q=&mode=keyword\|semantic\|hybrid` · `/api/papers/{id}/semantic-similar` | Paper search by BM25, embeddings or rank-fused hybrid; neighbours by meaning |
-| GET · POST | `/api/papers/{id}/insight` | Stored AI summary and structured extraction; POST generates it with the configured LLM (admin-gated) |
-| POST | `/api/ask` | Question answering over the graph: hybrid retrieval, citation-link expansion, numbered verified citations (admin-gated) |
+| GET · POST | `/api/papers/{id}/insight` | Stored AI summary and structured extraction; POST generates it with the configured LLM (access-gated, rate limited) |
+| POST | `/api/ask` | Question answering over the graph: hybrid retrieval, citation-link expansion, numbered verified citations (access-gated, rate limited) |
 | POST | `/api/recommendations` | Papers to read next from a reading list: citation proximity (Personalized PageRank) fused with embedding similarity, with reasons |
 | GET | `/api/trends/topics?window=` | Topics gaining or losing share of papers (emerging / rising / steady / declining) |
 | GET | `/api/reading-path?topic_id=` or `?paper_id=` | Ordered reading path, cited work first |
-| POST | `/api/query` | Plain-English structural questions → validated read-only Cypher, rows and the query itself (admin-gated) |
+| POST | `/api/query` | Plain-English structural questions → validated read-only Cypher, rows and the query itself (access-gated, rate limited) |
 | GET | `/api/search?q=` | Keyword search (Lucene full-text, prefix on the last term) over papers, authors, topics |
 | GET | `/api/graph/overview` · `/api/graph/neighborhood/{id}` | Capped node/edge views for the graph explorer |
 | GET | `/api/graph/shortest-path` | Shortest path between two nodes over chosen relationship types |
@@ -200,7 +200,7 @@ provider abstraction) will be written with those phases.
   the GDS and NetworkX backends (rankings are what the application uses).
 - PostgreSQL schema changes are applied with `create_all`; migrations (Alembic) are not
   set up yet.
-- No end-user authentication or rate limiting yet; write operations are admin-only.
+- No end-user accounts: write operations and LLM-backed endpoints use a shared admin token (or `PUBLIC_AI=true`), with in-process per-client rate limits. See [docs/security.md](docs/security.md).
 - The frontend has component tests against a mocked API but no browser (end-to-end) tests
   or accessibility audit yet; the nginx image and Compose wiring are exercised only by running
   the stack.
@@ -223,4 +223,5 @@ provider abstraction) will be written with those phases.
 | 12 | Research trends | done |
 | 13 | Reading paths | done |
 | 14 | Evaluation harness and gold sets (run it to get numbers) | done |
-| 15–17 | Security hardening, testing/performance, polish | planned |
+| 15 | Security hardening: access gate, rate limits, body limits, headers, CSP, audit in CI | done |
+| 16–17 | Testing/performance, polish | planned |
