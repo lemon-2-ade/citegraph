@@ -46,3 +46,36 @@ def test_analyze_validates_options() -> None:
     result = runner.invoke(app, ["analyze", "--backend", "spark"])
     assert result.exit_code != 0
     assert "backend must be" in result.output
+
+
+@pytest.fixture
+def no_llm_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("OPENAI_API_KEY", "")
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.setenv("EMBEDDING_PROVIDER", "openai")
+    get_settings.cache_clear()
+
+
+def test_insights_explains_missing_llm_key(no_llm_key: None) -> None:
+    result = runner.invoke(app, ["insights", "--limit", "1"])
+    assert result.exit_code == 1
+    assert "OPENAI_API_KEY" in result.output
+
+
+def test_eval_rejects_unknown_suite() -> None:
+    result = runner.invoke(app, ["eval", "bogus"])
+    assert result.exit_code == 2
+    assert "retrieval, nlquery or rag" in result.output
+
+
+@pytest.mark.parametrize("suite", ["nlquery", "rag"])
+def test_llm_evals_explain_missing_llm_key(no_llm_key: None, suite: str) -> None:
+    result = runner.invoke(app, ["eval", suite])
+    assert result.exit_code == 1
+    assert "OPENAI_API_KEY" in result.output
+
+
+def test_embed_explains_missing_embedding_key(no_llm_key: None) -> None:
+    result = runner.invoke(app, ["embed"])
+    assert result.exit_code == 1
+    assert "OPENAI_API_KEY" in result.output
