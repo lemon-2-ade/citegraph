@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { api, unwrap } from "./client";
 import { ApiError } from "./errors";
@@ -242,5 +242,37 @@ export function useSemanticSimilar(id: string, enabled: boolean) {
     enabled,
     staleTime: STALE_MS,
     retry: false,
+  });
+}
+
+/** The stored AI insight for a paper; resolves to null (not an error) when none exists yet. */
+export function usePaperInsight(id: string) {
+  return useQuery({
+    queryKey: ["insight", id],
+    queryFn: async () => {
+      try {
+        return await unwrap(
+          api.GET("/api/papers/{paper_id}/insight", { params: { path: { paper_id: id } } }),
+        );
+      } catch (error) {
+        if (error instanceof ApiError && error.isNotFound) return null;
+        throw error;
+      }
+    },
+    staleTime: STALE_MS,
+    retry: false,
+  });
+}
+
+export function useGenerateInsight(id: string) {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (force: boolean) =>
+      unwrap(
+        api.POST("/api/papers/{paper_id}/insight", {
+          params: { path: { paper_id: id }, query: { force } },
+        }),
+      ),
+    onSuccess: (data) => client.setQueryData(["insight", id], data),
   });
 }

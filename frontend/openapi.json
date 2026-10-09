@@ -1459,6 +1459,123 @@
         "title": "PaperHit",
         "type": "object"
       },
+      "PaperInsight": {
+        "properties": {
+          "contributions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Contributions",
+            "type": "array"
+          },
+          "datasets": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Datasets",
+            "type": "array"
+          },
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Keywords",
+            "type": "array"
+          },
+          "kind": {
+            "default": "other",
+            "enum": [
+              "method",
+              "empirical",
+              "survey",
+              "benchmark",
+              "theory",
+              "resource",
+              "position",
+              "other"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "methods": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Methods",
+            "type": "array"
+          },
+          "summary": {
+            "minLength": 1,
+            "title": "Summary",
+            "type": "string"
+          },
+          "tasks": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Tasks",
+            "type": "array"
+          }
+        },
+        "required": [
+          "summary",
+          "kind",
+          "contributions",
+          "methods",
+          "tasks",
+          "datasets",
+          "limitations",
+          "keywords"
+        ],
+        "title": "PaperInsight",
+        "type": "object"
+      },
+      "PaperInsightResult": {
+        "properties": {
+          "cached": {
+            "default": true,
+            "title": "Cached",
+            "type": "boolean"
+          },
+          "generated_at": {
+            "title": "Generated At",
+            "type": "string"
+          },
+          "insight": {
+            "$ref": "#/components/schemas/PaperInsight"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "paper_id": {
+            "title": "Paper Id",
+            "type": "string"
+          },
+          "stale": {
+            "default": false,
+            "title": "Stale",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "paper_id",
+          "insight",
+          "model",
+          "generated_at",
+          "stale",
+          "cached"
+        ],
+        "title": "PaperInsightResult",
+        "type": "object"
+      },
       "PaperSearchResults": {
         "properties": {
           "hits": {
@@ -3330,6 +3447,114 @@
           }
         },
         "summary": "Papers citing this paper",
+        "tags": [
+          "papers"
+        ]
+      }
+    },
+    "/api/papers/{paper_id}/insight": {
+      "get": {
+        "operationId": "paper_insight_api_papers__paper_id__insight_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "paper_id",
+            "required": true,
+            "schema": {
+              "title": "Paper Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaperInsightResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "The stored AI summary and structured extraction for a paper (404 if not generated)",
+        "tags": [
+          "papers"
+        ]
+      },
+      "post": {
+        "operationId": "create_paper_insight_api_papers__paper_id__insight_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "paper_id",
+            "required": true,
+            "schema": {
+              "title": "Paper Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "force",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Force",
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaperInsightResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Generate (or refresh) the AI insight for a paper; calls the configured LLM",
         "tags": [
           "papers"
         ]

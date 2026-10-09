@@ -13,6 +13,7 @@ import {
 } from "../api/queries";
 import type { PaperDetail, SimilarPaper } from "../api/types";
 import { PaperList } from "../components/PaperList";
+import { InsightCard } from "../components/InsightCard";
 import { Pagination } from "../components/Pagination";
 import { Empty, ErrorState, Loading } from "../components/StateViews";
 import { formatCount, formatScore, paperTitle } from "../lib/format";
@@ -244,6 +245,7 @@ function Details({ paper }: { paper: PaperDetail }) {
 
       <div className="two-col">
         <div className="stack">
+          <InsightCard paperId={paper.id} hasAbstract={Boolean(paper.abstract)} />
           <section className="card card-pad" aria-labelledby="abstract-heading">
             <h2 id="abstract-heading">Abstract</h2>
             {/* Source text is untrusted: rendered as plain text only, never as HTML. */}

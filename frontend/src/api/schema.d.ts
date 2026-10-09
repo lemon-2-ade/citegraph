@@ -329,6 +329,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/papers/{paper_id}/insight": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The stored AI summary and structured extraction for a paper (404 if not generated) */
+        get: operations["paper_insight_api_papers__paper_id__insight_get"];
+        put?: never;
+        /** Generate (or refresh) the AI insight for a paper; calls the configured LLM */
+        post: operations["create_paper_insight_api_papers__paper_id__insight_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/papers/{paper_id}/references": {
         parameters: {
             query?: never;
@@ -939,6 +957,49 @@ export interface components {
             score: number;
             /** Semantic Rank */
             semantic_rank: number | null;
+        };
+        /** PaperInsight */
+        PaperInsight: {
+            /** Contributions */
+            contributions: string[];
+            /** Datasets */
+            datasets: string[];
+            /** Keywords */
+            keywords: string[];
+            /**
+             * Kind
+             * @default other
+             * @enum {string}
+             */
+            kind: "method" | "empirical" | "survey" | "benchmark" | "theory" | "resource" | "position" | "other";
+            /** Limitations */
+            limitations: string[];
+            /** Methods */
+            methods: string[];
+            /** Summary */
+            summary: string;
+            /** Tasks */
+            tasks: string[];
+        };
+        /** PaperInsightResult */
+        PaperInsightResult: {
+            /**
+             * Cached
+             * @default true
+             */
+            cached: boolean;
+            /** Generated At */
+            generated_at: string;
+            insight: components["schemas"]["PaperInsight"];
+            /** Model */
+            model: string;
+            /** Paper Id */
+            paper_id: string;
+            /**
+             * Stale
+             * @default false
+             */
+            stale: boolean;
         };
         /** PaperSearchResults */
         PaperSearchResults: {
@@ -1804,6 +1865,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Page_PaperSummary_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    paper_insight_api_papers__paper_id__insight_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                paper_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaperInsightResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_paper_insight_api_papers__paper_id__insight_post: {
+        parameters: {
+            query?: {
+                force?: boolean;
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                paper_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaperInsightResult"];
                 };
             };
             /** @description Validation Error */

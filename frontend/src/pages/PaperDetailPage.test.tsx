@@ -23,6 +23,7 @@ function routes(extra: Record<string, unknown> = {}) {
     "/api/papers/paper:1/references": page([]),
     "/api/papers/paper:1/similar": [similar()],
     "/api/papers/paper:1/related": [related()],
+    "/api/papers/paper:1/insight": () => errorResponse(404, "not_found", "No insight yet"),
     ...extra,
   };
 }
@@ -83,5 +84,43 @@ describe("PaperDetailPage", () => {
     expect(await screen.findByRole("heading", { name: /Attention Mechanisms/ })).toBeInTheDocument();
     expect(await screen.findByRole("alert")).toHaveTextContent("Neo4j is unavailable");
     expect(await screen.findByText("A Citing Paper")).toBeInTheDocument();
+  });
+});
+
+describe("PaperDetailPage AI summary", () => {
+  const result = {
+    paper_id: "paper:1",
+    insight: {
+      summary: "Studies attention.",
+      kind: "method",
+      contributions: ["A new layer"],
+      methods: ["attention"],
+      tasks: [],
+      datasets: [],
+      limitations: [],
+      keywords: ["transformers"],
+    },
+    model: "gpt-4o-mini",
+    generated_at: "2026-10-09T00:00:00Z",
+    stale: false,
+    cached: true,
+  };
+
+  it("offers to generate when nothing is stored, then shows the result", async () => {
+    mockApi(routes({ "/api/papers/paper:1/insight": (url: URL) => url.search.includes("force") ? new Response(JSON.stringify(result), { status: 200, headers: { "content-type": "application/json" } }) : errorResponse(404, "not_found", "none") }));
+    renderDetail();
+    const button = await screen.findByRole("button", { name: "Generate summary" });
+    button.click();
+    expect(await screen.findByText("Studies attention.")).toBeInTheDocument();
+    expect(screen.getByText("A new layer")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Regenerate" })).toBeInTheDocument();
+  });
+
+  it("shows a stored summary with its model and a staleness note", async () => {
+    mockApi(routes({ "/api/papers/paper:1/insight": { ...result, stale: true } }));
+    renderDetail();
+    expect(await screen.findByText("Studies attention.")).toBeInTheDocument();
+    expect(screen.getByText(/gpt-4o-mini/)).toBeInTheDocument();
+    expect(screen.getByText(/abstract has changed/)).toBeInTheDocument();
   });
 });
