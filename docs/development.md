@@ -29,6 +29,27 @@ docker compose exec backend researchgraph ingest \
 docker compose exec backend researchgraph analyze
 ```
 
+## AI features
+
+```bash
+docker compose exec backend researchgraph embed      # vectors + index (OpenAI if a key is set, else local)
+docker compose exec backend researchgraph insights --limit 20   # AI summaries; skips finished papers
+docker compose exec backend researchgraph eval retrieval         # quality numbers (see docs/evaluation.md)
+```
+
+`OPENAI_API_KEY` in `.env` enables hosted embeddings and the LLM features (`LLM_PROVIDER` can also
+be `gemini` or `ollama`). In development the LLM endpoints are open when `ADMIN_API_TOKEN` is
+unset; otherwise send it as `X-Admin-Token`, or set `PUBLIC_AI=true`.
+
+Switching the embedding model requires `researchgraph embed --rebuild`.
+
+## Performance
+
+`python backend/scripts/loadtest.py --base http://localhost:8000` prints p50/p95 latency for the
+common read endpoints against your running stack (add `--with-ai` to include the paid ones).
+`make test` includes guard tests that fail if a pure-Python hot path turns quadratic; they say
+nothing about Neo4j latency, which depends on your data and hardware.
+
 ## Running the backend outside Docker
 
 ```bash

@@ -1,9 +1,9 @@
 # Architecture
 
 ResearchGraph uses a citation knowledge graph as structured research memory; AI features
-(later phases) act as the reasoning and interaction layer over that graph.
+act as the reasoning and interaction layer over that graph.
 
-This document describes what exists today (Phases 1–5). Planned components are marked.
+This document describes the system as built (all roadmap phases).
 
 ```text
                   ┌──────────────────────────────┐
@@ -46,6 +46,9 @@ This document describes what exists today (Phases 1–5). Planned components are
 | `app/db` | SQLAlchemy models and engine/session factory for PostgreSQL |
 | `app/models` | Source-independent domain records (`PaperRecord`, …) |
 | `app/ingestion` | Sources, normalisation, entity resolution, graph loading, pipeline, seed dataset |
+| `app/ai` | Embedding providers (OpenAI, local, offline), LLM provider (OpenAI/Gemini/Ollama), structured-output helper, insight and text-to-Cypher prompts |
+| `app/rag` | Graph-aware retrieval, prompt building, citation verification |
+| `app/evaluation` | Ranking and result-set metrics, gold-set loaders, suite runners |
 | `app/analytics` | Algorithms, NetworkX/GDS backends, batch analytics service, read-side queries |
 | `app/repositories` | Read models over Neo4j (papers, authors, topics) and PostgreSQL (jobs, runs) |
 | `app/services` | Orchestration shared by API, worker and CLI |
@@ -55,8 +58,10 @@ This document describes what exists today (Phases 1–5). Planned components are
 
 The web client lives in `frontend/` and is described in [frontend.md](frontend.md).
 
-Planned packages from the product spec (`ai/`, `rag/`) will be added with the phases that
-need them rather than as empty placeholders.
+The AI layer is split so the model is replaceable and testable: `app/ai` holds providers
+(embeddings, LLM) and prompts, `app/rag` the retrieval-and-answer pipeline, `app/evaluation` the
+metrics and runners, and `app/graph/cypher_guard.py` the validator that stands between model-written
+Cypher and the database.
 
 ## Key design decisions
 

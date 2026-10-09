@@ -6,12 +6,15 @@
 ResearchGraph ingests scholarly metadata, resolves duplicate papers and authors, and
 builds a Neo4j knowledge graph of papers, authors, institutions, venues, topics and
 citations. Graph analytics — PageRank, centrality, community detection, similarity,
-shortest paths — run on that graph. Later phases add embeddings, semantic search,
-graph-aware RAG, natural-language graph querying, recommendations and a web client.
+shortest paths — run on that graph. On top of it sit embeddings and hybrid search, AI paper
+summaries, graph-aware question answering with verified citations, natural-language graph
+queries, recommendations, trends, reading paths, and a web client with a graph explorer.
 
-**Status:** Phases 1–5 (foundation, graph model, ingestion, analytics, frontend foundation)
-are implemented. The AI layer and the graph visualisation are not built yet — see the
-[roadmap](#roadmap).
+**Status:** all roadmap phases are implemented (see the [roadmap](#roadmap)). Unit tests,
+type checks, lint and the frontend build run clean; the pieces that need your Neo4j, OpenAI key
+or a browser session (vector index, live LLM calls, the evaluation numbers) are verified by
+running the commands in [docs/development.md](docs/development.md), not by this repository's
+unit tests.
 
 ## Contents
 
@@ -185,13 +188,18 @@ workflow runs them against service containers.
 - [ADR-004](docs/adr/004-fastapi.md) FastAPI
 - [ADR-005](docs/adr/005-background-workers.md) Arq workers with durable state in PostgreSQL
 
-ADR-003 (hybrid graph + vector retrieval) and ADR-007 (LLM
-provider abstraction) will be written with those phases.
+- [ADR-003](docs/adr/003-graph-aware-retrieval.md) Graph-aware retrieval for question answering
+- [ADR-006](docs/adr/006-embeddings-and-vector-store.md) Embedding providers and the vector store
+- [ADR-007](docs/adr/007-llm-provider-abstraction.md) LLM provider abstraction
+- [ADR-009](docs/adr/009-natural-language-to-cypher.md) Natural-language to Cypher with layered read-only guarantees
 
 ## Limitations
 
-- No evaluation results exist yet. Retrieval, recommendation and RAG metrics will be
-  reported only once measured (Phase 14).
+- No evaluation results are published. The harness and gold sets exist
+  ([docs/evaluation.md](docs/evaluation.md)); numbers depend on your models and data, so run it.
+  The gold sets are small and labelled by the project author.
+- LLM output (summaries, answers, generated Cypher) can be wrong. The UI shows sources and the
+  query that ran so claims can be checked; nothing is presented as fact without them.
 - The seed dataset is small and hand-curated; its citation edges are a subset of each
   paper's references.
 - Venue names from different sources are not unified; fuzzy title matching only

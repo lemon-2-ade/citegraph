@@ -20,7 +20,13 @@ Every view has loading, empty and error states. Stub papers (cited but not yet f
 labelled. Abstracts and titles come from external sources and are rendered as plain text,
 never as HTML.
 
-Not built yet: anything that needs an LLM (summaries, question answering, natural-language queries).
+AI and discovery views: `/ask` (answers with numbered, linked citations and the sources behind
+them), `/query` (plain-English structural questions; shows the table and the Cypher that ran),
+`/recommend` (build a reading list, get suggested papers with reasons), `/trends` (topic share
+over time, labelled in text), `/reading-path` (ordered reading route for a topic or paper), plus an
+AI summary card on each paper. Model output is rendered as plain text. These views call
+access-gated endpoints, so with `ADMIN_API_TOKEN` set and `PUBLIC_AI=false` they show the API's
+authorisation error (see [security.md](security.md)).
 
 ## Layout
 
