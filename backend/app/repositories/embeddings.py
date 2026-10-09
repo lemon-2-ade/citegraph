@@ -95,6 +95,11 @@ LIMIT $limit
 """
 )
 
+_VECTORS: LiteralString = """
+MATCH (p:Paper) WHERE p.id IN $ids AND p.embedding IS NOT NULL
+RETURN p.id AS id, p.embedding AS vector
+"""
+
 _PAPER_EXISTS: LiteralString = "MATCH (p:Paper {id: $id}) RETURN p.id AS id"
 
 
@@ -164,6 +169,10 @@ class EmbeddingRepository:
         return await self._graph.read(
             _SEMANTIC, {"k": k, "vector": list(vector)}, label="embeddings.search"
         )
+
+    async def vectors(self, ids: Sequence[str]) -> dict[str, list[float]]:
+        rows = await self._graph.read(_VECTORS, {"ids": list(ids)}, label="embeddings.vectors")
+        return {r["id"]: [float(x) for x in r["vector"]] for r in rows}
 
     async def similar_to(self, paper_id: str, limit: int) -> list[dict[str, Any]]:
         if not await self._graph.read(_PAPER_EXISTS, {"id": paper_id}, label="embeddings.exists"):
