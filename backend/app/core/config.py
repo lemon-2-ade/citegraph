@@ -26,6 +26,19 @@ class Settings(BaseSettings):
     # If unset, those endpoints are open in development and disabled in production.
     admin_api_token: SecretStr | None = None
 
+    # --- request limits ------------------------------------------------------
+    max_request_bytes: int = 262_144
+    rate_limit_enabled: bool = True
+    # Per client, per minute, across ordinary API calls and the LLM-backed endpoints.
+    rate_limit_per_minute: int = 300
+    rate_limit_ai_per_minute: int = 12
+    # Take the client address from X-Forwarded-For. Enable ONLY behind a proxy that sets it
+    # (the bundled nginx does) and when the backend is not reachable directly.
+    trust_forwarded_for: bool = False
+    # Let anyone call the LLM-backed endpoints (rate limited). Off by default: they then need
+    # the admin token, or are disabled in production when no token is configured.
+    public_ai: bool = False
+
     # --- Neo4j ---------------------------------------------------------------
     neo4j_uri: str = "bolt://localhost:7687"
     neo4j_user: str = "neo4j"

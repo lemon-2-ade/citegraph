@@ -78,8 +78,25 @@ def require_admin(request: Request, x_admin_token: Annotated[str | None, Header(
 
 
 LLMDep = Annotated[LLMCache, Depends(get_llm)]
+
+
+def require_ai_access(
+    request: Request, x_admin_token: Annotated[str | None, Header()] = None
+) -> None:
+    """Gate for endpoints that spend LLM budget.
+
+    Open when ``PUBLIC_AI`` is set (they are still rate limited); otherwise the same rule as
+    the administrative API: open in development without a token, token-protected when one is
+    configured, disabled in production without one.
+    """
+    if request.app.state.settings.public_ai:
+        return
+    require_admin(request, x_admin_token)
+
+
 EmbedderDep = Annotated[EmbedderCache, Depends(get_embedder)]
 GraphDep = Annotated[GraphClient, Depends(get_graph)]
 SessionsDep = Annotated[async_sessionmaker[AsyncSession], Depends(get_sessions)]
 QueueDep = Annotated[ArqRedis, Depends(get_queue)]
 AdminDep = Depends(require_admin)
+AiAccessDep = Depends(require_ai_access)

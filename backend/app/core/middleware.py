@@ -10,6 +10,7 @@ import structlog
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response
+from starlette.types import ASGIApp
 
 from app.core.logging import get_logger
 
@@ -48,9 +49,27 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Defensive headers. The JSON API never needs scripts, frames or sensors, so its CSP is
+    empty; the interactive docs (which load assets) are exempt from the CSP only."""
+
+    def __init__(self, app: ASGIApp, *, hsts: bool = False, docs_prefix: str = "/api/docs") -> None:
+        super().__init__(app)
+        self._hsts = hsts
+        self._docs_prefix = docs_prefix
+
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         response = await call_next(request)
-        response.headers.setdefault("X-Content-Type-Options", "nosniff")
-        response.headers.setdefault("X-Frame-Options", "DENY")
-        response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        headers = response.headers
+        headers.setdefault("X-Content-Type-Options", "nosniff")
+        headers.setdefault("X-Frame-Options", "DENY")
+        headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+        headers.setdefault("Cross-Origin-Resource-Policy", "same-origin")
+        if not request.url.path.startswith(self._docs_prefix):
+            headers.setdefault(
+                "Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'"
+            )
+            headers.setdefault("Cache-Control", "no-store")
+        if self._hsts:
+            headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
         return response

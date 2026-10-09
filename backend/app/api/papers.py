@@ -6,7 +6,7 @@ from fastapi import APIRouter, Query
 
 from app.analytics.backends import NetworkXBackend
 from app.analytics.queries import AnalyticsQueries
-from app.api.deps import AdminDep, GraphDep, LLMDep
+from app.api.deps import AiAccessDep, GraphDep, LLMDep
 from app.repositories.papers import PaperRepository, PaperSort
 from app.schemas.analytics import SimilarPaper
 from app.schemas.common import Page, PageParams
@@ -145,7 +145,7 @@ async def paper_insight(paper_id: str, graph: GraphDep) -> PaperInsightResult:
     "/{paper_id}/insight",
     summary="Generate (or refresh) the AI insight for a paper; calls the configured LLM",
     response_model=PaperInsightResult,
-    dependencies=[AdminDep],
+    dependencies=[AiAccessDep],
 )
 async def create_paper_insight(
     paper_id: str, graph: GraphDep, llm: LLMDep, force: bool = False

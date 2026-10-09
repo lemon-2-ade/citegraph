@@ -24,6 +24,7 @@ from app.api import (
 )
 from app.core.config import Settings, get_settings
 from app.core.errors import register_error_handlers
+from app.core.limits import BodyLimitMiddleware, RateLimitMiddleware
 from app.core.logging import configure_logging, get_logger
 from app.core.middleware import RequestContextMiddleware, SecurityHeadersMiddleware
 from app.core.resources import Resources
@@ -66,15 +67,26 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
     app.state.settings = settings
 
-    app.add_middleware(SecurityHeadersMiddleware)
+    # add_middleware wraps outward: the last one added is the outermost, so a request meets
+    # SecurityHeaders -> CORS -> RequestContext -> RateLimit -> BodyLimit -> routes. Rejections
+    # from the limiters therefore still carry request IDs, CORS and security headers.
+    app.add_middleware(BodyLimitMiddleware, max_bytes=settings.max_request_bytes)
+    if settings.rate_limit_enabled:
+        app.add_middleware(
+            RateLimitMiddleware,
+            per_minute=settings.rate_limit_per_minute,
+            ai_per_minute=settings.rate_limit_ai_per_minute,
+            trust_forwarded_for=settings.trust_forwarded_for,
+        )
     app.add_middleware(RequestContextMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
-        allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
-        allow_headers=["*"],
-        expose_headers=["X-Request-ID"],
+        allow_methods=["GET", "POST"],
+        allow_headers=["Content-Type", "X-Admin-Token", "X-Request-ID"],
+        expose_headers=["X-Request-ID", "Retry-After"],
     )
+    app.add_middleware(SecurityHeadersMiddleware, hsts=settings.app_env == "production")
     register_error_handlers(app)
     for router in (
         health.router,
