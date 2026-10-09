@@ -1,7 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 
-import { BookIcon, DocIcon, GridIcon, LayersIcon, LinkIcon, NetworkIcon, SunMoonIcon, TagIcon, UsersIcon } from "./Icons";
+import {
+  ChatIcon,
+  DocIcon,
+  GridIcon,
+  LayersIcon,
+  NetworkIcon,
+  RouteIcon,
+  StarIcon,
+  SunMoonIcon,
+  TagIcon,
+  TerminalIcon,
+  TrendIcon,
+  UsersIcon,
+} from "./Icons";
 import { SearchBox } from "./SearchBox";
 
 type Theme = "system" | "light" | "dark";
@@ -54,19 +67,19 @@ export function Layout() {
             <NetworkIcon /> Graph explorer
           </NavLink>
           <NavLink to="/ask">
-            <BookIcon /> Ask the literature
+            <ChatIcon /> Ask the literature
           </NavLink>
           <NavLink to="/query">
-            <GridIcon /> Query the graph
+            <TerminalIcon /> Query the graph
           </NavLink>
           <NavLink to="/recommend">
-            <LinkIcon /> Recommendations
+            <StarIcon /> Recommendations
           </NavLink>
           <NavLink to="/trends">
-            <LayersIcon /> Trends
+            <TrendIcon /> Trends
           </NavLink>
           <NavLink to="/reading-path">
-            <BookIcon /> Reading paths
+            <RouteIcon /> Reading paths
           </NavLink>
           <NavLink to="/papers">
             <DocIcon /> Papers

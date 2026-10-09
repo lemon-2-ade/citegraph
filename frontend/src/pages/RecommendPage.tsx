@@ -19,7 +19,7 @@ function Picker({ onAdd, chosen }: { onAdd: (p: PaperSummary) => void; chosen: S
   };
   return (
     <div>
-      <form className="filters" onSubmit={submit} role="search" aria-label="Find papers to add">
+      <form className="inline-form" onSubmit={submit} role="search" aria-label="Find papers to add">
         <label className="field" style={{ flex: 1, minWidth: 240 }}>
           Find a paper you have read
           <input type="search" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Title or topic" />
@@ -67,8 +67,13 @@ export function RecommendPage() {
             {list.map((p) => (
               <li key={p.id} className="pick-row">
                 <span>{paperTitle(p.title)}</span>
-                <button type="button" className="btn" onClick={() => setList(list.filter((x) => x.id !== p.id))}>
-                  Remove {paperTitle(p.title)}
+                <button
+                  type="button"
+                  className="btn"
+                  aria-label={`Remove ${paperTitle(p.title)}`}
+                  onClick={() => setList(list.filter((x) => x.id !== p.id))}
+                >
+                  Remove
                 </button>
               </li>
             ))}

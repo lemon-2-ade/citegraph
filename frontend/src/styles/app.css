@@ -98,7 +98,7 @@ button, input, select { font: inherit; color: inherit; }
 /* ---------- filters & states ---------- */
 .filters { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; padding: 14px 18px; }
 .field { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: var(--ink-2); font-weight: 550; }
-.field input, .field select { background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 6px 10px; min-width: 120px; font-weight: 400; color: var(--ink); }
+.field input, .field select, .field textarea { background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 6px 10px; min-width: 120px; font-weight: 400; color: var(--ink); }
 .pager { display: flex; align-items: center; gap: 12px; justify-content: flex-end; padding-top: 14px; border-top: 1px solid var(--border); margin-top: 6px; }
 .skeleton { background: linear-gradient(90deg, var(--surface-2), var(--surface-3), var(--surface-2)); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; border-radius: 6px; height: 14px; margin: 10px 0; }
 @keyframes shimmer { to { background-position: -200% 0; } }
@@ -198,3 +198,5 @@ button, input, select { font: inherit; color: inherit; }
 .code { margin: 0; padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow-x: auto; font-family: var(--mono, ui-monospace, monospace); font-size: 0.85rem; line-height: 1.5; white-space: pre; }
 .pick-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .reasons { margin: 4px 0 0; padding-left: 18px; }
+.field textarea { font: inherit; resize: vertical; min-height: 3.2em; }
+.inline-form { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
