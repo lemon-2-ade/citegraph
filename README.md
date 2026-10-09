@@ -107,6 +107,9 @@ quality; API responses say so explicitly.
 | GET | `/api/search/papers?q=&mode=keyword\|semantic\|hybrid` · `/api/papers/{id}/semantic-similar` | Paper search by BM25, embeddings or rank-fused hybrid; neighbours by meaning |
 | GET · POST | `/api/papers/{id}/insight` | Stored AI summary and structured extraction; POST generates it with the configured LLM (admin-gated) |
 | POST | `/api/ask` | Question answering over the graph: hybrid retrieval, citation-link expansion, numbered verified citations (admin-gated) |
+| POST | `/api/recommendations` | Papers to read next from a reading list: citation proximity (Personalized PageRank) fused with embedding similarity, with reasons |
+| GET | `/api/trends/topics?window=` | Topics gaining or losing share of papers (emerging / rising / steady / declining) |
+| GET | `/api/reading-path?topic_id=` or `?paper_id=` | Ordered reading path, cited work first |
 | POST | `/api/query` | Plain-English structural questions → validated read-only Cypher, rows and the query itself (admin-gated) |
 | GET | `/api/search?q=` | Keyword search (Lucene full-text, prefix on the last term) over papers, authors, topics |
 | GET | `/api/graph/overview` · `/api/graph/neighborhood/{id}` | Capped node/edge views for the graph explorer |
@@ -148,6 +151,7 @@ researchgraph jobs                      recent ingestion jobs
 researchgraph analyze                   PageRank, centrality, communities (--backend, --algorithm)
 researchgraph embed                     embed papers + build the vector index (--rebuild after changing model)
 researchgraph insights                  generate AI summaries/extractions for papers (--limit, --force)
+researchgraph eval retrieval|nlquery|rag  measure quality on the gold sets in data/eval (see docs/evaluation.md)
 ```
 
 ## Dataset
@@ -215,5 +219,8 @@ provider abstraction) will be written with those phases.
 | 8 | LLM provider abstraction, AI paper summaries and structured extraction | done |
 | 9 | Graph-aware RAG with verified citations | done |
 | 10 | Natural language → validated read-only Cypher | done |
-| 11–13 | Recommendations, research trends, reading paths | planned |
-| 14–17 | Evaluation, security hardening, testing/performance, polish | planned |
+| 11 | Recommendations from a reading list | done |
+| 12 | Research trends | done |
+| 13 | Reading paths | done |
+| 14 | Evaluation harness and gold sets (run it to get numbers) | done |
+| 15–17 | Security hardening, testing/performance, polish | planned |
