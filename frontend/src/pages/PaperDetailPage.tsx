@@ -232,6 +232,9 @@ function Details({ paper }: { paper: PaperDetail }) {
           )}
           {paper.arxiv_id && <> · arXiv:{paper.arxiv_id}</>}
         </div>
+        <div className="row-meta">
+          <Link to={`/reading-path?paper_id=${encodeURIComponent(paper.id)}`}>Reading path from this paper →</Link>
+        </div>
       </div>
 
       {paper.is_stub && (

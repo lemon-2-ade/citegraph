@@ -2061,6 +2061,42 @@
         "title": "PathResponse",
         "type": "object"
       },
+      "PathStep": {
+        "properties": {
+          "builds_on": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Builds On",
+            "type": "array"
+          },
+          "cited_by_on_path": {
+            "default": 0,
+            "title": "Cited By On Path",
+            "type": "integer"
+          },
+          "paper": {
+            "$ref": "#/components/schemas/PaperSummary"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "position",
+          "paper",
+          "cited_by_on_path",
+          "builds_on",
+          "reason"
+        ],
+        "title": "PathStep",
+        "type": "object"
+      },
       "RankedAuthor": {
         "properties": {
           "id": {
@@ -2111,6 +2147,160 @@
           "score"
         ],
         "title": "RankedPaper",
+        "type": "object"
+      },
+      "ReadingPath": {
+        "properties": {
+          "candidates": {
+            "title": "Candidates",
+            "type": "integer"
+          },
+          "focus": {
+            "title": "Focus",
+            "type": "string"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/PathStep"
+            },
+            "title": "Steps",
+            "type": "array"
+          }
+        },
+        "required": [
+          "focus",
+          "steps",
+          "candidates",
+          "note"
+        ],
+        "title": "ReadingPath",
+        "type": "object"
+      },
+      "Reason": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "citation_proximity",
+              "similar_meaning",
+              "directly_linked"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "text"
+        ],
+        "title": "Reason",
+        "type": "object"
+      },
+      "RecommendRequest": {
+        "properties": {
+          "limit": {
+            "default": 10,
+            "maximum": 30.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "paper_ids": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Paper Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "paper_ids"
+        ],
+        "title": "RecommendRequest",
+        "type": "object"
+      },
+      "RecommendResponse": {
+        "properties": {
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "recommendations": {
+            "items": {
+              "$ref": "#/components/schemas/Recommendation"
+            },
+            "title": "Recommendations",
+            "type": "array"
+          },
+          "seeds": {
+            "items": {
+              "$ref": "#/components/schemas/PaperSummary"
+            },
+            "title": "Seeds",
+            "type": "array"
+          },
+          "semantic_available": {
+            "default": true,
+            "title": "Semantic Available",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "seeds",
+          "recommendations",
+          "semantic_available",
+          "note"
+        ],
+        "title": "RecommendResponse",
+        "type": "object"
+      },
+      "Recommendation": {
+        "properties": {
+          "linked_to": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Linked To",
+            "type": "array"
+          },
+          "paper": {
+            "$ref": "#/components/schemas/PaperSummary"
+          },
+          "reasons": {
+            "items": {
+              "$ref": "#/components/schemas/Reason"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "paper",
+          "score",
+          "reasons",
+          "linked_to"
+        ],
+        "title": "Recommendation",
         "type": "object"
       },
       "RelatedTopic": {
@@ -2506,6 +2696,139 @@
           "score"
         ],
         "title": "TopicRef",
+        "type": "object"
+      },
+      "TopicTrend": {
+        "properties": {
+          "growth": {
+            "title": "Growth",
+            "type": "number"
+          },
+          "label": {
+            "enum": [
+              "emerging",
+              "rising",
+              "steady",
+              "declining"
+            ],
+            "title": "Label",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "previous": {
+            "title": "Previous",
+            "type": "integer"
+          },
+          "recent": {
+            "title": "Recent",
+            "type": "integer"
+          },
+          "series": {
+            "items": {
+              "$ref": "#/components/schemas/YearCount"
+            },
+            "title": "Series",
+            "type": "array"
+          },
+          "share_previous": {
+            "title": "Share Previous",
+            "type": "number"
+          },
+          "share_recent": {
+            "title": "Share Recent",
+            "type": "number"
+          },
+          "topic_id": {
+            "title": "Topic Id",
+            "type": "string"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "topic_id",
+          "name",
+          "total",
+          "series",
+          "recent",
+          "previous",
+          "share_recent",
+          "share_previous",
+          "growth",
+          "label"
+        ],
+        "title": "TopicTrend",
+        "type": "object"
+      },
+      "TrendsResponse": {
+        "properties": {
+          "first_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Year"
+          },
+          "last_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Year"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "previous_years": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Previous Years",
+            "type": "array"
+          },
+          "recent_years": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Recent Years",
+            "type": "array"
+          },
+          "topics": {
+            "items": {
+              "$ref": "#/components/schemas/TopicTrend"
+            },
+            "title": "Topics",
+            "type": "array"
+          },
+          "window": {
+            "title": "Window",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "first_year",
+          "last_year",
+          "window",
+          "recent_years",
+          "previous_years",
+          "topics",
+          "note"
+        ],
+        "title": "TrendsResponse",
         "type": "object"
       },
       "ValidationError": {
@@ -4265,6 +4588,124 @@
         ]
       }
     },
+    "/api/reading-path": {
+      "get": {
+        "operationId": "reading_path_api_reading_path_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "topic_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Topic Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "paper_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Paper Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "length",
+            "required": false,
+            "schema": {
+              "default": 8,
+              "maximum": 20,
+              "minimum": 2,
+              "title": "Length",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadingPath"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "An ordered reading path (foundational to recent) for a topic or around a paper",
+        "tags": [
+          "reading-paths"
+        ]
+      }
+    },
+    "/api/recommendations": {
+      "post": {
+        "operationId": "recommendations_api_recommendations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecommendRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Recommend papers from a reading list (citation proximity + similar meaning)",
+        "tags": [
+          "recommendations"
+        ]
+      }
+    },
     "/api/search": {
       "get": {
         "operationId": "search_api_search_get",
@@ -4485,6 +4926,75 @@
         "summary": "Get Topic",
         "tags": [
           "topics"
+        ]
+      }
+    },
+    "/api/trends/topics": {
+      "get": {
+        "operationId": "topics_trends_api_trends_topics_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "window",
+            "required": false,
+            "schema": {
+              "default": 3,
+              "maximum": 10,
+              "minimum": 1,
+              "title": "Window",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "min_papers",
+            "required": false,
+            "schema": {
+              "default": 2,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Min Papers",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 30,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrendsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Topics gaining or losing share of papers: recent window vs the window before",
+        "tags": [
+          "trends"
         ]
       }
     }

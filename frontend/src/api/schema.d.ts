@@ -455,6 +455,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reading-path": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** An ordered reading path (foundational to recent) for a topic or around a paper */
+        get: operations["reading_path_api_reading_path_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recommendations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Recommend papers from a reading list (citation proximity + similar meaning) */
+        post: operations["recommendations_api_recommendations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/search": {
         parameters: {
             query?: never;
@@ -515,6 +549,23 @@ export interface paths {
         };
         /** Get Topic */
         get: operations["get_topic_api_topics__topic_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trends/topics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Topics gaining or losing share of papers: recent window vs the window before */
+        get: operations["topics_trends_api_trends_topics_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1207,6 +1258,21 @@ export interface components {
             /** Relationships */
             relationships: components["schemas"]["PathRelationship"][];
         };
+        /** PathStep */
+        PathStep: {
+            /** Builds On */
+            builds_on: string[];
+            /**
+             * Cited By On Path
+             * @default 0
+             */
+            cited_by_on_path: number;
+            paper: components["schemas"]["PaperSummary"];
+            /** Position */
+            position: number;
+            /** Reason */
+            reason: string;
+        };
         /** RankedAuthor */
         RankedAuthor: {
             /** Id */
@@ -1221,6 +1287,61 @@ export interface components {
         /** RankedPaper */
         RankedPaper: {
             paper: components["schemas"]["PaperSummary"];
+            /** Score */
+            score: number;
+        };
+        /** ReadingPath */
+        ReadingPath: {
+            /** Candidates */
+            candidates: number;
+            /** Focus */
+            focus: string;
+            /** Note */
+            note: string;
+            /** Steps */
+            steps: components["schemas"]["PathStep"][];
+        };
+        /** Reason */
+        Reason: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "citation_proximity" | "similar_meaning" | "directly_linked";
+            /** Text */
+            text: string;
+        };
+        /** RecommendRequest */
+        RecommendRequest: {
+            /**
+             * Limit
+             * @default 10
+             */
+            limit: number;
+            /** Paper Ids */
+            paper_ids: string[];
+        };
+        /** RecommendResponse */
+        RecommendResponse: {
+            /** Note */
+            note: string | null;
+            /** Recommendations */
+            recommendations: components["schemas"]["Recommendation"][];
+            /** Seeds */
+            seeds: components["schemas"]["PaperSummary"][];
+            /**
+             * Semantic Available
+             * @default true
+             */
+            semantic_available: boolean;
+        };
+        /** Recommendation */
+        Recommendation: {
+            /** Linked To */
+            linked_to: string[];
+            paper: components["schemas"]["PaperSummary"];
+            /** Reasons */
+            reasons: components["schemas"]["Reason"][];
             /** Score */
             score: number;
         };
@@ -1373,6 +1494,49 @@ export interface components {
             name: string;
             /** Score */
             score: number | null;
+        };
+        /** TopicTrend */
+        TopicTrend: {
+            /** Growth */
+            growth: number;
+            /**
+             * Label
+             * @enum {string}
+             */
+            label: "emerging" | "rising" | "steady" | "declining";
+            /** Name */
+            name: string;
+            /** Previous */
+            previous: number;
+            /** Recent */
+            recent: number;
+            /** Series */
+            series: components["schemas"]["YearCount"][];
+            /** Share Previous */
+            share_previous: number;
+            /** Share Recent */
+            share_recent: number;
+            /** Topic Id */
+            topic_id: string;
+            /** Total */
+            total: number;
+        };
+        /** TrendsResponse */
+        TrendsResponse: {
+            /** First Year */
+            first_year: number | null;
+            /** Last Year */
+            last_year: number | null;
+            /** Note */
+            note: string;
+            /** Previous Years */
+            previous_years: number[];
+            /** Recent Years */
+            recent_years: number[];
+            /** Topics */
+            topics: components["schemas"]["TopicTrend"][];
+            /** Window */
+            window: number;
         };
         /** ValidationError */
         ValidationError: {
@@ -2328,6 +2492,72 @@ export interface operations {
             };
         };
     };
+    reading_path_api_reading_path_get: {
+        parameters: {
+            query?: {
+                topic_id?: string | null;
+                paper_id?: string | null;
+                length?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReadingPath"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    recommendations_api_recommendations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecommendRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecommendResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     search_api_search_get: {
         parameters: {
             query: {
@@ -2443,6 +2673,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TopicDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    topics_trends_api_trends_topics_get: {
+        parameters: {
+            query?: {
+                window?: number;
+                min_papers?: number;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrendsResponse"];
                 };
             };
             /** @description Validation Error */

@@ -29,7 +29,11 @@ export function TopicDetailPage() {
   const years = yearColumns(t.papers_per_year);
   return (
     <div className="stack">
-      <PageHeader title={t.name} subtitle={t.description ?? `${t.paper_count} papers carry this topic.`} />
+      <PageHeader
+        title={t.name}
+        subtitle={t.description ?? `${t.paper_count} papers carry this topic.`}
+        actions={<Link to={`/reading-path?topic_id=${encodeURIComponent(t.id)}`}>Reading path →</Link>}
+      />
       {years.length > 0 && (
         <Section id="topic-years" title="Papers per year">
           <ColumnChart

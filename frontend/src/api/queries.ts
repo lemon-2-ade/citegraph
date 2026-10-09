@@ -289,3 +289,35 @@ export function useGraphQuery() {
     mutationFn: (question: string) => unwrap(api.POST("/api/query", { body: { question } })),
   });
 }
+
+export function useRecommendations() {
+  return useMutation({
+    mutationFn: (paperIds: string[]) =>
+      unwrap(api.POST("/api/recommendations", { body: { paper_ids: paperIds, limit: 10 } })),
+  });
+}
+
+export function useTopicTrends(window: number) {
+  return useQuery({
+    queryKey: ["trends", "topics", window],
+    queryFn: () =>
+      unwrap(api.GET("/api/trends/topics", { params: { query: { window, min_papers: 2, limit: 40 } } })),
+    staleTime: STALE_MS,
+  });
+}
+
+export function useReadingPath(focus: { topicId?: string; paperId?: string }, length: number) {
+  const enabled = Boolean(focus.topicId) !== Boolean(focus.paperId);
+  return useQuery({
+    queryKey: ["reading-path", focus.topicId ?? null, focus.paperId ?? null, length],
+    queryFn: () =>
+      unwrap(
+        api.GET("/api/reading-path", {
+          params: { query: { topic_id: focus.topicId, paper_id: focus.paperId, length } },
+        }),
+      ),
+    enabled,
+    staleTime: STALE_MS,
+    retry: false,
+  });
+}

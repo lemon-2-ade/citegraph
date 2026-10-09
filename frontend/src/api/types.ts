@@ -10,3 +10,6 @@ export type PaperInsightResult = Schemas["PaperInsightResult"];
 export type AskResponse = Schemas["AskResponse"];
 export type AnswerSource = Schemas["Source"];
 export type NLQueryResponse = Schemas["NLQueryResponse"];
+export type RecommendResponse = Schemas["RecommendResponse"];
+export type TopicTrend = Schemas["TopicTrend"];
+export type ReadingPath = Schemas["ReadingPath"];
