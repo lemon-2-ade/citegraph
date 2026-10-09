@@ -35,3 +35,28 @@ class ScriptedGraph:
 
     async def close(self) -> None:
         return None
+
+
+class ScriptedLLM:
+    """LLMProvider stand-in returning queued replies; records every request."""
+
+    name = "scripted"
+    model = "scripted-1"
+
+    def __init__(self, replies: list[str] | None = None) -> None:
+        self.replies = list(replies or [])
+        self.requests: list[list[Any]] = []
+
+    async def complete(
+        self,
+        messages: Any,
+        *,
+        json_mode: bool = False,
+        temperature: float = 0.0,
+        max_tokens: int = 1024,
+    ) -> Any:
+        from app.ai.llm import Completion
+
+        self.requests.append(list(messages))
+        text = self.replies.pop(0) if self.replies else "{}"
+        return Completion(text=text, model=self.model, prompt_tokens=10, completion_tokens=5)

@@ -6,11 +6,13 @@ from fastapi import APIRouter, Query
 
 from app.analytics.backends import NetworkXBackend
 from app.analytics.queries import AnalyticsQueries
-from app.api.deps import GraphDep
+from app.api.deps import AdminDep, GraphDep, LLMDep
 from app.repositories.papers import PaperRepository, PaperSort
 from app.schemas.analytics import SimilarPaper
 from app.schemas.common import Page, PageParams
 from app.schemas.graph import PaperDetail, PaperSummary
+from app.schemas.insights import PaperInsightResult
+from app.services.insights import generate_insight, get_insight
 from app.services.paper_search import semantic_similar
 
 router = APIRouter(prefix="/papers", tags=["papers"])
@@ -128,3 +130,24 @@ async def semantically_similar_papers(
     limit: Annotated[int, Query(ge=1, le=50)] = 10,
 ) -> list[SimilarPaper]:
     return await semantic_similar(graph, paper_id, limit)
+
+
+@router.get(
+    "/{paper_id}/insight",
+    summary="The stored AI summary and structured extraction for a paper (404 if not generated)",
+    response_model=PaperInsightResult,
+)
+async def paper_insight(paper_id: str, graph: GraphDep) -> PaperInsightResult:
+    return await get_insight(graph, paper_id)
+
+
+@router.post(
+    "/{paper_id}/insight",
+    summary="Generate (or refresh) the AI insight for a paper; calls the configured LLM",
+    response_model=PaperInsightResult,
+    dependencies=[AdminDep],
+)
+async def create_paper_insight(
+    paper_id: str, graph: GraphDep, llm: LLMDep, force: bool = False
+) -> PaperInsightResult:
+    return await generate_insight(graph, await llm.get(), paper_id, force=force)

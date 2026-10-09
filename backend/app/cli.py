@@ -6,6 +6,7 @@ researchgraph ingest --query "..."       ingest from OpenAlex (inline, or --enqu
 researchgraph ingest --resume <job-id>   resume a failed/interrupted job
 researchgraph jobs                       list recent ingestion jobs
 researchgraph embed [--rebuild]          embed papers and build the vector index
+researchgraph insights [--limit N]       generate AI summaries/extractions with the LLM
 """
 
 from __future__ import annotations
@@ -21,6 +22,7 @@ import typer
 from pydantic import ValidationError
 
 from app.ai.embeddings import build_provider
+from app.ai.llm import build_llm
 from app.core.config import get_settings
 from app.core.errors import ResearchGraphError
 from app.core.logging import configure_logging
@@ -34,6 +36,7 @@ from app.repositories.jobs import JobRepository
 from app.services.analytics import execute_run
 from app.services.embedding import embed_papers
 from app.services.ingestion import SOURCES, create_job, run_job
+from app.services.insights import generate_insights
 
 app = typer.Typer(help="ResearchGraph: research intelligence over a citation knowledge graph.")
 
@@ -194,10 +197,6 @@ def analyze(
     typer.echo(json.dumps(_run(work), indent=2, default=str))
 
 
-if __name__ == "__main__":  # pragma: no cover
-    app()
-
-
 @app.command()
 def embed(
     rebuild: Annotated[
@@ -224,3 +223,29 @@ def embed(
     except ResearchGraphError as exc:
         typer.secho(exc.message, err=True, fg=typer.colors.RED)
         raise typer.Exit(1) from exc
+
+
+@app.command()
+def insights(
+    limit: Annotated[int | None, typer.Option(min=1, help="Stop after this many papers")] = None,
+    force: Annotated[bool, typer.Option(help="Regenerate even when up to date")] = False,
+) -> None:
+    """Generate AI summaries and structured extractions (skips papers already done)."""
+    settings = get_settings()
+
+    async def work(r: Resources) -> dict[str, object]:
+        stats = await generate_insights(
+            r.graph, build_llm(settings), limit=limit, force=force,
+            concurrency=settings.llm_concurrency,
+        )  # fmt: skip
+        return stats.as_dict()
+
+    try:
+        typer.echo(json.dumps(_run(work), indent=2))
+    except ResearchGraphError as exc:
+        typer.secho(exc.message, err=True, fg=typer.colors.RED)
+        raise typer.Exit(1) from exc
+
+
+if __name__ == "__main__":  # pragma: no cover
+    app()
