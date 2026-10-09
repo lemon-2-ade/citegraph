@@ -84,3 +84,12 @@ def test_bounded_variable_length_path_is_ok() -> None:
 
 def test_function_namespaces_are_not_treated_as_properties() -> None:
     validate_cypher("RETURN date.truncate('year', date()) AS d LIMIT 1")
+
+
+def test_limit_before_the_final_return_still_gets_a_final_cap() -> None:
+    q = (
+        "MATCH (c:Paper)-[:CITES]->(p:Paper) WITH p, count(c) AS n "
+        "ORDER BY n DESC LIMIT 1 RETURN p.title"
+    )
+    v = validate_cypher(q)
+    assert v.cypher.endswith("\nLIMIT 50")

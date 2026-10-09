@@ -194,8 +194,12 @@ def _bound_rows(
     limits = [int(x) for x in re.findall(r"\bLIMIT\s+(\d+)\b", masked, flags=re.IGNORECASE)]
     if any(v > MAX_ROWS for v in limits):
         raise CypherRejectedError(f"LIMIT must be at most {MAX_ROWS}.")
+    last_return = [m.start() for m in re.finditer(r"\bRETURN\b", masked, flags=re.IGNORECASE)]
+    tail = masked[last_return[-1] :] if last_return else masked
     if re.search(r"\bLIMIT\s+\d+\s*$", masked, flags=re.IGNORECASE):
         return ValidatedQuery(text, limits[-1], labels, rel_types)
-    if re.search(r"\bLIMIT\b", masked, flags=re.IGNORECASE):
+    if re.search(r"\bLIMIT\b", tail, flags=re.IGNORECASE):
         raise CypherRejectedError("LIMIT must be a plain number at the end of the query.")
+    # A LIMIT before the final RETURN (WITH ... ORDER BY ... LIMIT 1) bounds that stage only;
+    # the final result still gets our cap.
     return ValidatedQuery(f"{text}\nLIMIT {DEFAULT_ROWS}", DEFAULT_ROWS, labels, rel_types)
