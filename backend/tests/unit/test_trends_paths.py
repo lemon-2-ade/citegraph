@@ -112,3 +112,17 @@ def test_path_endpoint_for_topic() -> None:
     assert body["focus"] == "Topic: Graphs"
     assert [s["paper"]["id"] for s in body["steps"]] == ["old", "new"]
     assert body["steps"][1]["builds_on"] == ["old"] and body["steps"][0]["cited_by_on_path"] == 1
+
+
+def test_inactive_topics_are_steady_with_no_change_and_sort_last() -> None:
+    totals = {2018: 10, 2019: 10, 2020: 10, 2021: 40, 2022: 40, 2023: 40}
+    rows = [
+        {"topic_id": "old", "name": "Old", "year": 2010, "papers": 5},
+        {"topic_id": "act", "name": "Active", "year": 2022, "papers": 3},
+        {"topic_id": "act", "name": "Active", "year": 2019, "papers": 3},
+    ]
+    res = compute_trends(rows, totals, window=3, min_papers=2)
+    by_id = {t.topic_id: t for t in res.topics}
+    assert by_id["old"].growth == 1.0 and by_id["old"].label == "steady"
+    steady = [t.topic_id for t in res.topics if t.label == "steady"]
+    assert steady[-1] == "old"

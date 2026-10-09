@@ -86,7 +86,9 @@ def compute_trends(
         share_previous = previous / total_previous if total_previous else 0.0
         smooth_recent = (recent + SMOOTHING) / (total_recent + 2 * SMOOTHING)
         smooth_previous = (previous + SMOOTHING) / (total_previous + 2 * SMOOTHING)
-        growth = smooth_recent / smooth_previous
+        # No papers in either window means no evidence of change, not a spurious ratio caused
+        # by the two windows having different totals.
+        growth = 1.0 if recent == 0 and previous == 0 else smooth_recent / smooth_previous
         trends.append(
             TopicTrend(
                 topic_id=tid,
@@ -102,7 +104,9 @@ def compute_trends(
             )
         )
     order = {"emerging": 0, "rising": 1, "steady": 2, "declining": 3}
-    trends.sort(key=lambda t: (order[t.label], -t.growth, -t.total, t.name))
+    trends.sort(
+        key=lambda t: (order[t.label], t.recent + t.previous == 0, -t.growth, -t.total, t.name)
+    )
     return TrendsResponse(
         first_year=years[0],
         last_year=last,
