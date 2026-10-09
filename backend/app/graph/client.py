@@ -13,7 +13,7 @@ import time
 from collections.abc import Mapping
 from typing import Any, LiteralString
 
-from neo4j import AsyncDriver, AsyncGraphDatabase, AsyncManagedTransaction
+from neo4j import AsyncDriver, AsyncGraphDatabase, AsyncManagedTransaction, unit_of_work
 from neo4j.exceptions import ServiceUnavailable
 
 from app.core.config import Settings
@@ -67,20 +67,45 @@ class GraphClient:
         return await self._timed("write", label, work)
 
     async def run_readonly_unchecked(
-        self, query: str, params: Mapping[str, Any] | None = None, *, label: str = ""
+        self,
+        query: str,
+        params: Mapping[str, Any] | None = None,
+        *,
+        label: str = "",
+        tx_timeout: float | None = None,
     ) -> list[Record]:
         """Execute a dynamically built query in a READ transaction.
 
         Only for queries that were constructed or validated by trusted code (e.g. the
         Cypher validator). The read transaction is a second line of defence: Neo4j
-        rejects writes inside it.
+        rejects writes inside it. ``tx_timeout`` (seconds) is enforced by the server.
         """
 
         async def work(tx: AsyncManagedTransaction) -> list[Record]:
             result = await tx.run(query, dict(params or {}))
             return [record.data() async for record in result]
 
+        if tx_timeout is not None:
+            work = unit_of_work(timeout=tx_timeout)(work)
         return await self._timed("read", label, work)
+
+    async def query_type(self, query: str) -> str:
+        """Neo4j's own classification of a query: "r", "w", "rw" or "s", via ``EXPLAIN``.
+
+        Nothing is executed. Raises ``neo4j.exceptions.Neo4jError`` on a syntax error.
+        """
+
+        async def work(tx: AsyncManagedTransaction) -> str:
+            result = await tx.run("EXPLAIN " + query)
+            summary = await result.consume()
+            return summary.query_type or ""
+
+        try:
+            async with self._driver.session(database=self._database) as session:
+                query_type: str = await session.execute_read(work)
+        except (ServiceUnavailable, OSError) as exc:
+            raise DependencyUnavailableError(f"Neo4j is unavailable: {exc}") from exc
+        return query_type
 
     async def _timed(self, mode: str, label: str, work: Any) -> list[Record]:
         start = time.perf_counter()

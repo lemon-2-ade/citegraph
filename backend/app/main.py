@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import analytics, entities, graph, health, ingestion, papers, rag, search
+from app.api import analytics, entities, graph, health, ingestion, nlquery, papers, rag, search
 from app.core.config import Settings, get_settings
 from app.core.errors import register_error_handlers
 from app.core.logging import configure_logging, get_logger
@@ -70,6 +70,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         graph.router,
         search.router,
         rag.router,
+        nlquery.router,
         analytics.router,
         analytics.runs,
         ingestion.router,

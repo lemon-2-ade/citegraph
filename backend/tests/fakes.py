@@ -16,6 +16,7 @@ class ScriptedGraph:
     def __init__(self, responses: Mapping[str, list[dict[str, Any]]] | None = None) -> None:
         self.responses = dict(responses or {})
         self.calls: list[tuple[str, str, dict[str, Any]]] = []
+        self.query_types: list[str] = []
 
     async def read(
         self, query: str, params: Mapping[str, Any] | None = None, *, label: str = ""
@@ -28,7 +29,16 @@ class ScriptedGraph:
         return []
 
     write = read
-    run_readonly_unchecked = read
+
+    async def run_readonly_unchecked(
+        self, query: str, params: Mapping[str, Any] | None = None, *, label: str = "",
+        tx_timeout: float | None = None,
+    ) -> list[dict[str, Any]]:  # fmt: skip
+        return await self.read(query, params, label=label)  # type: ignore[arg-type]
+
+    async def query_type(self, query: str) -> str:
+        self.calls.append(("query_type", query, {}))
+        return self.query_types.pop(0) if self.query_types else "r"
 
     async def verify(self) -> None:
         return None
