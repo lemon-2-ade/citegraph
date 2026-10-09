@@ -11,6 +11,7 @@ from fastapi import Depends, Header, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.ai.embeddings import EmbedderCache
+from app.ai.llm import LLMCache
 from app.core.config import Settings
 from app.core.errors import DependencyUnavailableError
 from app.core.logging import get_logger
@@ -35,6 +36,14 @@ def get_embedder(request: Request) -> EmbedderCache:
         embedder = EmbedderCache(request.app.state.settings)
         request.app.state.embedder = embedder
     return embedder
+
+
+def get_llm(request: Request) -> LLMCache:
+    llm: LLMCache | None = getattr(request.app.state, "llm", None)
+    if llm is None:
+        llm = LLMCache(request.app.state.settings)
+        request.app.state.llm = llm
+    return llm
 
 
 def get_sessions(request: Request) -> async_sessionmaker[AsyncSession]:
@@ -68,6 +77,7 @@ def require_admin(request: Request, x_admin_token: Annotated[str | None, Header(
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid or missing X-Admin-Token")
 
 
+LLMDep = Annotated[LLMCache, Depends(get_llm)]
 EmbedderDep = Annotated[EmbedderCache, Depends(get_embedder)]
 GraphDep = Annotated[GraphClient, Depends(get_graph)]
 SessionsDep = Annotated[async_sessionmaker[AsyncSession], Depends(get_sessions)]

@@ -59,6 +59,9 @@ class Settings(BaseSettings):
     # --- AI (used from Phase 7 onwards) ------------------------------------------
     llm_provider: Literal["openai", "gemini", "ollama"] = "openai"
     llm_model: str = "gpt-4o-mini"
+    llm_timeout_seconds: float = 60.0
+    # Parallel LLM requests during batch jobs (insights); keep modest to respect rate limits.
+    llm_concurrency: int = 4
     # "auto" uses OpenAI when OPENAI_API_KEY is set and a local CPU model otherwise.
     # "hashing" is a deterministic offline provider for tests and demos only.
     embedding_provider: Literal["auto", "openai", "local", "hashing"] = "auto"
